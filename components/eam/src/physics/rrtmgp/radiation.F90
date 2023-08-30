@@ -101,7 +101,7 @@ module radiation
    ! the history buffer too so that we can annotate them with a description of what
    ! they are, rather than expecting the user to know what they are from the pbuf
    ! fields.
-   logical :: spectralflux  = .false.  ! calculate fluxes (up and down) per band.
+   logical :: spectralflux  = .true.  ! calculate fluxes (up and down) per band. !!JPT .false. -> .true.
 
    ! Flag to indicate whether or not to use the radiation timestep for solar zenith
    ! angle calculations. If true, use the radiation timestep for all solar zenith
