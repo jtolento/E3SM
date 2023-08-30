@@ -18,25 +18,28 @@ main() {
 # --- Configuration flags ----
 
 # Machine and project
-readonly MACHINE=cori-knl
+#readonly MACHINE=cori-knl
+readonly MACHINE=pm-cpu
 readonly PROJECT="e3sm"
 
 # Simulation
-readonly COMPSET="WCYCL1850"
+#readonly COMPSET="WCYCL1850"
+#readonly RESOLUTION="ne30pg2_EC30to60E2r2"
+readonly COMPSET="F20TR"
 readonly RESOLUTION="ne30pg2_EC30to60E2r2"
 # BEFORE RUNNING : CHANGE the following CASE_NAME to desired value
-readonly CASE_NAME="your_casename"
+readonly CASE_NAME="FcaseRun"
 # If this is part of a simulation campaign, ask your group lead about using a case_group label
 # readonly CASE_GROUP=""
 
 # Code and compilation
-readonly CHECKOUT="20210806"
-readonly BRANCH="master"
+#readonly CHECKOUT="20210806"
+#readonly BRANCH="master"
 readonly CHERRY=( )
 readonly DEBUG_COMPILE=false
 
 # Run options
-readonly MODEL_START_TYPE="hybrid"  # 'initial', 'continue', 'branch', 'hybrid'
+readonly MODEL_START_TYPE="initial"  # 'initial', 'continue', 'branch', 'hybrid'
 readonly START_DATE="0001-01-01"
 
 # Additional options for 'branch' and 'hybrid'
@@ -46,8 +49,11 @@ readonly RUN_REFCASE="20210625.v2rc3c-GWD.piControl.ne30pg2_EC30to60E2r2.chrysal
 readonly RUN_REFDATE="1001-01-01"   # same as MODEL_START_DATE for 'branch', can be different for 'hybrid'
 
 # Set paths
-readonly CODE_ROOT="${HOME}/E3SMv2/code/${CHECKOUT}"
-readonly CASE_ROOT="/global/cscratch1/sd/${USER}/E3SMv2/${CASE_NAME}"
+#readonly CODE_ROOT="${HOME}/E3SMv2/code/${CHECKOUT}"
+#readonly CASE_ROOT="/global/cscratch1/sd/${USER}/E3SMv2/${CASE_NAME}"
+readonly CODE_ROOT="${HOME}/E3SM"
+readonly CASE_ROOT="${SCRATCH}/E3SM/${CASE_NAME}"
+
 
 # Sub-directories
 readonly CASE_BUILD_DIR=${CASE_ROOT}/build
@@ -70,7 +76,7 @@ if [ "${run}" != "production" ]; then
   readonly CASE_SCRIPTS_DIR=${CASE_ROOT}/tests/${run}/case_scripts
   readonly CASE_RUN_DIR=${CASE_ROOT}/tests/${run}/run
   readonly PELAYOUT=${layout}
-  readonly WALLTIME="2:00:00"
+  readonly WALLTIME="00:30:00"
   readonly STOP_OPTION=${units}
   readonly STOP_N=${length}
   readonly REST_OPTION=${STOP_OPTION}
@@ -113,7 +119,7 @@ do_case_submit=true
 umask 022
 
 # Fetch code from Github
-fetch_code
+#fetch_code
 
 # Create case
 create_newcase
@@ -131,7 +137,7 @@ runtime_options
 copy_script
 
 # Submit
-case_submit
+#case_submit
 
 # All done
 echo $'\n----- All done -----\n'
