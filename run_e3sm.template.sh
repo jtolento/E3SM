@@ -28,7 +28,7 @@ readonly PROJECT="e3sm"
 readonly COMPSET="F20TR"
 readonly RESOLUTION="ne30pg2_EC30to60E2r2"
 # BEFORE RUNNING : CHANGE the following CASE_NAME to desired value
-readonly CASE_NAME="FcaseRun"
+readonly CASE_NAME="GPrun"
 # If this is part of a simulation campaign, ask your group lead about using a case_group label
 # readonly CASE_GROUP=""
 
@@ -40,8 +40,8 @@ readonly DEBUG_COMPILE=false
 
 # Run options
 readonly MODEL_START_TYPE="initial"  # 'initial', 'continue', 'branch', 'hybrid'
-readonly START_DATE="0001-01-01"
-
+#readonly START_DATE="0001-01-01"
+readonly START_DATE="2010-06-01"
 # Additional options for 'branch' and 'hybrid'
 readonly GET_REFCASE=TRUE
 readonly RUN_REFDIR="/global/cscratch1/sd/forsyth/E3SMv2/v2.LR.piControl/init"
@@ -137,7 +137,7 @@ runtime_options
 copy_script
 
 # Submit
-#case_submit
+case_submit
 
 # All done
 echo $'\n----- All done -----\n'
@@ -302,12 +302,34 @@ case_setup() {
     pushd ${CASE_SCRIPTS_DIR}
 
     # Setup some CIME directories
+    echo 'Hello'
     ./xmlchange EXEROOT=${CASE_BUILD_DIR}
     ./xmlchange RUNDIR=${CASE_RUN_DIR}
-
+    ./xmlchange --append CAM_CONFIG_OPTS='-rad rrtmgp'
+    echo 'world!'
     # Short term archiving
-    ./xmlchange DOUT_S=${DO_SHORT_TERM_ARCHIVING^^}
-    ./xmlchange DOUT_S_ROOT=${CASE_ARCHIVE_DIR}
+    #./xmlchange DOUT_S=${DO_SHORT_TERM_ARCHIVING^^}
+    #./xmlchange DOUT_S_ROOT=${CASE_ARCHIVE_DIR}
+    #export NPROCS_ATM=512
+    #export NPROCS_LND=512
+    #export NPROCS_ROF=512
+    #export NPROCS_ICE=512
+    #export NPROCS_OCN=512
+    #export NPROCS_WAV=32
+    #export NPROCS_CPL=512
+    #export MAXMPITASKS=128
+    #export MAXTASKS=256
+
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_CPL  --val $NPROCS_CPL
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_ATM  --val $NPROCS_ATM
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_LND  --val $NPROCS_LND
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_ROF  --val $NPROCS_ROF
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_ICE  --val $NPROCS_ICE
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_OCN  --val $NPROCS_OCN
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_GLC  --val $NPROCS_GLC
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_WAV  --val $NPROCS_WAV
+    #./xmlchange --file env_mach_pes.xml  --id NTHRDS  --val 1
+    #./xmlchange --append CAM_CONFIG_OPTS='-rad rrtmgp' # JPT - Use RRTMGP INSTEAD 
 
     # Build with COSP, except for a data atmosphere (datm)
     if [ `./xmlquery --value COMP_ATM` == "datm"  ]; then
