@@ -1188,7 +1188,7 @@ contains
       character(*), parameter :: subname = 'radiation_tend'
 
       ! Radiative fluxes
-      type(fluxes_t) :: fluxes_allsky, fluxes_clrsky
+      type(fluxes_t) :: fluxes_allsky, fluxes_clrsky, fluxes_allsky_day
 
       ! Zero-array for cloud properties if not diagnosed by microphysics
       real(r8), target, dimension(pcols,pver) :: zeros
@@ -1274,6 +1274,7 @@ contains
          ! Allocate shortwave fluxes
          call initialize_fluxes(ncol, nlev_rad+1, nswbands, fluxes_allsky, do_direct=.true.)
          call initialize_fluxes(ncol, nlev_rad+1, nswbands, fluxes_clrsky, do_direct=.true.)
+         call initialize_fluxes(ncol, nlev_rad+1, nswbands, fluxes_allsky_day, do_direct=.true.)
 
          ! Get albedo. This uses CAM routines internally and just provides a
          ! wrapper to improve readability of the code here.
@@ -1404,7 +1405,7 @@ contains
                )
 
                ! Send fluxes to history buffer
-               call output_fluxes_sw(icall, state, fluxes_allsky, fluxes_clrsky, qrs,  qrsc)
+               call output_fluxes_sw(icall, state, fluxes_allsky, fluxes_clrsky, fluxes_allsky_day, qrs,  qrsc) !JPT
             end if
          end do
 
@@ -1417,6 +1418,7 @@ contains
          ! Free memory allocated for shortwave fluxes
          call free_fluxes(fluxes_allsky)
          call free_fluxes(fluxes_clrsky)
+         call free_fluxes(fluxes_allsky_day) !JPT
 
       else
 
@@ -2298,7 +2300,7 @@ contains
    !-------------------------------------------------------------------------------
 
    ! Send shortwave fluxes and heating rates to history buffer
-   subroutine output_fluxes_sw(icall, state, flux_all, flux_clr, fluxes, qrs, qrsc) !JPT +fluxes
+   subroutine output_fluxes_sw(icall, state, flux_all, flux_clr, fluxes_allsky_day, qrs, qrsc) !JPT +fluxes
       use physconst, only: cpair
       use physics_types, only: physics_state
       use cam_history, only: outfld
@@ -2309,7 +2311,7 @@ contains
       type(physics_state), intent(in) :: state
       type(fluxes_t), intent(in) :: flux_all
       type(fluxes_t), intent(in) :: flux_clr
-      type(fluxes_t), intent(in) :: fluxes ! JPT
+      type(fluxes_t), intent(in) :: fluxes_allsky_day ! JPT
       real(r8), intent(in) :: qrs(:,:), qrsc(:,:)
 
 
@@ -2363,7 +2365,7 @@ contains
 
       ! Output band-by-band spectral fluxes JPT
       call outfld('SD', &
-                  fluxes%bnd_flux_dn(1:ncol,1:nlay,1:nswbands), &
+                  fluxes_allsky_day%bnd_flux_dn(1:ncol,1:nlay,1:nswbands), &
                   ncol, state%lchnk)
 
    end subroutine output_fluxes_sw
