@@ -2298,10 +2298,12 @@ contains
    !-------------------------------------------------------------------------------
 
    ! Send shortwave fluxes and heating rates to history buffer
-   subroutine output_fluxes_sw(icall, state, flux_all, flux_clr, qrs, qrsc)
+   subroutine output_fluxes_sw(icall, state, flux_all, flux_clr, fluxes, qrs, qrsc) !JPT +fluxes
       use physconst, only: cpair
       use physics_types, only: physics_state
       use cam_history, only: outfld
+      use ppgrid, only: pver
+      
 
       integer, intent(in) :: icall
       type(physics_state), intent(in) :: state
@@ -2310,15 +2312,16 @@ contains
       type(fluxes_t), intent(in) :: fluxes ! JPT
       real(r8), intent(in) :: qrs(:,:), qrsc(:,:)
 
+
       ! SW cloud radiative effect
       real(r8) :: cloud_radiative_effect(state%ncol)
 
       ! Working variables
-      integer :: ncol
+      integer :: ncol, nlay !JPT +nlay
       integer :: ktop_rad = 1
-
+      
       ncol = state%ncol
-
+      nlay = pver           ! JPT
       ! All-sky flux_all%fluxes at model interfaces
       call outfld('FDS'//diag(icall), flux_all%flux_dn(1:ncol,ktop:kbot+1), ncol, state%lchnk)
       call outfld('FUS'//diag(icall), flux_all%flux_up(1:ncol,ktop:kbot+1), ncol, state%lchnk)
