@@ -2307,6 +2307,7 @@ contains
       type(physics_state), intent(in) :: state
       type(fluxes_t), intent(in) :: flux_all
       type(fluxes_t), intent(in) :: flux_clr
+      type(fluxes_t), intent(in) :: fluxes ! JPT
       real(r8), intent(in) :: qrs(:,:), qrsc(:,:)
 
       ! SW cloud radiative effect
