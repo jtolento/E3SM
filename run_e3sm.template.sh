@@ -28,15 +28,15 @@ readonly PROJECT="e3sm"
 readonly COMPSET="F20TR"
 readonly RESOLUTION="ne30pg2_EC30to60E2r2"
 # BEFORE RUNNING : CHANGE the following CASE_NAME to desired value
-readonly CASE_NAME="GPrun"
+readonly CASE_NAME="dbug"
 # If this is part of a simulation campaign, ask your group lead about using a case_group label
-# readonly CASE_GROUP=""
+# readonly CASE_GROUP="L"
 
 # Code and compilation
 #readonly CHECKOUT="20210806"
 #readonly BRANCH="master"
 readonly CHERRY=( )
-readonly DEBUG_COMPILE=false
+readonly DEBUG_COMPILE=TRUE
 
 # Run options
 readonly MODEL_START_TYPE="initial"  # 'initial', 'continue', 'branch', 'hybrid'
@@ -64,6 +64,7 @@ readonly CASE_ARCHIVE_DIR=${CASE_ROOT}/archive
 #               'M_1x10_ndays', 'M2_1x10_ndays', 'M80_1x10_ndays', 'L_1x10_ndays'
 #  or 'production' for full simulation
 readonly run='XS_2x5_ndays'
+#readonly run='production'
 if [ "${run}" != "production" ]; then
 
   # Short test simulations
@@ -81,7 +82,8 @@ if [ "${run}" != "production" ]; then
   readonly STOP_N=${length}
   readonly REST_OPTION=${STOP_OPTION}
   readonly REST_N=${STOP_N}
-  readonly RESUBMIT=${resubmit}
+  #readonly RESUBMIT=${resubmit}
+  readonly RESUBMIT=0
   readonly DO_SHORT_TERM_ARCHIVING=false
 
 else
@@ -89,13 +91,13 @@ else
   # Production simulation
   readonly CASE_SCRIPTS_DIR=${CASE_ROOT}/case_scripts
   readonly CASE_RUN_DIR=${CASE_ROOT}/run
-  readonly PELAYOUT="L"
-  readonly WALLTIME="34:00:00"
-  readonly STOP_OPTION="nyears"
-  readonly STOP_N="50"
-  readonly REST_OPTION="nyears"
-  readonly REST_N="5"
-  readonly RESUBMIT="9"
+  readonly PELAYOUT="M"
+  readonly WALLTIME="02:00:00"
+  readonly STOP_OPTION="ndays"
+  readonly STOP_N="30"
+  readonly REST_OPTION="ndays"
+  readonly REST_N="30"
+  readonly RESUBMIT="0"
   readonly DO_SHORT_TERM_ARCHIVING=false
 fi
 
@@ -156,7 +158,7 @@ cat << EOF >> user_nl_eam
  avgflag_pertape = 'A','A','I','A','A','A','I'
  fexcl1 = 'CFAD_SR532_CAL', 'LINOZ_DO3', 'LINOZ_DO3_PSC', 'LINOZ_O3CLIM', 'LINOZ_O3COL', 'LINOZ_SSO3', 'hstobie_linoz'
  fincl1 = 'extinct_sw_inp','extinct_lw_bnd7','extinct_lw_inp','CLD_CAL', 'TREFMNAV', 'TREFMXAV'
- fincl2 = 'FLUT','PRECT','U200','V200','U850','V850','Z500','OMEGA500','UBOT','VBOT','TREFHT','TREFHTMN:M','TREFHTMX:X','QREFHT','TS','PS','TMQ','TUQ','TVQ','TOZ', 'FLDS', 'FLNS', 'FSDS', 'FSNS', 'SHFLX', 'LHFLX', 'TGCLDCWP', 'TGCLDIWP', 'TGCLDLWP', 'CLDTOT', 'T250', 'T200', 'T150', 'T100', 'T050', 'T025', 'T010', 'T005', 'T002', 'T001', 'TTOP', 'U250', 'U150', 'U100', 'U050', 'U025', 'U010', 'U005', 'U002', 'U001', 'UTOP', 'FSNT', 'FLNT'
+ fincl2 = 'FLUT','PRECT','U200','V200','U850','V850','Z500','OMEGA500','UBOT','VBOT','TREFHT','TREFHTMN:M','TREFHTMX:X','QREFHT','TS','PS','TMQ','TUQ','TVQ','TOZ', 'FLDS', 'FLNS', 'FSDS', 'FSNS', 'SHFLX', 'LHFLX', 'TGCLDCWP', 'TGCLDIWP', 'TGCLDLWP', 'CLDTOT', 'T250', 'T200', 'T150', 'T100', 'T050', 'T025', 'T010', 'T005', 'T002', 'T001', 'TTOP', 'U250', 'U150', 'U100', 'U050', 'U025', 'U010', 'U005', 'U002', 'U001', 'UTOP', 'FSNT', 'FLNT','SW_ALBEDO_DIR','SW_ALBEDO_DIF'
  fincl3 = 'PSL','T200','T500','U850','V850','UBOT','VBOT','TREFHT', 'Z700', 'TBOT:M'
  fincl4 = 'FLUT','U200','U850','PRECT','OMEGA500'
  fincl5 = 'PRECT','PRECC','TUQ','TVQ','QFLX','SHFLX','U90M','V90M'
@@ -302,11 +304,11 @@ case_setup() {
     pushd ${CASE_SCRIPTS_DIR}
 
     # Setup some CIME directories
-    echo 'Hello'
+    
     ./xmlchange EXEROOT=${CASE_BUILD_DIR}
     ./xmlchange RUNDIR=${CASE_RUN_DIR}
     ./xmlchange --append CAM_CONFIG_OPTS='-rad rrtmgp'
-    echo 'world!'
+    
     # Short term archiving
     #./xmlchange DOUT_S=${DO_SHORT_TERM_ARCHIVING^^}
     #./xmlchange DOUT_S_ROOT=${CASE_ARCHIVE_DIR}

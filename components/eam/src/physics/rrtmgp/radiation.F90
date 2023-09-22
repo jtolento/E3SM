@@ -605,6 +605,11 @@ contains
                   'Cloud longwave absorption optical depth', &
                   sampling_seq='rad_lwsw', flag_xyfill=.true.)
 
+      ! Band-by-band shortwave fluxes !JPT
+      call addfld('SD', (/'lev   ','swband'/), 'I', '1', &
+                  'Shortwave Downwelling flux', &
+                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
+      
       ! Band-by-band shortwave albedos
       call addfld('SW_ALBEDO_DIR', (/'swband'/), 'I', '1', &
                   'Shortwave direct-beam albedo', &
@@ -613,7 +618,7 @@ contains
                   'Shortwave diffuse-beam albedo', &
                   sampling_seq='rad_lwsw', flag_xyfill=.true.)
 
-      ! get list of active radiation calls
+            ! get list of active radiation calls
       call rad_cnst_get_call_list(active_calls)
 
       ! TODO: what is active_calls and diag?
@@ -1813,6 +1818,7 @@ contains
                   asm(1:ncol,1:nlay,1:nswbands), &
                   ncol, state%lchnk)
 
+      
       ! Compute and output diagnostics for single (550 nm) band
       sw_band_index = get_band_index_sw(550._r8, 'nm')
       do icol = 1,size(tau, 1)
@@ -2350,6 +2356,11 @@ contains
       ! Send heating rates to history buffer
       call outfld('QRS'//diag(icall), qrs(1:ncol,1:pver)/cpair, ncol, state%lchnk)
       call outfld('QRSC'//diag(icall), qrsc(1:ncol,1:pver)/cpair, ncol, state%lchnk)
+
+      ! Output band-by-band spectral fluxes JPT
+      call outfld('SD', &
+                  fluxes%bnd_flux_dn(1:ncol,1:nlay,1:nswbands), &
+                  ncol, state%lchnk)
 
    end subroutine output_fluxes_sw
 
