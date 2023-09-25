@@ -606,8 +606,20 @@ contains
                   sampling_seq='rad_lwsw', flag_xyfill=.true.)
 
       ! Band-by-band shortwave fluxes !JPT
-      call addfld('SD', (/'lev   ','swband'/), 'I', '1', &
+      call addfld('SD', (/'lev   ','swband'/), 'I', 'W/m2', &
                   'Shortwave Downwelling flux', &
+                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
+      call addfld('SU', (/'lev   ','swband'/), 'I', 'W/m2', &
+                  'Shortwave Upwlling flux', &
+                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
+      call addfld('SN', (/'lev   ','swband'/), 'I', 'W/m2', &
+                  'Shortwave Net Flux', &
+                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
+      call addfld('SDDIR', (/'lev   ','swband'/), 'I', 'W/m2', &
+                  'Shortwave Direct Downwelling Flux', &
                   sampling_seq='rad_lwsw', flag_xyfill=.true.)
       
       ! Band-by-band shortwave albedos
@@ -2367,6 +2379,18 @@ contains
       call outfld('SD', &
                   fluxes_allsky_day%bnd_flux_dn(1:ncol,1:nlay,1:nswbands), &
                   ncol, state%lchnk)
+      call outfld('SU', &
+                  fluxes_allsky_day%bnd_flux_up(1:ncol,1:nlay,1:nswbands), &
+                  ncol, state%lchnk)
+
+      call outfld('SN', &
+                  fluxes_allsky_day%bnd_flux_net(1:ncol,1:nlay,1:nswbands), &
+                  ncol, state%lchnk)
+      
+      call outfld('SDDIR', &
+                  fluxes_allsky_day%bnd_flux_dn_dir(1:ncol,1:nlay,1:nswbands), &
+                  ncol, state%lchnk)
+
 
    end subroutine output_fluxes_sw
 
