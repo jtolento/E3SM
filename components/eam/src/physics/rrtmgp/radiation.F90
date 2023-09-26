@@ -622,6 +622,22 @@ contains
                   'Shortwave Direct Downwelling Flux', &
                   sampling_seq='rad_lwsw', flag_xyfill=.true.)
       
+      call addfld('SW_DN_BOA', (/'swband'/), 'I', 'W/m2', &
+                  'Spectral Shortwave Downwelling Flux at Surface', &
+                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
+      call addfld('SW_UP_BOA', (/'swband'/), 'I', 'W/m2', &
+                  'Spectral Shortwave Upwelling Flux at Surface', &
+                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
+      call addfld('SW_DN TOA', (/'swband'/), 'I', 'W/m2', &
+                  'Spectral Shortwave Downwelling Flux at TOA', &
+                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
+      call addfld('SW_UP_TOA', (/'swband'/), 'I', 'W/m2', &
+                  'Spectral Shortwave Downwelling Flux at TOA', &
+                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
+
+
+      
       ! Band-by-band shortwave albedos
       call addfld('SW_ALBEDO_DIR', (/'swband'/), 'I', '1', &
                   'Shortwave direct-beam albedo', &
@@ -1604,6 +1620,8 @@ contains
       ! Inputs
       integer, intent(in) :: ncol
       type(fluxes_t), intent(inout) :: fluxes_allsky, fluxes_clrsky
+      real(r8)  intent(inout) :: bnd_flx_boa_dn, bnd_flx_boa_up !jpt
+      real(r8)  intent(inout) :: bnd_flx_toa_dn, bnd_flx_toa_up !jpt
       real(r8), intent(inout) :: qrs(:,:), qrsc(:,:)
       real(r8), intent(in), dimension(:,:,:) :: gas_vmr
       real(r8), intent(in), dimension(:,:) :: pmid, pint, tmid
@@ -2391,7 +2409,22 @@ contains
                   fluxes_allsky_day%bnd_flux_dn_dir(1:ncol,1:nlay,1:nswbands), &
                   ncol, state%lchnk)
 
+      call outfld('SW_DN_BOA', &
+                  fluxes_allsky_day%bnd_flux_dn(1:ncol,1,1:nswbands), &
+                  ncol, state%lchnk)
 
+      call outfld('SW_DN_TOA', &
+                  fluxes_allsky_day%bnd_flux_dn(1:ncol,nlay,1:nswbands), &
+                  ncol, state%lchnk)
+
+      call outfld('SW_UP_BOA', &
+                  fluxes_allsky_day%bnd_flux_up(1:ncol,1,1:nswbands), &
+                  ncol, state%lchnk)
+
+      call outfld('SW_UP_TOA', &
+                  fluxes_allsky_day%bnd_flux_up(1:ncol,nlay,1:nswbands), &
+                  ncol, state%lchnk)
+      
    end subroutine output_fluxes_sw
 
    !----------------------------------------------------------------------------
