@@ -628,7 +628,7 @@ contains
       call addfld('SW_UP_BOA', (/'swband'/), 'I', 'W/m2', &
                   'Spectral Shortwave Upwelling Flux at Surface', &
                   sampling_seq='rad_lwsw', flag_xyfill=.true.)
-      call addfld('SW_DN TOA', (/'swband'/), 'I', 'W/m2', &
+      call addfld('SW_DN_TOA', (/'swband'/), 'I', 'W/m2', &
                   'Spectral Shortwave Downwelling Flux at TOA', &
                   sampling_seq='rad_lwsw', flag_xyfill=.true.)
       call addfld('SW_UP_TOA', (/'swband'/), 'I', 'W/m2', &
