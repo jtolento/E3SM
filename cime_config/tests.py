@@ -221,7 +221,7 @@ _TESTS = {
     "e3sm_atm_nbfb" : {
         "tests" : (
             "PGN_P1x1.ne4_oQU240.F2010",
-            "TSC.ne4_oQU240.F2010-CICE",
+            "TSC.ne4_oQU240.F2010",
             "MVK_PS.ne4_oQU240.F2010",
             )
         },
@@ -230,6 +230,7 @@ _TESTS = {
         "tests" : (
             "SMS_D_Ld1.T62_oQU240wLI.GMPAS-IAF-PISMF.mpaso-impl_top_drag",
             "SMS_D_Ld1.T62_oQU240.GMPAS-IAF.mpaso-harmonic_mean_drag",
+            "SMS_D_Ld1.T62_oQU240.GMPAS-IAF.mpaso-upwind_advection",
             )
         },
 
@@ -423,6 +424,7 @@ _TESTS = {
                  "SMS.ne4_oQU240.F2010.eam-thetahy_ftype0",
                  "SMS.ne4_oQU240.F2010.eam-thetahy_ftype1",
                  "SMS.ne4_oQU240.F2010.eam-thetahy_ftype2",
+                 "SMS.ne4_oQU240.F2010.eam-thetahy_ftype2_energy",
                  "SMS.ne4_oQU240.F2010.eam-thetahy_ftype4",
                  "SMS.ne4_oQU240.F2010.eam-thetanh_ftype0",
                  "SMS.ne4_oQU240.F2010.eam-thetanh_ftype1",
