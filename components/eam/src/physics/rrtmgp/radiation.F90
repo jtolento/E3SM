@@ -1620,8 +1620,6 @@ contains
       ! Inputs
       integer, intent(in) :: ncol
       type(fluxes_t), intent(inout) :: fluxes_allsky, fluxes_clrsky
-      real(r8)  intent(inout) :: bnd_flx_boa_dn, bnd_flx_boa_up !jpt
-      real(r8)  intent(inout) :: bnd_flx_toa_dn, bnd_flx_toa_up !jpt
       real(r8), intent(inout) :: qrs(:,:), qrsc(:,:)
       real(r8), intent(in), dimension(:,:,:) :: gas_vmr
       real(r8), intent(in), dimension(:,:) :: pmid, pint, tmid
@@ -2395,34 +2393,34 @@ contains
 
       ! Output band-by-band spectral fluxes JPT
       call outfld('SD', &
-                  fluxes_allsky_day%bnd_flux_dn(1:ncol,1:nlay,1:nswbands), &
+                  flux_all%bnd_flux_dn(1:ncol,1:nlay,1:nswbands), &
                   ncol, state%lchnk)
       call outfld('SU', &
-                  fluxes_allsky_day%bnd_flux_up(1:ncol,1:nlay,1:nswbands), &
+                  flux_all%bnd_flux_up(1:ncol,1:nlay,1:nswbands), &
                   ncol, state%lchnk)
 
       call outfld('SN', &
-                  fluxes_allsky_day%bnd_flux_net(1:ncol,1:nlay,1:nswbands), &
+                  flux_all%bnd_flux_net(1:ncol,1:nlay,1:nswbands), &
                   ncol, state%lchnk)
       
       call outfld('SDDIR', &
-                  fluxes_allsky_day%bnd_flux_dn_dir(1:ncol,1:nlay,1:nswbands), &
+                  flux_all%bnd_flux_dn_dir(1:ncol,1:nlay,1:nswbands), &
                   ncol, state%lchnk)
 
       call outfld('SW_DN_BOA', &
-                  fluxes_allsky_day%bnd_flux_dn(1:ncol,1,1:nswbands), &
+                  flux_all%bnd_flux_dn(1:ncol,1,1:nswbands), &
                   ncol, state%lchnk)
 
       call outfld('SW_DN_TOA', &
-                  fluxes_allsky_day%bnd_flux_dn(1:ncol,nlay,1:nswbands), &
+                  flux_all%bnd_flux_dn(1:ncol,nlay,1:nswbands), &
                   ncol, state%lchnk)
 
       call outfld('SW_UP_BOA', &
-                  fluxes_allsky_day%bnd_flux_up(1:ncol,1,1:nswbands), &
+                  flux_all%bnd_flux_up(1:ncol,1,1:nswbands), &
                   ncol, state%lchnk)
 
       call outfld('SW_UP_TOA', &
-                  fluxes_allsky_day%bnd_flux_up(1:ncol,nlay,1:nswbands), &
+                  flux_all%bnd_flux_up(1:ncol,nlay,1:nswbands), &
                   ncol, state%lchnk)
       
    end subroutine output_fluxes_sw
