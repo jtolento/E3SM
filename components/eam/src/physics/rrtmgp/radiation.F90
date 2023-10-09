@@ -614,26 +614,26 @@ contains
                   'Shortwave Upwlling flux', &
                   sampling_seq='rad_lwsw', flag_xyfill=.true.)
 
-      call addfld('SN', (/'lev   ','swband'/), 'I', 'W/m2', &
-                  'Shortwave Net Flux', &
-                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
+      !call addfld('SN', (/'lev   ','swband'/), 'I', 'W/m2', &
+      !            'Shortwave Net Flux', &
+      !            sampling_seq='rad_lwsw', flag_xyfill=.true.)
 
-      call addfld('SDDIR', (/'lev   ','swband'/), 'I', 'W/m2', &
-                  'Shortwave Direct Downwelling Flux', &
-                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
+      !call addfld('SDDIR', (/'lev   ','swband'/), 'I', 'W/m2', &
+      !            'Shortwave Direct Downwelling Flux', &
+      !            sampling_seq='rad_lwsw', flag_xyfill=.true.)
       
-      call addfld('SW_DN_BOA', (/'swband'/), 'I', 'W/m2', &
-                  'Spectral Shortwave Downwelling Flux at Surface', &
-                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
-      call addfld('SW_UP_BOA', (/'swband'/), 'I', 'W/m2', &
-                  'Spectral Shortwave Upwelling Flux at Surface', &
-                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
-      call addfld('SW_DN_TOA', (/'swband'/), 'I', 'W/m2', &
-                  'Spectral Shortwave Downwelling Flux at TOA', &
-                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
-      call addfld('SW_UP_TOA', (/'swband'/), 'I', 'W/m2', &
-                  'Spectral Shortwave Downwelling Flux at TOA', &
-                  sampling_seq='rad_lwsw', flag_xyfill=.true.)
+      !call addfld('SW_DN_BOA', (/'swband'/), 'I', 'W/m2', &
+      !            'Spectral Shortwave Downwelling Flux at Surface', &
+      !            sampling_seq='rad_lwsw', flag_xyfill=.true.)
+      !call addfld('SW_UP_BOA', (/'swband'/), 'I', 'W/m2', &
+      !            'Spectral Shortwave Upwelling Flux at Surface', &
+      !            sampling_seq='rad_lwsw', flag_xyfill=.true.)
+      !call addfld('SW_DN_TOA', (/'swband'/), 'I', 'W/m2', &
+      !            'Spectral Shortwave Downwelling Flux at TOA', &
+      !            sampling_seq='rad_lwsw', flag_xyfill=.true.)
+      !call addfld('SW_UP_TOA', (/'swband'/), 'I', 'W/m2', &
+      !            'Spectral Shortwave Downwelling Flux at TOA', &
+      !            sampling_seq='rad_lwsw', flag_xyfill=.true.)
 
 
 
@@ -1302,7 +1302,6 @@ contains
          ! Allocate shortwave fluxes
          call initialize_fluxes(ncol, nlev_rad+1, nswbands, fluxes_allsky, do_direct=.true.)
          call initialize_fluxes(ncol, nlev_rad+1, nswbands, fluxes_clrsky, do_direct=.true.)
-         call initialize_fluxes(ncol, nlev_rad+1, nswbands, fluxes_allsky_day, do_direct=.true.)
 
          ! Get albedo. This uses CAM routines internally and just provides a
          ! wrapper to improve readability of the code here.
@@ -1433,7 +1432,7 @@ contains
                )
 
                ! Send fluxes to history buffer
-               call output_fluxes_sw(icall, state, fluxes_allsky, fluxes_clrsky, fluxes_allsky_day, qrs,  qrsc) !JPT
+               call output_fluxes_sw(icall, state, fluxes_allsky, fluxes_clrsky, qrs,  qrsc)
             end if
          end do
 
@@ -1446,7 +1445,6 @@ contains
          ! Free memory allocated for shortwave fluxes
          call free_fluxes(fluxes_allsky)
          call free_fluxes(fluxes_clrsky)
-         call free_fluxes(fluxes_allsky_day) !JPT
 
       else
 
@@ -2328,7 +2326,7 @@ contains
    !-------------------------------------------------------------------------------
 
    ! Send shortwave fluxes and heating rates to history buffer
-   subroutine output_fluxes_sw(icall, state, flux_all, flux_clr, fluxes_allsky_day, qrs, qrsc) !JPT +fluxes
+   subroutine output_fluxes_sw(icall, state, flux_all, flux_clr, qrs, qrsc)
       use physconst, only: cpair
       use physics_types, only: physics_state
       use cam_history, only: outfld
@@ -2339,7 +2337,6 @@ contains
       type(physics_state), intent(in) :: state
       type(fluxes_t), intent(in) :: flux_all
       type(fluxes_t), intent(in) :: flux_clr
-      type(fluxes_t), intent(in) :: fluxes_allsky_day ! JPT
       real(r8), intent(in) :: qrs(:,:), qrsc(:,:)
 
 
@@ -2399,29 +2396,29 @@ contains
                   flux_all%bnd_flux_up(1:ncol,1:nlay,1:nswbands), &
                   ncol, state%lchnk)
 
-      call outfld('SN', &
-                  flux_all%bnd_flux_net(1:ncol,1:nlay,1:nswbands), &
-                  ncol, state%lchnk)
-      
-      call outfld('SDDIR', &
-                  flux_all%bnd_flux_dn_dir(1:ncol,1:nlay,1:nswbands), &
-                  ncol, state%lchnk)
+      !call outfld('SN', &
+      !            flux_all%bnd_flux_net(1:ncol,1:nlay,1:nswbands), &
+      !            ncol, state%lchnk)
+      !
+      !call outfld('SDDIR', &
+      !            flux_all%bnd_flux_dn_dir(1:ncol,1:nlay,1:nswbands), &
+      !            ncol, state%lchnk)
 
-      call outfld('SW_DN_BOA', &
-                  flux_all%bnd_flux_dn(1:ncol,1,1:nswbands), &
-                  ncol, state%lchnk)
+      !call outfld('SW_DN_BOA', &
+      !            flux_all%bnd_flux_dn(1:ncol,1,1:nswbands), &
+      !            ncol, state%lchnk)
 
-      call outfld('SW_DN_TOA', &
-                  flux_all%bnd_flux_dn(1:ncol,nlay,1:nswbands), &
-                  ncol, state%lchnk)
+      !call outfld('SW_DN_TOA', &
+      !            flux_all%bnd_flux_dn(1:ncol,nlay,1:nswbands), &
+      !            ncol, state%lchnk)
 
-      call outfld('SW_UP_BOA', &
-                  flux_all%bnd_flux_up(1:ncol,1,1:nswbands), &
-                  ncol, state%lchnk)
+      !call outfld('SW_UP_BOA', &
+      !            flux_all%bnd_flux_up(1:ncol,1,1:nswbands), &
+      !            ncol, state%lchnk)
 
-      call outfld('SW_UP_TOA', &
-                  flux_all%bnd_flux_up(1:ncol,nlay,1:nswbands), &
-                  ncol, state%lchnk)
+      !call outfld('SW_UP_TOA', &
+      !            flux_all%bnd_flux_up(1:ncol,nlay,1:nswbands), &
+      !            ncol, state%lchnk)
       
    end subroutine output_fluxes_sw
 
