@@ -18,14 +18,14 @@ main() {
 # --- Configuration flags ----
 
 # Machine and project
-readonly MACHINE=cori-knl
+readonly MACHINE=pm-cpu
 readonly PROJECT="e3sm"
 
 # Simulation
-readonly COMPSET="WCYCL1850"
+readonly COMPSET="F20TR"
 readonly RESOLUTION="ne30pg2_EC30to60E2r2"
 # BEFORE RUNNING : CHANGE the following CASE_NAME to desired value
-readonly CASE_NAME="your_casename"
+readonly CASE_NAME="dmy_vrb"
 # If this is part of a simulation campaign, ask your group lead about using a case_group label
 # readonly CASE_GROUP=""
 
@@ -36,8 +36,8 @@ readonly CHERRY=( )
 readonly DEBUG_COMPILE=false
 
 # Run options
-readonly MODEL_START_TYPE="hybrid"  # 'initial', 'continue', 'branch', 'hybrid'
-readonly START_DATE="0001-01-01"
+readonly MODEL_START_TYPE="initial"  # 'initial', 'continue', 'branch', 'hybrid'
+readonly START_DATE="2010-06-01"
 
 # Additional options for 'branch' and 'hybrid'
 readonly GET_REFCASE=TRUE
@@ -46,8 +46,10 @@ readonly RUN_REFCASE="20210625.v2rc3c-GWD.piControl.ne30pg2_EC30to60E2r2.chrysal
 readonly RUN_REFDATE="1001-01-01"   # same as MODEL_START_DATE for 'branch', can be different for 'hybrid'
 
 # Set paths
-readonly CODE_ROOT="${HOME}/E3SMv2/code/${CHECKOUT}"
-readonly CASE_ROOT="/global/cscratch1/sd/${USER}/E3SMv2/${CASE_NAME}"
+#readonly CODE_ROOT="${HOME}/E3SMv2/code/${CHECKOUT}"
+#readonly CASE_ROOT="/global/cscratch1/sd/${USER}/E3SMv2/${CASE_NAME}"
+readonly CODE_ROOT="${HOME}/E3SM"
+readonly CASE_ROOT="${SCRATCH}/E3SM/${CASE_NAME}"
 
 # Sub-directories
 readonly CASE_BUILD_DIR=${CASE_ROOT}/build
@@ -70,12 +72,13 @@ if [ "${run}" != "production" ]; then
   readonly CASE_SCRIPTS_DIR=${CASE_ROOT}/tests/${run}/case_scripts
   readonly CASE_RUN_DIR=${CASE_ROOT}/tests/${run}/run
   readonly PELAYOUT=${layout}
-  readonly WALLTIME="2:00:00"
+  readonly WALLTIME="00:15:00"
   readonly STOP_OPTION=${units}
   readonly STOP_N=${length}
   readonly REST_OPTION=${STOP_OPTION}
   readonly REST_N=${STOP_N}
-  readonly RESUBMIT=${resubmit}
+  #readonly RESUBMIT=${resubmit}
+  readonly RESUBMIT=0
   readonly DO_SHORT_TERM_ARCHIVING=false
 
 else
@@ -113,7 +116,7 @@ do_case_submit=true
 umask 022
 
 # Fetch code from Github
-fetch_code
+#fetch_code
 
 # Create case
 create_newcase
@@ -150,7 +153,7 @@ cat << EOF >> user_nl_eam
  avgflag_pertape = 'A','A','I','A','A','A','I'
  fexcl1 = 'CFAD_SR532_CAL', 'LINOZ_DO3', 'LINOZ_DO3_PSC', 'LINOZ_O3CLIM', 'LINOZ_O3COL', 'LINOZ_SSO3', 'hstobie_linoz'
  fincl1 = 'extinct_sw_inp','extinct_lw_bnd7','extinct_lw_inp','CLD_CAL', 'TREFMNAV', 'TREFMXAV'
- fincl2 = 'FLUT','PRECT','U200','V200','U850','V850','Z500','OMEGA500','UBOT','VBOT','TREFHT','TREFHTMN:M','TREFHTMX:X','QREFHT','TS','PS','TMQ','TUQ','TVQ','TOZ', 'FLDS', 'FLNS', 'FSDS', 'FSNS', 'SHFLX', 'LHFLX', 'TGCLDCWP', 'TGCLDIWP', 'TGCLDLWP', 'CLDTOT', 'T250', 'T200', 'T150', 'T100', 'T050', 'T025', 'T010', 'T005', 'T002', 'T001', 'TTOP', 'U250', 'U150', 'U100', 'U050', 'U025', 'U010', 'U005', 'U002', 'U001', 'UTOP', 'FSNT', 'FLNT'
+ fincl2 = 'FLUT','PRECT','U200','V200','U850','V850','Z500','OMEGA500','UBOT','VBOT','TREFHT','TREFHTMN:M','TREFHTMX:X','QREFHT','TS','PS','TMQ','TUQ','TVQ','TOZ', 'FLDS', 'FLNS', 'FSDS', 'FSNS', 'SHFLX', 'LHFLX', 'TGCLDCWP', 'TGCLDIWP', 'TGCLDLWP', 'CLDTOT', 'T250', 'T200', 'T150', 'T100', 'T050', 'T025', 'T010', 'T005', 'T002', 'T001', 'TTOP', 'U250', 'U150', 'U100', 'U050', 'U025', 'U010', 'U005', 'U002', 'U001', 'UTOP', 'FSNT', 'FLNT','FOO_JPT'
  fincl3 = 'PSL','T200','T500','U850','V850','UBOT','VBOT','TREFHT', 'Z700', 'TBOT:M'
  fincl4 = 'FLUT','U200','U850','PRECT','OMEGA500'
  fincl5 = 'PRECT','PRECC','TUQ','TVQ','QFLX','SHFLX','U90M','V90M'
@@ -303,6 +306,29 @@ case_setup() {
     ./xmlchange DOUT_S=${DO_SHORT_TERM_ARCHIVING^^}
     ./xmlchange DOUT_S_ROOT=${CASE_ARCHIVE_DIR}
 
+    #Custom stuff sent over from Ben
+    export NPROCS_ATM=512
+    export NPROCS_LND=512
+    export NPROCS_ROF=512
+    export NPROCS_ICE=512
+    export NPROCS_OCN=512
+    export NPROCS_WAV=32
+    export NPROCS_CPL=512
+    export MAXMPITASKS=128
+    export MAXTASKS=256
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_CPL  --val $NPROCS_CPL
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_ATM  --val $NPROCS_ATM
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_LND  --val $NPROCS_LND
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_ROF  --val $NPROCS_ROF
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_ICE  --val $NPROCS_ICE
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_OCN  --val $NPROCS_OCN
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_GLC  --val $NPROCS_GLC
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_WAV  --val $NPROCS_WAV
+    ./xmlchange --file env_mach_pes.xml  --id NTHRDS  --val 1
+    # Turn on RRTMGP JPT
+    ./xmlchange --append CAM_CONFIG_OPTS='-rad rrtmgp' # JPT - Use RRTMGP INSTEAD     
+
+    
     # Build with COSP, except for a data atmosphere (datm)
     if [ `./xmlquery --value COMP_ATM` == "datm"  ]; then
       echo $'\nThe specified configuration uses a data atmosphere, so cannot activate COSP simulator\n'

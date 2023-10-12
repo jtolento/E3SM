@@ -101,7 +101,7 @@ module radiation
    ! the history buffer too so that we can annotate them with a description of what
    ! they are, rather than expecting the user to know what they are from the pbuf
    ! fields.
-   logical :: spectralflux  = .false.  ! calculate fluxes (up and down) per band.
+   logical :: spectralflux  = .true.  ! calculate fluxes (up and down) per band. !JPT
 
    ! Flag to indicate whether or not to use the radiation timestep for solar zenith
    ! angle calculations. If true, use the radiation timestep for all solar zenith
@@ -604,6 +604,7 @@ contains
       call addfld('CLOUD_TAU_LW', (/'lev   ','lwband'/), 'I', '1', &
                   'Cloud longwave absorption optical depth', &
                   sampling_seq='rad_lwsw', flag_xyfill=.true.)
+      
 
       ! Band-by-band shortwave albedos
       call addfld('SW_ALBEDO_DIR', (/'swband'/), 'I', '1', &
@@ -712,6 +713,11 @@ contains
             call addfld('SWCF'//diag(icall),     horiz_only, 'A', 'W/m2', &
                         'Shortwave cloud forcing', &
                         sampling_seq='rad_lwsw', flag_xyfill=.true.)
+            !JPT Custom variables
+            call addfld('FOO_JPT'//diag(icall), horiz_only,  'A',  'W/m2', &
+                        'Dummy Variable set to FSDS', &
+                        sampling_seq='rad_lwsw', flag_xyfill=.true.)
+)
 
 
             if (history_amwg) then
@@ -2350,6 +2356,9 @@ contains
       ! Send heating rates to history buffer
       call outfld('QRS'//diag(icall), qrs(1:ncol,1:pver)/cpair, ncol, state%lchnk)
       call outfld('QRSC'//diag(icall), qrsc(1:ncol,1:pver)/cpair, ncol, state%lchnk)
+
+      !JPT Custom output fields
+      call outfld('FOO_JPT'//diag(icall), flux_all%flux_dn(1:ncol,kbot+1), ncol, state%lchnk)
 
    end subroutine output_fluxes_sw
 
