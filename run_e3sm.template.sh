@@ -25,7 +25,7 @@ readonly PROJECT="e3sm"
 readonly COMPSET="F20TR"
 readonly RESOLUTION="ne30pg2_EC30to60E2r2"
 # BEFORE RUNNING : CHANGE the following CASE_NAME to desired value
-readonly CASE_NAME="dmy_vrb"
+readonly CASE_NAME="one_mth_tst"
 # If this is part of a simulation campaign, ask your group lead about using a case_group label
 # readonly CASE_GROUP=""
 
@@ -67,12 +67,12 @@ if [ "${run}" != "production" ]; then
   layout=${tmp[0]}
   units=${tmp[2]}
   resubmit=$(( ${tmp[1]%%x*} -1 ))
-  length=${tmp[1]##*x}
+  length=30
 
   readonly CASE_SCRIPTS_DIR=${CASE_ROOT}/tests/${run}/case_scripts
   readonly CASE_RUN_DIR=${CASE_ROOT}/tests/${run}/run
   readonly PELAYOUT=${layout}
-  readonly WALLTIME="00:15:00"
+  readonly WALLTIME="00:45:00"
   readonly STOP_OPTION=${units}
   readonly STOP_N=${length}
   readonly REST_OPTION=${STOP_OPTION}
@@ -307,24 +307,24 @@ case_setup() {
     ./xmlchange DOUT_S_ROOT=${CASE_ARCHIVE_DIR}
 
     #Custom stuff sent over from Ben
-    export NPROCS_ATM=512
-    export NPROCS_LND=512
-    export NPROCS_ROF=512
-    export NPROCS_ICE=512
-    export NPROCS_OCN=512
-    export NPROCS_WAV=32
-    export NPROCS_CPL=512
-    export MAXMPITASKS=128
-    export MAXTASKS=256
-    ./xmlchange --file env_mach_pes.xml  --id NTASKS_CPL  --val $NPROCS_CPL
-    ./xmlchange --file env_mach_pes.xml  --id NTASKS_ATM  --val $NPROCS_ATM
-    ./xmlchange --file env_mach_pes.xml  --id NTASKS_LND  --val $NPROCS_LND
-    ./xmlchange --file env_mach_pes.xml  --id NTASKS_ROF  --val $NPROCS_ROF
-    ./xmlchange --file env_mach_pes.xml  --id NTASKS_ICE  --val $NPROCS_ICE
-    ./xmlchange --file env_mach_pes.xml  --id NTASKS_OCN  --val $NPROCS_OCN
-    ./xmlchange --file env_mach_pes.xml  --id NTASKS_GLC  --val $NPROCS_GLC
-    ./xmlchange --file env_mach_pes.xml  --id NTASKS_WAV  --val $NPROCS_WAV
-    ./xmlchange --file env_mach_pes.xml  --id NTHRDS  --val 1
+    #export NPROCS_ATM=512
+    #export NPROCS_LND=512
+    #export NPROCS_ROF=512
+    #export NPROCS_ICE=512
+    #export NPROCS_OCN=512
+    #export NPROCS_WAV=32
+    #export NPROCS_CPL=512
+    #export MAXMPITASKS=128
+    #export MAXTASKS=256
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_CPL  --val $NPROCS_CPL
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_ATM  --val $NPROCS_ATM
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_LND  --val $NPROCS_LND
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_ROF  --val $NPROCS_ROF
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_ICE  --val $NPROCS_ICE
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_OCN  --val $NPROCS_OCN
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_GLC  --val $NPROCS_GLC
+    #./xmlchange --file env_mach_pes.xml  --id NTASKS_WAV  --val $NPROCS_WAV
+    #./xmlchange --file env_mach_pes.xml  --id NTHRDS  --val 1
     # Turn on RRTMGP JPT
     ./xmlchange --append CAM_CONFIG_OPTS='-rad rrtmgp' # JPT - Use RRTMGP INSTEAD     
 

@@ -713,11 +713,11 @@ contains
             call addfld('SWCF'//diag(icall),     horiz_only, 'A', 'W/m2', &
                         'Shortwave cloud forcing', &
                         sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
             !JPT Custom variables
             call addfld('FOO_JPT'//diag(icall), horiz_only,  'A',  'W/m2', &
                         'Dummy Variable set to FSDS', &
                         sampling_seq='rad_lwsw', flag_xyfill=.true.)
-)
 
 
             if (history_amwg) then
