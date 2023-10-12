@@ -719,6 +719,14 @@ contains
                         'Dummy Variable set to FSDS', &
                         sampling_seq='rad_lwsw', flag_xyfill=.true.)
 
+            call addfld('SW_UP_BND', (/'lev   ','swband'/), 'A', 'W/m2', &
+                        'Spectral Shortwave Upwelling flux', &
+                        sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
+            call addfld('SW_DN_BND', (/'lev   ','swband'/), 'A', 'W/m2', &
+                        'Spectral Shortwave Downwelling flux', &
+                        sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
 
             if (history_amwg) then
                call add_default('SOLIN'//diag(icall),   1, ' ')
@@ -2359,7 +2367,13 @@ contains
 
       !JPT Custom output fields
       call outfld('FOO_JPT'//diag(icall), flux_all%flux_dn(1:ncol,kbot+1), ncol, state%lchnk)
-
+      call outfld('SW_UP_BND',  &
+                  flux_all%bnd_flux_up(1:ncol,ktop,1:nswbands), &
+                  ncol, state%lchnk)
+      call outfld('SW_DN_BND',  &
+                  flux_all%bnd_flux_dn(1:ncol,ktop,1:nswbands), &
+                  ncol, state%lchnk)
+      
    end subroutine output_fluxes_sw
 
    !----------------------------------------------------------------------------
