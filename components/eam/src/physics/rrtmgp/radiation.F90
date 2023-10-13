@@ -2368,10 +2368,10 @@ contains
       !JPT Custom output fields
       call outfld('FOO_JPT'//diag(icall), flux_all%flux_dn(1:ncol,kbot+1), ncol, state%lchnk)
       call outfld('SW_UP_BND',  &
-                  flux_all%bnd_flux_up(1:ncol,ktop,1:nswbands), &
+                  flux_all%bnd_flux_up(1:ncol,ktop:kbot+1,1:nswbands), &
                   ncol, state%lchnk)
       call outfld('SW_DN_BND',  &
-                  flux_all%bnd_flux_dn(1:ncol,ktop,1:nswbands), &
+                  flux_all%bnd_flux_dn(1:ncol,ktop:kbot+1,1:nswbands), &
                   ncol, state%lchnk)
       
    end subroutine output_fluxes_sw

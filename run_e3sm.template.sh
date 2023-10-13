@@ -25,7 +25,7 @@ readonly PROJECT="e3sm"
 readonly COMPSET="F20TR"
 readonly RESOLUTION="ne30pg2_EC30to60E2r2"
 # BEFORE RUNNING : CHANGE the following CASE_NAME to desired value
-readonly CASE_NAME="foo"
+readonly CASE_NAME="spc_up_dn"
 # If this is part of a simulation campaign, ask your group lead about using a case_group label
 # readonly CASE_GROUP=""
 
@@ -72,7 +72,7 @@ if [ "${run}" != "production" ]; then
   readonly CASE_SCRIPTS_DIR=${CASE_ROOT}/tests/${run}/case_scripts
   readonly CASE_RUN_DIR=${CASE_ROOT}/tests/${run}/run
   readonly PELAYOUT=${layout}
-  readonly WALLTIME="00:45:00"
+  readonly WALLTIME="00:30:00"
   readonly STOP_OPTION=${units}
   readonly STOP_N=${length}
   readonly REST_OPTION=${STOP_OPTION}
