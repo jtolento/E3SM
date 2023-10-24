@@ -718,14 +718,28 @@ contains
             call addfld('FOO_JPT'//diag(icall), horiz_only,  'A',  'W/m2', &
                         'Dummy Variable set to FSDS', &
                         sampling_seq='rad_lwsw', flag_xyfill=.true.)
-
-            call addfld('SW_UP_BND', (/'lev   ','swband'/), 'A', 'W/m2', &
+            call addfld('SW_UP_BND', (/'ilev   ','swband'/), 'A', 'W/m2', &
                         'Spectral Shortwave Upwelling flux', &
                         sampling_seq='rad_lwsw', flag_xyfill=.true.)
-
-            call addfld('SW_DN_BND', (/'lev   ','swband'/), 'A', 'W/m2', &
+            call addfld('SW_DN_BND', (/'ilev   ','swband'/), 'A', 'W/m2', &
                         'Spectral Shortwave Downwelling flux', &
                         sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
+            call addfld('SW_DN_BOA_BND', (/'swband'/),  'A',  'W/m2', &
+                        'Spectral Shortwave Downwelling Flux at Surface', &
+                        sampling_seq='rad_lwsw', flag_xyfill=.true.)
+            call addfld('SW_UP_BOA_BND', (/'swband'/), 'A',  'W/m2', &
+                        'Spectral Shortwave Upwelling Flux at Surface', &
+                        sampling_seq='rad_lwsw', flag_xyfill=.true.)
+            call addfld('SW_DN_TOA_BND', (/'swband'/), 'A',  'W/m2', &
+                        'Spectral Shortwave Downwelling Flux at top of atmosphere', &
+                        sampling_seq='rad_lwsw', flag_xyfill=.true.)
+            call addfld('SW_UP_TOA_BND', (/'swband'/),  'A',  'W/m2', &
+                        'Spectral Shortwave Downwelling Flux at top of atmosphere', &
+                        sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
+
+
 
 
             if (history_amwg) then
@@ -2373,7 +2387,18 @@ contains
       call outfld('SW_DN_BND',  &
                   flux_all%bnd_flux_dn(1:ncol,ktop:kbot+1,1:nswbands), &
                   ncol, state%lchnk)
-      
+      call outfld('SW_DN_BOA_BND', &
+                  bnd_flux_dn(1:ncol,kbot+1,1:nswbands), &
+                  ncol, state%lchnk)
+      call outfld('SW_DN_TOA_BND', &
+                  bnd_flux_dn(1:ncol,ktop,1:nswbands), &
+                  ncol, state%lchnk)
+      call outfld('SW_UP_BOA_BND', &
+                  bnd_flux_up(1:ncol,kbot+1,1:nswbands), &
+                  ncol, state%lchnk)
+      call outfld('SW_UP_TOA_BND', &
+                  bnd_flux_up(1:ncol,ktop,1:nswbands), &
+                  ncol, state%lchnk)
    end subroutine output_fluxes_sw
 
    !----------------------------------------------------------------------------

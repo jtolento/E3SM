@@ -5727,7 +5727,7 @@ end subroutine print_active_fldlst
     logical :: hist_fld_col_active(numcols)
 
     ! Local variables
-    integer                         :: ff          ! masterlist index pointer
+    integer                         :: ff          ! masterlistindex pointer
     integer                         :: i
     integer                         :: t           ! history file (tape) index
     integer                         :: f           ! field index
