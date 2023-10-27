@@ -2388,16 +2388,16 @@ contains
                   flux_all%bnd_flux_dn(1:ncol,ktop:kbot+1,1:nswbands), &
                   ncol, state%lchnk)
       call outfld('SW_DN_BOA_BND', &
-                  bnd_flux_dn(1:ncol,kbot+1,1:nswbands), &
+                  flux_all%bnd_flux_dn(1:ncol,kbot+1,1:nswbands), &
                   ncol, state%lchnk)
       call outfld('SW_DN_TOA_BND', &
-                  bnd_flux_dn(1:ncol,ktop,1:nswbands), &
+                  flux_all%bnd_flux_dn(1:ncol,ktop,1:nswbands), &
                   ncol, state%lchnk)
       call outfld('SW_UP_BOA_BND', &
-                  bnd_flux_up(1:ncol,kbot+1,1:nswbands), &
+                  flux_all%bnd_flux_up(1:ncol,kbot+1,1:nswbands), &
                   ncol, state%lchnk)
       call outfld('SW_UP_TOA_BND', &
-                  bnd_flux_up(1:ncol,ktop,1:nswbands), &
+                  flux_all%bnd_flux_up(1:ncol,ktop,1:nswbands), &
                   ncol, state%lchnk)
    end subroutine output_fluxes_sw
 
