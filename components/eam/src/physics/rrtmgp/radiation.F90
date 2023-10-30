@@ -2026,20 +2026,21 @@ contains
          ! each column.
          do icol = 1,size(fluxes%bnd_flux_dn, 1)
 
+         ! adjust ratio of band 5 split to more accurate partition. 
             ! Direct fluxes
             cam_out%soll(icol) &
                = sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,1:9)) &
-               + 0.5_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
+               + 0.456#_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
             cam_out%sols(icol) &
-               = 0.5_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
+               = 0.544_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
                + sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,11:14))
 
             ! Diffuse fluxes
             cam_out%solld(icol) &
                = sum(flux_dn_diffuse(icol,kbot+1,1:9)) &
-               + 0.5_r8 * flux_dn_diffuse(icol,kbot+1,10)
+               + 0.437_r8 * flux_dn_diffuse(icol,kbot+1,10)
             cam_out%solsd(icol) &
-               = 0.5_r8 * flux_dn_diffuse(icol,kbot+1,10) &
+               = 0.563_r8 * flux_dn_diffuse(icol,kbot+1,10) &
                + sum(flux_dn_diffuse(icol,kbot+1,11:14))
 
             ! Net shortwave flux at surface
