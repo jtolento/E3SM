@@ -2030,17 +2030,17 @@ contains
             ! Direct fluxes
             cam_out%soll(icol) &
                = sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,1:9)) &
-               + 0.456#_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
+               + 0.458_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
             cam_out%sols(icol) &
-               = 0.544_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
+               = 0.542_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
                + sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,11:14))
 
             ! Diffuse fluxes
             cam_out%solld(icol) &
                = sum(flux_dn_diffuse(icol,kbot+1,1:9)) &
-               + 0.437_r8 * flux_dn_diffuse(icol,kbot+1,10)
+               + 0.438_r8 * flux_dn_diffuse(icol,kbot+1,10)
             cam_out%solsd(icol) &
-               = 0.563_r8 * flux_dn_diffuse(icol,kbot+1,10) &
+               = 0.562_r8 * flux_dn_diffuse(icol,kbot+1,10) &
                + sum(flux_dn_diffuse(icol,kbot+1,11:14))
 
             ! Net shortwave flux at surface
