@@ -2278,8 +2278,8 @@ contains
             ! Band straddles the visible to near-infrared transition, so we take
             ! the albedo to be the average of the visible and near-infrared
             ! broadband albedos
-            albedo_dir(iband,1:ncol) = 0.5 * (cam_in%aldir(1:ncol) + cam_in%asdir(1:ncol))
-            albedo_dif(iband,1:ncol) = 0.5 * (cam_in%aldif(1:ncol) + cam_in%asdif(1:ncol))
+            albedo_dir(iband,1:ncol) = (0.458 * cam_in%aldir(1:ncol)) + (0.542 * cam_in%asdir(1:ncol))
+            albedo_dif(iband,1:ncol) = (0.438 * cam_in%aldif(1:ncol)) + (0.562 * cam_in%asdif(1:ncol))
 
          end if
       end do
