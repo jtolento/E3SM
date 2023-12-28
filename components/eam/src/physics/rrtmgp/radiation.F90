@@ -2030,17 +2030,17 @@ contains
             ! Direct fluxes
             cam_out%soll(icol) &
                = sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,1:9)) &
-               + 0.458_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
+               + 0.5_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
             cam_out%sols(icol) &
-               = 0.542_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
+               = 0.5_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
                + sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,11:14))
 
             ! Diffuse fluxes
             cam_out%solld(icol) &
                = sum(flux_dn_diffuse(icol,kbot+1,1:9)) &
-               + 0.438_r8 * flux_dn_diffuse(icol,kbot+1,10)
+               + 0.5_r8 * flux_dn_diffuse(icol,kbot+1,10)
             cam_out%solsd(icol) &
-               = 0.562_r8 * flux_dn_diffuse(icol,kbot+1,10) &
+               = 0.5_r8 * flux_dn_diffuse(icol,kbot+1,10) &
                + sum(flux_dn_diffuse(icol,kbot+1,11:14))
 
             ! Net shortwave flux at surface
@@ -2278,8 +2278,8 @@ contains
             ! Band straddles the visible to near-infrared transition, so we take
             ! the albedo to be the average of the visible and near-infrared
             ! broadband albedos
-            albedo_dir(iband,1:ncol) = (0.458 * cam_in%aldir(1:ncol)) + (0.542 * cam_in%asdir(1:ncol))
-            albedo_dif(iband,1:ncol) = (0.438 * cam_in%aldif(1:ncol)) + (0.562 * cam_in%asdif(1:ncol))
+            albedo_dir(iband,1:ncol) = (0.5 * cam_in%aldir(1:ncol)) + (0.5 * cam_in%asdir(1:ncol))
+            albedo_dif(iband,1:ncol) = (0.5 * cam_in%aldif(1:ncol)) + (0.5 * cam_in%asdif(1:ncol))
 
          end if
       end do
