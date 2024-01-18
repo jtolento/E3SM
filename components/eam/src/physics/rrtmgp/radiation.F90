@@ -635,6 +635,20 @@ contains
             call addfld('SOLSD'//diag(icall), horiz_only, 'A',   'W/m2', &
                         'Solar downward visible diffuse to surface', &
                         sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
+            call addfld('SOLLSYM'//diag(icall),  horiz_only, 'A',   'W/m2', &
+                        'Solar downward near infrared direct to surface (Symmeteric)', &
+                        sampling_seq='rad_lwsw', flag_xyfill=.true.)
+            call addfld('SOLSSYM'//diag(icall),  horiz_only, 'A',   'W/m2', &
+                        'Solar downward visible direct to surface (Symmeteric)', &
+                        sampling_seq='rad_lwsw', flag_xyfill=.true.)
+            call addfld('SOLLDSYM'//diag(icall), horiz_only, 'A',   'W/m2', &
+			'Solar downward near infrared diffuse to surface (Symmeteric)',&
+			sampling_seq='rad_lwsw', flag_xyfill=.true.)
+            call addfld('SOLSDSYM'//diag(icall), horiz_only, 'A',   'W/m2', &
+                        'Solar downward visible diffuse to surface (Symmeteric)', &
+                        sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
             call addfld('QRS'//diag(icall),   (/ 'lev' /), 'A', 'K/s', &
                         'Solar heating rate', &
                         sampling_seq='rad_lwsw', flag_xyfill=.true.)
@@ -1435,7 +1449,7 @@ contains
          call set_net_fluxes_sw(fluxes_allsky, fsds, fsns, fsnt)
 
          ! Set surface fluxes that are used by the land model
-         call export_surface_fluxes(fluxes_allsky, cam_out, 'shortwave')
+         call export_surface_fluxes(fluxes_allsky, cam_out, 'shortwave', icall, state) !jpt +icall,state
 
          ! Free memory allocated for shortwave fluxes
          call free_fluxes(fluxes_allsky)
@@ -1522,7 +1536,7 @@ contains
          call set_net_fluxes_lw(fluxes_allsky, flns, flnt)
 
          ! Export surface fluxes that are used by the land model
-         call export_surface_fluxes(fluxes_allsky, cam_out, 'longwave')
+         call export_surface_fluxes(fluxes_allsky, cam_out, 'longwave', icall, state) ! JPT +icall,state
 
          ! Free memory allocated for shortwave fluxes
          call free_fluxes(fluxes_allsky)
@@ -1978,16 +1992,28 @@ contains
 
    !----------------------------------------------------------------------------
 
-   subroutine export_surface_fluxes(fluxes, cam_out, band)
+   subroutine export_surface_fluxes(fluxes, cam_out, band, icall, state) !JPT +icall,state
       use camsrfexch, only: cam_out_t
-
+      use cam_history, only: outfld !JPT
+      
+      use physics_types, only: physics_state  !JPT
       type(fluxes_t), intent(in) :: fluxes
       type(cam_out_t), intent(inout) :: cam_out
       character(len=*), intent(in) :: band
       integer :: icol
+      integer :: ncol !JPT
+      integer, intent(in) :: icall
+      type(physics_state), intent(in) :: state
+      !real(r8), intent(inout) :: fsds(:)
+      real(r8), dimension(size(fluxes%bnd_flux_dn,1)) :: solssym !JPT
+      real(r8), dimension(size(fluxes%bnd_flux_dn,1)) :: solsdsym !JPT
+      real(r8), dimension(size(fluxes%bnd_flux_dn,1)) :: sollsym !JPT
+      real(r8), dimension(size(fluxes%bnd_flux_dn,1)) :: solldsym !JPT
       real(r8), dimension(size(fluxes%bnd_flux_dn,1), &
                           size(fluxes%bnd_flux_dn,2), &
                           size(fluxes%bnd_flux_dn,3)) :: flux_dn_diffuse
+
+       ncol = state%ncol !jpt
 
       ! TODO: check this code! This seems to differ from what is in RRTMG.
       !
@@ -2043,6 +2069,23 @@ contains
                = 0.562_r8 * flux_dn_diffuse(icol,kbot+1,10) &
                + sum(flux_dn_diffuse(icol,kbot+1,11:14))
 
+                    ! adjust ratio of band 5 split to more accurate partition.                      
+            ! Symmetric Direct fluxes
+            sollsym(icol) &
+               = sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,1:9)) &
+               + 0.5_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
+            solssym(icol) &
+               = 0.5_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
+               + sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,11:14))
+
+            ! Symmetric Diffuse fluxes
+            solldsym(icol) &
+               = sum(flux_dn_diffuse(icol,kbot+1,1:9)) &
+               + 0.5_r8 * flux_dn_diffuse(icol,kbot+1,10)
+            solsdsym(icol) &
+               = 0.5_r8 * flux_dn_diffuse(icol,kbot+1,10) &
+               + sum(flux_dn_diffuse(icol,kbot+1,11:14))
+            
             ! Net shortwave flux at surface
             cam_out%netsw(icol) = fluxes%flux_net(icol,kbot+1)
          end do
@@ -2054,6 +2097,16 @@ contains
          call endrun('flux_type ' // band // ' not known.')
       end if
 
+
+      !call outfld('SWCF'//diag(icall), cloud_radiative_effect, ncol, state%lchnk)
+      call outfld('SOLS'//diag(icall), cam_out%sols, ncol, state%lchnk) !JPT
+      call outfld('SOLL'//diag(icall), cam_out%soll, ncol, state%lchnk) !JPT
+      call outfld('SOLLD'//diag(icall), cam_out%solld, ncol, state%lchnk) !JPT
+      call outfld('SOLSD'//diag(icall), cam_out%solsd, ncol, state%lchnk) !JPT
+      call outfld('SOLSSYM'//diag(icall), solssym, ncol, state%lchnk) !JPT
+      call outfld('SOLLSYM'//diag(icall), sollsym, ncol, state%lchnk) !JPT
+      call outfld('SOLLDSYM'//diag(icall), solldsym, ncol, state%lchnk) !JPT
+      call outfld('SOLSDSYM'//diag(icall), solsdsym, ncol, state%lchnk) !JPT 
    end subroutine export_surface_fluxes
 
    !----------------------------------------------------------------------------
@@ -2325,9 +2378,12 @@ contains
       use physconst, only: cpair
       use physics_types, only: physics_state
       use cam_history, only: outfld
+      !use camsrfexch, only: cam_out_t ! JPT
+      !type(cam_out_t), intent(inout) :: cam_flx !JPT
 
       integer, intent(in) :: icall
       type(physics_state), intent(in) :: state
+      !type(fluxes_t), intent(in) :: flxs ! JPT
       type(fluxes_t), intent(in) :: flux_all
       type(fluxes_t), intent(in) :: flux_clr
       real(r8), intent(in) :: qrs(:,:), qrsc(:,:)
@@ -2338,6 +2394,10 @@ contains
       ! Working variables
       integer :: ncol
       integer :: ktop_rad = 1
+
+      !real(r8), dimension(size(flxs%bnd_flux_dn,1), &
+      !                    size(flxs%bnd_flux_dn,2), &
+      !                    size(flxs%bnd_flux_dn,3)) :: flux_dn_diffuse
 
       ncol = state%ncol
 
@@ -2400,6 +2460,30 @@ contains
       call outfld('SW_UP_TOA_BND', &
                   flux_all%bnd_flux_up(1:ncol,ktop,1:nswbands), &
                   ncol, state%lchnk)
+
+      !flux_dn_diffuse = fluxes%bnd_flux_dn - fluxes%bnd_flux_dn_dir
+      !do icol = 1,size(fluxes%bnd_flux_dn, 1)
+      !   ! Direct fluxes 
+      !   soll(icol) &
+      !       = sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,1:9)) &
+      !        + 0.458_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
+      !   sols(icol) &
+      !        = 0.542_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
+      !        + sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,11:14))
+      !   ! Diffuse fluxes
+      !   solld(icol) &
+      !        = sum(flux_dn_diffuse(icol,kbot+1,1:9)) &
+      !        + 0.438_r8 * flux_dn_diffuse(icol,kbot+1,10)
+      !   solsd(icol) &
+      !        = 0.562_r8 * flux_dn_diffuse(icol,kbot+1,10) &
+      !        + sum(flux_dn_diffuse(icol,kbot+1,11:14))
+     ! 
+         !call outfld('SOLIN'//diag(icall), flux_clr%flux_dn(1:ncol,1), ncol, state%lchnk)
+      !   call outfld('SOLS'//diag(icall), sols, ncol, state%lchnk) !JPT                    !                         
+       !  call outfld('SOLL'//diag(icall), soll, ncol, state%lchnk) !JPT
+       !  call outfld('SOLLD'//diag(icall), solld, ncol, state%lchnk) !JPT
+       !  call outfld('SOLSD'//diag(icall), solsd, ncol, state%lchnk) !JPT  
+         
    end subroutine output_fluxes_sw
 
    !----------------------------------------------------------------------------
