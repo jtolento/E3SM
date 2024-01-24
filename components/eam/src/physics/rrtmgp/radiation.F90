@@ -2099,14 +2099,14 @@ contains
 
 
       !call outfld('SWCF'//diag(icall), cloud_radiative_effect, ncol, state%lchnk)
-      call outfld('SOLS'//diag(icall), cam_out%sols, ncol, state%lchnk) !JPT
-      call outfld('SOLL'//diag(icall), cam_out%soll, ncol, state%lchnk) !JPT
-      call outfld('SOLLD'//diag(icall), cam_out%solld, ncol, state%lchnk) !JPT
-      call outfld('SOLSD'//diag(icall), cam_out%solsd, ncol, state%lchnk) !JPT
-      call outfld('SOLSSYM'//diag(icall), solssym, ncol, state%lchnk) !JPT
-      call outfld('SOLLSYM'//diag(icall), sollsym, ncol, state%lchnk) !JPT
-      call outfld('SOLLDSYM'//diag(icall), solldsym, ncol, state%lchnk) !JPT
-      call outfld('SOLSDSYM'//diag(icall), solsdsym, ncol, state%lchnk) !JPT 
+      !call outfld('SOLS'//diag(icall), cam_out%sols, ncol, state%lchnk) !JPT
+      !call outfld('SOLL'//diag(icall), cam_out%soll, ncol, state%lchnk) !JPT
+      !call outfld('SOLLD'//diag(icall), cam_out%solld, ncol, state%lchnk) !JPT
+      !call outfld('SOLSD'//diag(icall), cam_out%solsd, ncol, state%lchnk) !JPT
+      !call outfld('SOLSSYM'//diag(icall), solssym, ncol, state%lchnk) !JPT
+      !call outfld('SOLLSYM'//diag(icall), sollsym, ncol, state%lchnk) !JPT
+      !call outfld('SOLLDSYM'//diag(icall), solldsym, ncol, state%lchnk) !JPT
+      !call outfld('SOLSDSYM'//diag(icall), solsdsym, ncol, state%lchnk) !JPT 
    end subroutine export_surface_fluxes
 
    !----------------------------------------------------------------------------
@@ -2382,6 +2382,7 @@ contains
       !type(cam_out_t), intent(inout) :: cam_flx !JPT
 
       integer, intent(in) :: icall
+      integer :: icol !JPT
       type(physics_state), intent(in) :: state
       !type(fluxes_t), intent(in) :: flxs ! JPT
       type(fluxes_t), intent(in) :: flux_all
@@ -2395,9 +2396,17 @@ contains
       integer :: ncol
       integer :: ktop_rad = 1
 
-      !real(r8), dimension(size(flxs%bnd_flux_dn,1), &
-      !                    size(flxs%bnd_flux_dn,2), &
-      !                    size(flxs%bnd_flux_dn,3)) :: flux_dn_diffuse
+      real(r8), dimension(size(flux_all%bnd_flux_dn,1), &
+                          size(flux_all%bnd_flux_dn,2), &
+                          size(flux_all%bnd_flux_dn,3)) :: flux_dn_diffuse !JPT
+      real(r8), dimension(size(flux_all%bnd_flux_dn,1)) :: sols !JPT
+      real(r8), dimension(size(flux_all%bnd_flux_dn,1)) :: solsd !JPT
+      real(r8), dimension(size(flux_all%bnd_flux_dn,1)) :: soll !JPT
+      real(r8), dimension(size(flux_all%bnd_flux_dn,1)) :: solld !JPT
+      real(r8), dimension(size(flux_all%bnd_flux_dn,1)) :: solssym !JPT
+      real(r8), dimension(size(flux_all%bnd_flux_dn,1)) :: solsdsym !JPT
+      real(r8), dimension(size(flux_all%bnd_flux_dn,1)) :: sollsym !JPT
+      real(r8), dimension(size(flux_all%bnd_flux_dn,1)) :: solldsym !JPT
 
       ncol = state%ncol
 
@@ -2461,29 +2470,47 @@ contains
                   flux_all%bnd_flux_up(1:ncol,ktop,1:nswbands), &
                   ncol, state%lchnk)
 
-      !flux_dn_diffuse = fluxes%bnd_flux_dn - fluxes%bnd_flux_dn_dir
-      !do icol = 1,size(fluxes%bnd_flux_dn, 1)
-      !   ! Direct fluxes 
-      !   soll(icol) &
-      !       = sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,1:9)) &
-      !        + 0.458_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
-      !   sols(icol) &
-      !        = 0.542_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
-      !        + sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,11:14))
-      !   ! Diffuse fluxes
-      !   solld(icol) &
-      !        = sum(flux_dn_diffuse(icol,kbot+1,1:9)) &
-      !        + 0.438_r8 * flux_dn_diffuse(icol,kbot+1,10)
-      !   solsd(icol) &
-      !        = 0.562_r8 * flux_dn_diffuse(icol,kbot+1,10) &
-      !        + sum(flux_dn_diffuse(icol,kbot+1,11:14))
-     ! 
-         !call outfld('SOLIN'//diag(icall), flux_clr%flux_dn(1:ncol,1), ncol, state%lchnk)
-      !   call outfld('SOLS'//diag(icall), sols, ncol, state%lchnk) !JPT                    !                         
-       !  call outfld('SOLL'//diag(icall), soll, ncol, state%lchnk) !JPT
-       !  call outfld('SOLLD'//diag(icall), solld, ncol, state%lchnk) !JPT
-       !  call outfld('SOLSD'//diag(icall), solsd, ncol, state%lchnk) !JPT  
-         
+      flux_dn_diffuse = flux_all%bnd_flux_dn - flux_all%bnd_flux_dn_dir
+      do icol = 1,size(flux_all%bnd_flux_dn, 1)
+         ! Direct fluxes 
+         soll(icol) &
+             = sum(flux_all%bnd_flux_dn_dir(icol,kbot+1,1:9)) &
+              + 0.458_r8 * flux_all%bnd_flux_dn_dir(icol,kbot+1,10)
+         sols(icol) &
+              = 0.542_r8 * flux_all%bnd_flux_dn_dir(icol,kbot+1,10) &
+              + sum(flux_all%bnd_flux_dn_dir(icol,kbot+1,11:14))
+         ! Diffuse fluxes
+         solld(icol) &
+              = sum(flux_dn_diffuse(icol,kbot+1,1:9)) &
+              + 0.438_r8 * flux_dn_diffuse(icol,kbot+1,10)
+         solsd(icol) &
+              = 0.562_r8 * flux_dn_diffuse(icol,kbot+1,10) &
+              + sum(flux_dn_diffuse(icol,kbot+1,11:14))
+
+         ! Direct fluxes Symmetric
+         sollsym(icol) &
+             = sum(flux_all%bnd_flux_dn_dir(icol,kbot+1,1:9)) &
+              + 0.5_r8 * flux_all%bnd_flux_dn_dir(icol,kbot+1,10)
+         solssym(icol) &
+              = 0.5_r8 * flux_all%bnd_flux_dn_dir(icol,kbot+1,10) &
+              + sum(flux_all%bnd_flux_dn_dir(icol,kbot+1,11:14))
+         ! Diffuse fluxes Symmetric
+         solldsym(icol) &
+              = sum(flux_dn_diffuse(icol,kbot+1,1:9)) &
+              + 0.5_r8 * flux_dn_diffuse(icol,kbot+1,10)
+         solsdsym(icol) &
+              = 0.5_r8 * flux_dn_diffuse(icol,kbot+1,10) &
+              + sum(flux_dn_diffuse(icol,kbot+1,11:14))
+      end do
+      call outfld('SOLIN'//diag(icall), flux_clr%flux_dn(1:ncol,1), ncol, state%lchnk)
+      call outfld('SOLS'//diag(icall), sols, ncol, state%lchnk) !JPT
+      call outfld('SOLL'//diag(icall), soll, ncol, state%lchnk) !JPT
+      call outfld('SOLLD'//diag(icall), solld, ncol, state%lchnk) !JPT
+      call outfld('SOLSD'//diag(icall), solsd, ncol, state%lchnk) !JPT  
+      call outfld('SOLSSYM'//diag(icall), solssym, ncol, state%lchnk) !JPT
+      call outfld('SOLLSYM'//diag(icall), sollsym, ncol, state%lchnk) !JPT
+      call outfld('SOLLDSYM'//diag(icall), solldsym, ncol, state%lchnk) !JPT
+      call outfld('SOLSDSYM'//diag(icall), solsdsym, ncol, state%lchnk) !JPT  
    end subroutine output_fluxes_sw
 
    !----------------------------------------------------------------------------
