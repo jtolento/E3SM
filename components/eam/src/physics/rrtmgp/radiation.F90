@@ -2443,7 +2443,7 @@ contains
       call outfld('SWCF'//diag(icall), cloud_radiative_effect, ncol, state%lchnk)
 
       ! Send solar insolation to history buffer
-      call outfld('SOLIN'//diag(icall), flux_clr%flux_dn(1:ncol,1), ncol, state%lchnk)
+      !call outfld('SOLIN'//diag(icall), flux_clr%flux_dn(1:ncol,1), ncol, state%lchnk)
 
       ! Send heating rates to history buffer
       call outfld('QRS'//diag(icall), qrs(1:ncol,1:pver)/cpair, ncol, state%lchnk)
