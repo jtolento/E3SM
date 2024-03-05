@@ -60,6 +60,12 @@ module camsrfexch
      real(r8), allocatable :: sols(:)     ! 
      real(r8), allocatable :: solld(:)    !
      real(r8), allocatable :: solsd(:)    !
+     !JPT add solnir+solfir (dir+dif)
+     real(r8), allocatable :: solnir(:)   ! Solar Near-Infrared (Dir)
+     real(r8), allocatable :: solfir(:)   ! Solar Far-Infrared (Dir)
+     real(r8), allocatable :: solnird(:)  ! Solar Near-Infrared (Dif)
+     real(r8), allocatable :: solfird(:)  ! Solar Far-Infrared (Dif)
+     
      real(r8), allocatable :: thbot(:)    ! 
      real(r8), allocatable :: co2prog(:)  ! prognostic co2
      real(r8), allocatable :: co2diag(:)  ! diagnostic co2
@@ -439,6 +445,19 @@ CONTAINS
        allocate (cam_out(c)%solsd(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error solsd')
 
+       !JPT allocate SOLNIR+SOLFIR (dir and diff)
+       allocate (cam_out(c)%solnir(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error solnir')
+
+       allocate (cam_out(c)%solfir(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error solfir')
+
+       allocate (cam_out(c)%solnird(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error solnird')
+
+       allocate (cam_out(c)%solfird(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error solfird')
+       
        allocate (cam_out(c)%thbot(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error thbot')
 
@@ -526,6 +545,12 @@ CONTAINS
        cam_out(c)%sols(:)     = 0._r8
        cam_out(c)%solld(:)    = 0._r8
        cam_out(c)%solsd(:)    = 0._r8
+       !JPT add SOLNIR+SOLFIR (dir+diff)
+       cam_out(c)%solnir(:)   = 0._r8
+       cam_out(c)%solfir(:)   = 0._r8
+       cam_out(c)%solnird(:)  = 0._r8
+       cam_out(c)%solfird(:)  = 0._r8
+       
        cam_out(c)%thbot(:)    = 0._r8
        cam_out(c)%co2prog(:)  = 0._r8
        cam_out(c)%co2diag(:)  = 0._r8

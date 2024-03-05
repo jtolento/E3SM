@@ -584,7 +584,8 @@
          albdir(nbndsw) = aldir(iplon)
          albdif(nbndsw) = aldif(iplon)
 !  Set band 24 (or, band 9 counting from 1) to use linear average of UV/visible
-!  and near-IR values, since this band straddles 0.7 microns: 
+!  and near-IR values, since this band straddles 0.7 microns:
+! JPT This ratio can be improved          
          albdir(9) = 0.5*(aldir(iplon) + asdir(iplon))
          albdif(9) = 0.5*(aldif(iplon) + asdif(iplon))
 !  UV/visible bands 25-28 (10-13), 16000-50000 cm-1, 0.200-0.625 micron

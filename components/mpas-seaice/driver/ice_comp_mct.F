@@ -1976,6 +1976,10 @@ contains
       shortwaveVisibleDiffuseDownField, &
       shortwaveIRDirectDownField,       &
       shortwaveIRDiffuseDownField,      &
+      shortwaveNIRDirectDownField,      & !JPT
+      shortwaveFIRDiffuseDownField,     & !JPT
+      shortwaveFIRDirectDownField,      & !JPT
+      shortwaveNIRDiffuseDownField,     & !JPT
       longwaveDownField,                &
       rainfallRateField,                &
       snowfallRateField,                &
@@ -2019,6 +2023,10 @@ contains
       shortwaveVisibleDiffuseDown, &
       shortwaveIRDirectDown,       &
       shortwaveIRDiffuseDown,      &
+      shortwaveNIRDirectDown,      & !JPT
+      shortwaveNIRDiffuseDown,     & !JPT
+      shortwaveFIRDirectDown,      & !JPT
+      shortwaveFIRDiffuseDown,     & !JPT
       longwaveDown,                &
       rainfallRate,                &
       snowfallRate,                &
@@ -2096,6 +2104,12 @@ contains
       call mpas_pool_get_array(atmosCoupling, 'shortwaveVisibleDiffuseDown', shortwaveVisibleDiffuseDown)
       call mpas_pool_get_array(atmosCoupling, 'shortwaveIRDirectDown', shortwaveIRDirectDown)
       call mpas_pool_get_array(atmosCoupling, 'shortwaveIRDiffuseDown', shortwaveIRDiffuseDown)
+
+      call mpas_pool_get_array(atmosCoupling, 'shortwaveNIRDirectDown', shortwaveIRDirectDown)   !JPT
+      call mpas_pool_get_array(atmosCoupling, 'shortwaveNIRDiffuseDown', shortwaveIRDiffuseDown) !JPT
+      call mpas_pool_get_array(atmosCoupling, 'shortwaveFIRDirectDown', shortwaveIRDirectDown)   !JPT   
+      call mpas_pool_get_array(atmosCoupling, 'shortwaveFIRDiffuseDown', shortwaveIRDiffuseDown) !JPT
+
       call mpas_pool_get_array(atmosCoupling, 'longwaveDown', longwaveDown)
       call mpas_pool_get_array(atmosCoupling, 'rainfallRate', rainfallRate)
       call mpas_pool_get_array(atmosCoupling, 'snowfallRate', snowfallRate)
@@ -2187,6 +2201,11 @@ contains
         shortwaveVisibleDiffuseDown(i) = x2i_i % rAttr(index_x2i_Faxa_swvdf, n)
         shortwaveIRDirectDown(i)       = x2i_i % rAttr(index_x2i_Faxa_swndr, n)
         shortwaveIRDiffuseDown(i)      = x2i_i % rAttr(index_x2i_Faxa_swndf, n)
+
+        shortwaveNIRDirectDown(i)      = x2i_i % rAttr(index_x2i_Faxa_swnirdr, n) !JPT
+        shortwaveNIRDiffuseDown(i)     = x2i_i % rAttr(index_x2i_Faxa_swnirdf, n) !JPT
+        shortwaveFIRDirectDown(i)      = x2i_i % rAttr(index_x2i_Faxa_swfirdr, n) !JPT                 
+        shortwaveFIRDiffuseDown(i)     = x2i_i % rAttr(index_x2i_Faxa_swfirdf, n) !JPT 
         longwaveDown(i)                = x2i_i % rAttr(index_x2i_Faxa_lwdn, n)
         rainfallRate(i)                = x2i_i % rAttr(index_x2i_Faxa_rain, n)
         snowfallRate(i)                = x2i_i % rAttr(index_x2i_Faxa_snow, n)
@@ -2331,6 +2350,12 @@ contains
    call mpas_pool_get_field(atmosCoupling, 'shortwaveVisibleDiffuseDown', shortwaveVisibleDiffuseDownField)
    call mpas_pool_get_field(atmosCoupling, 'shortwaveIRDirectDown', shortwaveIRDirectDownField)
    call mpas_pool_get_field(atmosCoupling, 'shortwaveIRDiffuseDown', shortwaveIRDiffuseDownField)
+   
+   call mpas_pool_get_field(atmosCoupling, 'shortwaveNIRDirectDown', shortwaveNIRDirectDownField)   !JPT
+   call mpas_pool_get_field(atmosCoupling, 'shortwaveNIRDiffuseDown', shortwaveNIRDiffuseDownField) !JPT
+   call mpas_pool_get_field(atmosCoupling, 'shortwaveFIRDirectDown', shortwaveFIRDirectDownField)   !JPT
+   call mpas_pool_get_field(atmosCoupling, 'shortwaveFIRDiffuseDown', shortwaveFIRDiffuseDownField) !JPT
+
    call mpas_pool_get_field(atmosCoupling, 'longwaveDown', longwaveDownField)
    call mpas_pool_get_field(atmosCoupling, 'rainfallRate', rainfallRateField)
    call mpas_pool_get_field(atmosCoupling, 'snowfallRate', snowfallRateField)
@@ -2384,6 +2409,10 @@ contains
    call mpas_dmpar_exch_halo_field(shortwaveVisibleDiffuseDownField)
    call mpas_dmpar_exch_halo_field(shortwaveIRDirectDownField)
    call mpas_dmpar_exch_halo_field(shortwaveIRDiffuseDownField)
+   call mpas_dmpar_exch_halo_field(shortwaveNIRDirectDownField) !JPT
+   call mpas_dmpar_exch_halo_field(shortwaveNIRDiffuseDownField)!JPT
+   call mpas_dmpar_exch_halo_field(shortwaveFIRDirectDownField) !JPT
+   call mpas_dmpar_exch_halo_field(shortwaveFIRDiffuseDownField)!JPT
    call mpas_dmpar_exch_halo_field(longwaveDownField)
    call mpas_dmpar_exch_halo_field(rainfallRateField)
    call mpas_dmpar_exch_halo_field(snowfallRateField)
@@ -3428,6 +3457,10 @@ contains
 !    o  swvdr    -- sw: vis direct  downward
 !    o  swndf    -- sw: nir diffuse downward
 !    o  swvdf    -- sw: vis diffuse downward
+!    o  swnirdr  -- sw: !JPT
+!    o  swnirdf  -- sw: !JPT
+!    o  swfirdr  -- sw: !JPT
+!    o  swfirdf  -- sw: !JPT
 !    o  swnet    -- sw: net
 !    o  q        -- ocn frazil heat flux(+) / melt potential(-)
 !    o  frazil   -- ocn frazil mass flux 
@@ -3542,6 +3575,10 @@ contains
       shortwaveVisibleDiffuseDownField, &
       shortwaveIRDirectDownField,       &
       shortwaveIRDiffuseDownField,      &
+      shortwaveNIRDirectDownField,      &!JPT
+      shortwaveNIRDiffuseDownField,     &!JPT
+      shortwaveFIRDirectDownField,      &!JPT
+      shortwaveFIRDiffuseDownField,     &!JPT
       longwaveDownField,                &
       rainfallRateField,                &
       snowfallRateField,                &
@@ -3585,6 +3622,10 @@ contains
       shortwaveVisibleDiffuseDown, &
       shortwaveIRDirectDown,       &
       shortwaveIRDiffuseDown,      &
+      shortwaveNIRDirectDown,      & !JPT
+      shortwaveNIRDiffuseDown,     & !JPT
+      shortwaveFIRDirectDown,      & !JPT                                                                
+      shortwaveFIRDiffuseDown,     & !JPT
       longwaveDown,                &
       rainfallRate,                &
       snowfallRate,                &
@@ -3684,6 +3725,11 @@ contains
       call mpas_pool_get_array(atmosCoupling, 'shortwaveVisibleDiffuseDown', shortwaveVisibleDiffuseDown)
       call mpas_pool_get_array(atmosCoupling, 'shortwaveIRDirectDown', shortwaveIRDirectDown)
       call mpas_pool_get_array(atmosCoupling, 'shortwaveIRDiffuseDown', shortwaveIRDiffuseDown)
+      call mpas_pool_get_array(atmosCoupling, 'shortwaveNIRDirectDown', shortwaveNIRDirectDown)   !JPT
+      call mpas_pool_get_array(atmosCoupling, 'shortwaveNIRDiffuseDown', shortwaveNIRDiffuseDown) !JPT
+      call mpas_pool_get_array(atmosCoupling, 'shortwaveFIRDirectDown', shortwaveFIRDirectDown)   !JPT
+      call mpas_pool_get_array(atmosCoupling, 'shortwaveFIRDiffuseDown', shortwaveFIRDiffuseDown) !JPT
+
       call mpas_pool_get_array(atmosCoupling, 'longwaveDown', longwaveDown)
       call mpas_pool_get_array(atmosCoupling, 'rainfallRate', rainfallRate)
       call mpas_pool_get_array(atmosCoupling, 'snowfallRate', snowfallRate)
@@ -3769,6 +3815,10 @@ contains
         shortwaveVisibleDiffuseDown(i) = x2i_im(n,index_x2i_Faxa_swvdf)
         shortwaveIRDirectDown(i)       = x2i_im(n,index_x2i_Faxa_swndr)
         shortwaveIRDiffuseDown(i)      = x2i_im(n,index_x2i_Faxa_swndf)
+        shortwaveNIRDirectDown(i)      = x2i_im(n,index_x2i_Faxa_swnirdr) !JPT
+        shortwaveNIRDiffuseDown(i)     = x2i_im(n,index_x2i_Faxa_swnirdf) !JPT
+        shortwaveFIRDirectDown(i)      = x2i_im(n,index_x2i_Faxa_swfirdr) !JPT
+        shortwaveFIRDiffuseDown(i)     = x2i_im(n,index_x2i_Faxa_swfirdf) !JPT
         longwaveDown(i)                = x2i_im(n,index_x2i_Faxa_lwdn)
         rainfallRate(i)                = x2i_im(n,index_x2i_Faxa_rain)
         snowfallRate(i)                = x2i_im(n,index_x2i_Faxa_snow)
@@ -3912,6 +3962,10 @@ contains
    call mpas_pool_get_field(atmosCoupling, 'shortwaveVisibleDiffuseDown', shortwaveVisibleDiffuseDownField)
    call mpas_pool_get_field(atmosCoupling, 'shortwaveIRDirectDown', shortwaveIRDirectDownField)
    call mpas_pool_get_field(atmosCoupling, 'shortwaveIRDiffuseDown', shortwaveIRDiffuseDownField)
+   call mpas_pool_get_field(atmosCoupling, 'shortwaveNIRDirectDown', shortwaveNIRDirectDownField)   !JPT  
+   call mpas_pool_get_field(atmosCoupling, 'shortwaveNIRDiffuseDown', shortwaveNIRDiffuseDownField) !JPT
+   call mpas_pool_get_field(atmosCoupling, 'shortwaveFIRDirectDown', shortwaveFIRDirectDownField)   !JPT
+   call mpas_pool_get_field(atmosCoupling, 'shortwaveFIRDiffuseDown', shortwaveFIRDiffuseDownField) !JPT
    call mpas_pool_get_field(atmosCoupling, 'longwaveDown', longwaveDownField)
    call mpas_pool_get_field(atmosCoupling, 'rainfallRate', rainfallRateField)
    call mpas_pool_get_field(atmosCoupling, 'snowfallRate', snowfallRateField)
@@ -3964,7 +4018,11 @@ contains
    call mpas_dmpar_exch_halo_field(shortwaveVisibleDirectDownField)
    call mpas_dmpar_exch_halo_field(shortwaveVisibleDiffuseDownField)
    call mpas_dmpar_exch_halo_field(shortwaveIRDirectDownField)
-   call mpas_dmpar_exch_halo_field(shortwaveIRDiffuseDownField)
+   call mpas_dmpar_exch_halo_field(shortwaveIRDiffuseDownField)   
+   call mpas_dmpar_exch_halo_field(shortwaveNIRDirectDownField)  !JPT
+   call mpas_dmpar_exch_halo_field(shortwaveNIRDiffuseDownField) !JPT
+   call mpas_dmpar_exch_halo_field(shortwaveFIRDirectDownField)  !JPT
+   call mpas_dmpar_exch_halo_field(shortwaveFIRDiffuseDownField) !JPT
    call mpas_dmpar_exch_halo_field(longwaveDownField)
    call mpas_dmpar_exch_halo_field(rainfallRateField)
    call mpas_dmpar_exch_halo_field(snowfallRateField)

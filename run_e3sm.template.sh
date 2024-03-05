@@ -21,10 +21,10 @@ readonly MACHINE=pm-cpu
 readonly PROJECT="e3sm"
 
 # Simulation
-readonly COMPSET="WCYCL1850"
+readonly COMPSET="F1850"
 readonly RESOLUTION="ne30pg2_r05_IcoswISC30E3r5"
 # BEFORE RUNNING : CHANGE the following CASE_NAME to desired value
-readonly CASE_NAME="your_casename"
+readonly CASE_NAME="btf_mpassi"
 # If this is part of a simulation campaign, ask your group lead about using a case_group label
 # readonly CASE_GROUP=""
 
@@ -37,7 +37,7 @@ readonly DEBUG_COMPILE=false
 
 # Run options
 readonly MODEL_START_TYPE="initial"  # 'initial', 'continue', 'branch', 'hybrid'
-readonly START_DATE="0001-01-01"
+readonly START_DATE="1850-01-01"
 
 # Additional options for 'branch' and 'hybrid'
 readonly GET_REFCASE=TRUE
@@ -46,8 +46,8 @@ readonly GET_REFCASE=TRUE
 #readonly RUN_REFDATE=""   # same as MODEL_START_DATE for 'branch', can be different for 'hybrid'
 
 # Set paths
-readonly CODE_ROOT="${HOME}/E3SMv3/code/${CHECKOUT}"
-readonly CASE_ROOT="/pscratch/sd/r/${USER}/e3sm-scratch/${CASE_NAME}"
+readonly CODE_ROOT="${HOME}/E3SM"
+readonly CASE_ROOT="/pscratch/sd/j/${USER}/LANL/${CASE_NAME}"
 
 # Sub-directories
 readonly CASE_BUILD_DIR=${CASE_ROOT}/build
@@ -70,7 +70,7 @@ if [ "${run}" != "production" ]; then
   readonly CASE_SCRIPTS_DIR=${CASE_ROOT}/tests/${run}/case_scripts
   readonly CASE_RUN_DIR=${CASE_ROOT}/tests/${run}/run
   readonly PELAYOUT=${layout}
-  readonly WALLTIME="2:00:00"
+  readonly WALLTIME="0:30:00"
   readonly STOP_OPTION=${units}
   readonly STOP_N=${length}
   readonly REST_OPTION=${STOP_OPTION}
@@ -101,7 +101,7 @@ readonly HIST_N="5"
 readonly OLD_EXECUTABLE=""
 
 # --- Toggle flags for what to do ----
-do_fetch_code=true
+do_fetch_code=false
 do_create_newcase=true
 do_case_setup=true
 do_case_build=true
@@ -113,7 +113,7 @@ do_case_submit=true
 umask 022
 
 # Fetch code from Github
-fetch_code
+#fetch_code
 
 # Create case
 create_newcase

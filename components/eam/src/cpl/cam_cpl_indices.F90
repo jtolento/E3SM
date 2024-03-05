@@ -33,6 +33,12 @@ module cam_cpl_indices
   integer :: index_a2x_Faxa_swndf      ! sw: nir diffuse downward
   integer :: index_a2x_Faxa_swvdf      ! sw: vis diffuse downward
   integer :: index_a2x_Faxa_swnet      ! sw: net
+  !JPT Add NIR+FIR fields                                                                           
+  integer :: index_a2x_Faxa_swnirdr    ! sw: near-infrared (1.2>x>0.7 microns) downward direct
+  integer :: index_a2x_Faxa_swfirdr    ! sw: far-infrared (>1.2 microns) downward direct
+  integer :: index_a2x_Faxa_swnirdf    ! sw: near-infrared (1.2>x>0.7 microns) downward diffuse
+  integer :: index_a2x_Faxa_swfirdf    ! sw: far-infrared  (>1.2 microns) downward diffuse
+  
   integer :: index_a2x_Faxa_bcphidry   ! flux: Black Carbon hydrophilic dry deposition
   integer :: index_a2x_Faxa_bcphodry   ! flux: Black Carbon hydrophobic dry deposition
   integer :: index_a2x_Faxa_bcphiwet   ! flux: Black Carbon hydrophilic wet deposition

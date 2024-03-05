@@ -301,7 +301,11 @@ contains
           a2x(index_a2x_Faxa_swvdr,ig) = cam_out(c)%sols(i)   
           a2x(index_a2x_Faxa_swndf,ig) = cam_out(c)%solld(i)  
           a2x(index_a2x_Faxa_swvdf,ig) = cam_out(c)%solsd(i)  
-
+          ! JPT add solnir+solfir (dir+dif)                                     
+          a2x(index_a2x_Faxa_swnirdr,ig) = cam_out(c)%solnir(i)
+          a2x(index_a2x_Faxa_swfirdr,ig) = cam_out(c)%solfir(i)
+          a2x(index_a2x_Faxa_swnirdf,ig) = cam_out(c)%solnird(i)
+          a2x(index_a2x_Faxa_swfirdf,ig) = cam_out(c)%solfird(i)
           ! aerosol deposition fluxes
           a2x(index_a2x_Faxa_bcphidry,ig) = cam_out(c)%bcphidry(i)
           a2x(index_a2x_Faxa_bcphodry,ig) = cam_out(c)%bcphodry(i)

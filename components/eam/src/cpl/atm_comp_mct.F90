@@ -1626,7 +1626,13 @@ CONTAINS
           a2x_am(ig, index_a2x_Faxa_swndr) = cam_out(c)%soll(i)   
           a2x_am(ig, index_a2x_Faxa_swvdr) = cam_out(c)%sols(i)   
           a2x_am(ig, index_a2x_Faxa_swndf) = cam_out(c)%solld(i)  
-          a2x_am(ig, index_a2x_Faxa_swvdf) = cam_out(c)%solsd(i)  
+          a2x_am(ig, index_a2x_Faxa_swvdf) = cam_out(c)%solsd(i)
+          ! JPT add SW NIR+FIR  fields                                          
+          a2x_am(ig, index_a2x_Faxa_swnirdr) = cam_out(c)%solnir(i)
+          a2x_am(ig, index_a2x_Faxa_swfirdr) = cam_out(c)%solfir(i)
+          a2x_am(ig, index_a2x_Faxa_swnirdf) = cam_out(c)%solnird(i)
+          a2x_am(ig, index_a2x_Faxa_swfirdf) = cam_out(c)%solfird(i)
+
 
           ! aerosol deposition fluxes
           a2x_am(ig, index_a2x_Faxa_bcphidry) = cam_out(c)%bcphidry(i)
