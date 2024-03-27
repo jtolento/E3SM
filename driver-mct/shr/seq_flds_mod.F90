@@ -936,6 +936,34 @@ contains
     attname  = 'Fioi_swpen'
     call metadata_set(attname, longname, stdname, units)
 
+
+    ! JPT Add NIR WGHT for MPASSI (Direct)
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_wght_dir")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_wght_dir")
+    !if (rof_heat) then
+    !   call seq_flds_add(x2r_fluxes,"Faxa_swndr")
+    !   call seq_flds_add(a2x_fluxes_to_rof,"Faxa_swndr")
+    !endif
+    !call seq_flds_add(x2l_fluxes,"Faxa_swndr")
+    longname = 'near-infrared weight for split band (Direct)'
+    stdname  = 'surface_downward_direct_shortwave_near_infrared_weight'
+    units    = '1'
+    attname  = 'Faxa_nir_wght_dir'
+    call metadata_set(attname, longname, stdname, units)
+    ! JPT Add NIR WGHT for MPASSI (Diffuse)
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_wght_dif")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_wght_dif")
+    !if (rof_heat) then
+    !   call seq_flds_add(x2r_fluxes,"Faxa_swndr")
+    !   call seq_flds_add(a2x_fluxes_to_rof,"Faxa_swndr")
+    !endif
+    !call seq_flds_add(x2l_fluxes,"Faxa_swndr")
+    longname = 'near-infrared weight for split band (Diffuse)'
+    stdname  = 'surface_downward_diffuse_shortwave_near_infrared_weight'
+    units    = '1'
+    attname  = 'Faxa_nir_wght_dif'
+    call metadata_set(attname, longname, stdname, units)
+
     ! Black Carbon hydrophilic dry deposition
     call seq_flds_add(a2x_fluxes,"Faxa_bcphidry" )
     call seq_flds_add(x2i_fluxes,"Faxa_bcphidry" )
