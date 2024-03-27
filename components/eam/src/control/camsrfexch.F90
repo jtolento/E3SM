@@ -60,6 +60,10 @@ module camsrfexch
      real(r8), allocatable :: sols(:)     ! 
      real(r8), allocatable :: solld(:)    !
      real(r8), allocatable :: solsd(:)    !
+     !JPT NIR WGHT for MPASSI
+     real(r8), allocatable :: nir_wght_dir(:)    ! 
+     real(r8), allocatable :: nir_wght_dif(:)    !
+     
      real(r8), allocatable :: thbot(:)    ! 
      real(r8), allocatable :: co2prog(:)  ! prognostic co2
      real(r8), allocatable :: co2diag(:)  ! diagnostic co2
@@ -439,6 +443,14 @@ CONTAINS
        allocate (cam_out(c)%solsd(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error solsd')
 
+       !JPT add NIR WGHT for MPASSI
+       allocate (cam_out(c)%nir_wght_dir(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_wght_dir')
+
+       allocate (cam_out(c)%nir_wght_dif(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_wght_dif')
+
+
        allocate (cam_out(c)%thbot(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error thbot')
 
@@ -526,6 +538,10 @@ CONTAINS
        cam_out(c)%sols(:)     = 0._r8
        cam_out(c)%solld(:)    = 0._r8
        cam_out(c)%solsd(:)    = 0._r8
+       !JPT add nir wght 
+       cam_out(c)%nir_wght_dir(:)    = 0._r8
+       cam_out(c)%nir_wght_dif(:)    = 0._r8
+       
        cam_out(c)%thbot(:)    = 0._r8
        cam_out(c)%co2prog(:)  = 0._r8
        cam_out(c)%co2diag(:)  = 0._r8
