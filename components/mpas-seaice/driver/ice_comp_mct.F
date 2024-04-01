@@ -2211,6 +2211,7 @@ contains
       shortwaveVisibleDiffuseDown, &
       shortwaveIRDirectDown,       &
       shortwaveIRDiffuseDown,      &
+      nir_weight_dir,              &
       longwaveDown,                &
       rainfallRate,                &
       snowfallRate,                &
@@ -2292,6 +2293,7 @@ contains
       call mpas_pool_get_array(atmosCoupling, 'shortwaveVisibleDiffuseDown', shortwaveVisibleDiffuseDown)
       call mpas_pool_get_array(atmosCoupling, 'shortwaveIRDirectDown', shortwaveIRDirectDown)
       call mpas_pool_get_array(atmosCoupling, 'shortwaveIRDiffuseDown', shortwaveIRDiffuseDown)
+      call mpas_pool_get_array(atmosCoupling, 'nir_weight_dir', nir_weight_dir)
       call mpas_pool_get_array(atmosCoupling, 'longwaveDown', longwaveDown)
       call mpas_pool_get_array(atmosCoupling, 'rainfallRate', rainfallRate)
       call mpas_pool_get_array(atmosCoupling, 'snowfallRate', snowfallRate)
@@ -2381,6 +2383,7 @@ contains
         shortwaveVisibleDiffuseDown(i) = x2i_i % rAttr(index_x2i_Faxa_swvdf, n)
         shortwaveIRDirectDown(i)       = x2i_i % rAttr(index_x2i_Faxa_swndr, n)
         shortwaveIRDiffuseDown(i)      = x2i_i % rAttr(index_x2i_Faxa_swndf, n)
+        nir_weight_dir(i)              = x2i_i % rAttr(index_x2i_Faxa_nir_wght_dir, n)
         longwaveDown(i)                = x2i_i % rAttr(index_x2i_Faxa_lwdn, n)
         rainfallRate(i)                = x2i_i % rAttr(index_x2i_Faxa_rain, n)
         snowfallRate(i)                = x2i_i % rAttr(index_x2i_Faxa_snow, n)
@@ -2548,6 +2551,7 @@ contains
    call mpas_pool_get_field(atmosCoupling, 'shortwaveVisibleDiffuseDown', shortwaveVisibleDiffuseDownField)
    call mpas_pool_get_field(atmosCoupling, 'shortwaveIRDirectDown', shortwaveIRDirectDownField)
    call mpas_pool_get_field(atmosCoupling, 'shortwaveIRDiffuseDown', shortwaveIRDiffuseDownField)
+
    call mpas_pool_get_field(atmosCoupling, 'longwaveDown', longwaveDownField)
    call mpas_pool_get_field(atmosCoupling, 'rainfallRate', rainfallRateField)
    call mpas_pool_get_field(atmosCoupling, 'snowfallRate', snowfallRateField)

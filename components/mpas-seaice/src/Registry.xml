@@ -2030,6 +2030,7 @@
 			<var name="shortwaveVisibleDiffuseDown"/>
 			<var name="shortwaveIRDirectDown"/>
 			<var name="shortwaveIRDiffuseDown"/>
+			<var name="nir_weight_dir"/>
 			<var name="oceanStressCellU"/>
 			<var name="oceanStressCellV"/>
 			<var name="seaSurfaceTemperature"/>
@@ -3958,6 +3959,11 @@
 		     dimensions="nCells Time"
 		     units="W m-2"
 		/>
+                <var name="nir_weight_dir"
+                     type="real"
+                     dimensions="nCells Time"
+                     units="1"
+                />
 		<var name="longwaveDown"
 		     type="real"
 		     dimensions="nCells Time"

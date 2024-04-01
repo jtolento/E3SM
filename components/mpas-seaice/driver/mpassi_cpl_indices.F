@@ -83,7 +83,8 @@ module mpassi_cpl_indices
   integer :: index_x2i_Faxa_swndr      ! sw: nir direct  downward
   integer :: index_x2i_Faxa_swvdr      ! sw: vis direct  downward
   integer :: index_x2i_Faxa_swndf      ! sw: nir diffuse downward
-  integer :: index_x2i_Faxa_swvdf      ! sw: vis diffuse downward
+  integer :: index_x2i_Faxa_swvdf ! sw: vis diffuse downward
+  integer :: index_x2i_Faxa_nir_wght_dir ! JPT    
   integer :: index_x2i_Faxa_swnet      ! sw: net
   integer :: index_x2i_Fioo_q          ! ocn freezing melting potential
   integer :: index_x2i_Fioo_frazil     ! ocn frazil ice formation 
@@ -212,6 +213,7 @@ contains
     index_x2i_Faxa_swvdr    = mct_avect_indexra(x2i,'Faxa_swvdr')
     index_x2i_Faxa_swndf    = mct_avect_indexra(x2i,'Faxa_swndf')
     index_x2i_Faxa_swvdf    = mct_avect_indexra(x2i,'Faxa_swvdf')
+    index_x2i_Faxa_nir_wght_dir=mct_avect_indexra(x2i,'Faxa_nir_wght_dir')  
     index_x2i_Fioo_q        = mct_avect_indexra(x2i,'Fioo_q')
     index_x2i_Fioo_frazil   = mct_avect_indexra(x2i,'Fioo_frazil')
     index_x2i_Faxa_bcphidry = mct_avect_indexra(x2i,'Faxa_bcphidry')

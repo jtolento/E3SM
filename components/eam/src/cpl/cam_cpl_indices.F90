@@ -184,6 +184,9 @@ contains
     index_a2x_Faxa_swvdr    = mct_avect_indexra(a2x,'Faxa_swvdr')
     index_a2x_Faxa_swndf    = mct_avect_indexra(a2x,'Faxa_swndf')
     index_a2x_Faxa_swvdf    = mct_avect_indexra(a2x,'Faxa_swvdf')
+    !JPT add NIR wghts 
+    index_a2x_Faxa_nir_wght_dir = mct_avect_indexra(a2x,'Faxa_nir_wght_dir')
+    index_a2x_Faxa_nir_wght_dif	= mct_avect_indexra(a2x,'Faxa_nir_wght_dif')
     index_a2x_Faxa_bcphidry = mct_avect_indexra(a2x,'Faxa_bcphidry')
     index_a2x_Faxa_bcphodry = mct_avect_indexra(a2x,'Faxa_bcphodry')
     index_a2x_Faxa_bcphiwet = mct_avect_indexra(a2x,'Faxa_bcphiwet')
