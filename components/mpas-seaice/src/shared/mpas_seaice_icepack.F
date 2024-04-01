@@ -2859,6 +2859,7 @@ contains
          shortwaveVisibleDiffuseDown, &
          shortwaveIRDirectDown, &
          shortwaveIRDiffuseDown, &
+         nir_weight_dir,         &
          solarZenithAngleCosine, &
          snowfallRate
 
@@ -3000,6 +3001,7 @@ contains
        call MPAS_pool_get_array(atmos_coupling, "shortwaveVisibleDiffuseDown", shortwaveVisibleDiffuseDown)
        call MPAS_pool_get_array(atmos_coupling, "shortwaveIRDirectDown", shortwaveIRDirectDown)
        call MPAS_pool_get_array(atmos_coupling, "shortwaveIRDiffuseDown", shortwaveIRDiffuseDown)
+       call MPAS_pool_get_array(atmos_coupling, "nir_weight_dir", nir_weight_dir)!JPT 
        call MPAS_pool_get_array(atmos_coupling, "snowfallRate", snowfallRate)
 
        call MPAS_pool_get_array(shortwave, "dayOfNextShortwaveCalculation", dayOfNextShortwaveCalculation)
@@ -3102,6 +3104,7 @@ contains
                swvdf=shortwaveVisibleDiffuseDown(iCell), &
                swidr=shortwaveIRDirectDown(iCell), &
                swidf=shortwaveIRDiffuseDown(iCell), &
+               nir_wght_dir = nir_weight_dir(icell), &
                coszen=solarZenithAngleCosine(iCell), &
                fsnow=snowfallRate(iCell), &
                alvdrn=albedoVisibleDirectCategory(:,iCell), &
