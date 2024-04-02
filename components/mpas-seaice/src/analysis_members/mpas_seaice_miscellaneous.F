@@ -274,7 +274,6 @@ contains
            albedoIRDirectCell, &
            albedoVisibleDiffuseCell, &
            albedoIRDiffuseCell, &
-           shortwaveIRDirectDown, &
            coriolisStressVertexU, &
            coriolisStressVertexV, &
            uVelocity, &
