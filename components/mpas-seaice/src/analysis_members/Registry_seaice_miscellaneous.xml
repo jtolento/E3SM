@@ -30,6 +30,9 @@
 		<var name="broadbandAlbedo" type="real" dimensions="nCells Time" units="1"
 			description="snow/sea ice broadband albedo"
 		/>
+		<var name="shortwaveIRDirectDown" type="real" dimensions="nCells Time" units="1"
+			description="shortwave IR Direct Down"
+		/>
 		<var name="coriolisStressVertexU" type="real" dimensions="nVertices Time" units="kg m-1 s-2"
 			description="Coriolis stress in U direction"
 		/>
