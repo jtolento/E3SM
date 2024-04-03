@@ -641,6 +641,7 @@
                      puvcddir(ikl) = puvcddir(ikl) + zincflx(iw)*ztdbtc(jk)
                   endif
 ! Accumulate direct fluxes for near-IR bands
+! JPT Band 9 shoulbe be split, is this code being used?                  
                else if (ibm == 14 .or. ibm <= 9) then  
                   pnicd(ikl) = pnicd(ikl) + zincflx(iw)*zcd(jk,iw)
                   pnifd(ikl) = pnifd(ikl) + zincflx(iw)*zfd(jk,iw)

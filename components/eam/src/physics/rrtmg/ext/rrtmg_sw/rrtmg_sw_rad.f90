@@ -551,6 +551,8 @@
 
 ! Surface albedo
 !  Near-IR bands 16-24 and 29 (1-9 and 14), 820-16000 cm-1, 0.625-12.195 microns
+! JPT: if this code is what is being used it can be dramatically improved
+! Needs to be redone, band 14 should be split between S and L albedos 
          do ib=1,9
             albdir(ib) = aldir(iplon)
             albdif(ib) = aldif(iplon)
@@ -1004,7 +1006,7 @@
 ! loops above to (nlayers-1), and set the top most (nlayers) layer values here. 
 
       pavel(nlayers) = 0.5_r8 * pz(nlayers-1)
-      tavel(nlayers) = tavel(nlayers-1)
+
       pz(nlayers) = 1.e-4_r8
       tz(nlayers-1) = 0.5_r8 * (tavel(nlayers)+tavel(nlayers-1))
       tz(nlayers) = tz(nlayers-1)
