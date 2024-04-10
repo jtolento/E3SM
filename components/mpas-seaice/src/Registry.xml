@@ -3963,7 +3963,7 @@
                      type="real"
                      dimensions="nCells Time"
                      units="1"
-                />
+		/>
 		<var name="longwaveDown"
 		     type="real"
 		     dimensions="nCells Time"

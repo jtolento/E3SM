@@ -28,7 +28,10 @@
 			description="Bulk salinity of ice in a cell"
 		/>
 		<var name="broadbandAlbedo" type="real" dimensions="nCells Time" units="1"
-			description="snow/sea ice broadband albedo"
+		        description="snow/sea ice broadband albedo"
+		/>
+		<var name="nir_wght_dir" type="real" dimensions="nCells Time" units="1"
+                     description="Weight used to split NIR flux"
 		/>
 		<var name="coriolisStressVertexU" type="real" dimensions="nVertices Time" units="kg m-1 s-2"
 			description="Coriolis stress in U direction"

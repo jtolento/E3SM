@@ -1372,7 +1372,8 @@ end function radiation_nextsw_cday
                   call outfld('FSN200'//diag(icall),fsn200,pcols,lchnk)
                   call outfld('FSN200C'//diag(icall),fsn200c,pcols,lchnk)
                   call outfld('SWCF'//diag(icall),swcf  ,pcols,lchnk)
-
+                  !JPT
+                  cam_out%nir_wght_dir = 0.5
               end if ! (active_calls(icall))
           end do ! icall
           call t_stopf ('rad_sw_loop')
