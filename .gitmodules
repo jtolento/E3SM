@@ -72,6 +72,7 @@
 [submodule "components/mpas-seaice/src/icepack"]
 	path = components/mpas-seaice/src/icepack
 	url = git@github.com:E3SM-Project/Icepack.git
+	branch = nir_splitting
 [submodule "externals/haero"]
 	path = externals/haero
 	url = git@github.com:eagles-project/haero.git
