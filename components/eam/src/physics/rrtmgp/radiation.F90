@@ -1070,6 +1070,7 @@ contains
                             get_cloud_optics_lw, sample_cloud_optics_lw, &
                             set_aerosol_optics_sw
       use aer_rad_props, only: aer_rad_props_lw
+      use cam_logfile,  only: iulog !JPT
 
       ! For running CFMIP Observation Simulator Package (COSP)
       use cospsimulator_intr, only: docosp, cospsimulator_intr_run, cosp_nradsteps
@@ -1201,6 +1202,7 @@ contains
       ! Number of physics columns in this "chunk"
       ncol = state%ncol
 
+      !write(iulog,*) ' JPT pcols = ', pcols
       ! Set pointers to heating rates stored on physics buffer. These will be
       ! modified in this routine.
       call pbuf_get_field(pbuf, pbuf_get_index('QRS'), qrs)
@@ -1781,6 +1783,7 @@ contains
       use cam_history, only: outfld
       use radconstants, only: idx_sw_diag
       use cam_history_support, only: fillvalue
+      use cam_logfile,  only: iulog !JPT
 
       type(physics_state), intent(in) :: state
       real(r8), intent(in), dimension(:) :: coszrs
@@ -1815,10 +1818,14 @@ contains
 
       ! Compute and output diagnostics for single (550 nm) band
       sw_band_index = get_band_index_sw(550._r8, 'nm')
+      !write(iulog,*) ' JPT size tau(1) = ', SIZE(tau, 1)
+      !write(iulog,*) ' JPT Size coszrs = ', SIZE(coszrs)
       do icol = 1,size(tau, 1)
          do ilay = 1,size(tau, 2)
             ! NOTE: this logical is inside the loop to make this play nice with GPU parallelism
-            if (coszrs(icol) > 0) then
+           ! write(iulog,*) ' JPT icol = ', icol
+           ! write(iulog,*) ' JPT coszrs = ', coszrs(icol)
+            if (icol <= ncol ) then
                tot_icld_vistau(icol,ilay) = tau    (icol,ilay,sw_band_index)
                liq_icld_vistau(icol,ilay) = tau_liq(icol,ilay,sw_band_index)
                ice_icld_vistau(icol,ilay) = tau_ice(icol,ilay,sw_band_index)
@@ -2001,17 +2008,17 @@ contains
             ! Direct fluxes
             cam_out%soll(icol) &
                = sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,1:9)) &
-               + 0.5_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
+               + 0.458_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
             cam_out%sols(icol) &
-               = 0.5_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
+               = 0.542_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
                + sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,11:14))
 
             ! Diffuse fluxes
             cam_out%solld(icol) &
                = sum(flux_dn_diffuse(icol,kbot+1,1:9)) &
-               + 0.5_r8 * flux_dn_diffuse(icol,kbot+1,10)
+               + 0.438_r8 * flux_dn_diffuse(icol,kbot+1,10)
             cam_out%solsd(icol) &
-               = 0.5_r8 * flux_dn_diffuse(icol,kbot+1,10) &
+               = 0.562_r8 * flux_dn_diffuse(icol,kbot+1,10) &
                + sum(flux_dn_diffuse(icol,kbot+1,11:14))
 
             ! Net shortwave flux at surface
@@ -2249,8 +2256,8 @@ contains
             ! Band straddles the visible to near-infrared transition, so we take
             ! the albedo to be the average of the visible and near-infrared
             ! broadband albedos
-            albedo_dir(iband,1:ncol) = 0.5 * (cam_in%aldir(1:ncol) + cam_in%asdir(1:ncol))
-            albedo_dif(iband,1:ncol) = 0.5 * (cam_in%aldif(1:ncol) + cam_in%asdif(1:ncol))
+            albedo_dir(iband,1:ncol) = (0.458 * cam_in%aldir(1:ncol)) + (0.542 * cam_in%asdir(1:ncol))
+            albedo_dif(iband,1:ncol) = (0.438 * cam_in%aldif(1:ncol)) + (0.562 * cam_in%asdif(1:ncol))
 
          end if
       end do
