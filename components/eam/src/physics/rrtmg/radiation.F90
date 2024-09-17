@@ -658,9 +658,28 @@ end function radiation_nextsw_cday
           call addfld('FSNRTOAS'//diag(icall),  horiz_only,     'A','W/m2', &
                       'Net near-infrared flux (>= 0.7 microns) at top of atmosphere', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
-          call addfld ('SWCF'//diag(icall),  horiz_only,     'A',   'W/m2', 'Shortwave cloud forcing', &
+          call addfld('SWCF'//diag(icall),  horiz_only,     'A',   'W/m2', 'Shortwave cloud forcing', &
                        sampling_seq='rad_lwsw', flag_xyfill=.true., &
                        standard_name='toa_shortwave_cloud_radiative_effect')
+          ! JPT Added flds for forcing fiagnostics
+          !call addfld('ASDIR'//diag(icall),  horiz_only,     'A',   '1', 'UV/VIS Direct Albedo', &
+          !             sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !             standard_name='direct_vis_albedo')
+          !call addfld('ALDIR'//diag(icall),  horiz_only,     'A',   '1', 'NIR Direct Albedo', &
+          !             sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !             standard_name='direct_nir_albedo')
+          !call addfld('ASDIF'//diag(icall),  horiz_only,     'A',   '1', 'UV/VIS Diffuse Albedo', &
+          !             sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !             standard_name='diffuse_vis_albedo')
+          !call addfld('ALDIF'//diag(icall),  horiz_only,     'A',   '1', 'NIR Diffuse Albedo', &
+          !             sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !             standard_name='diffuse_nir_albedo')
+          call addfld('SD_SPLT_BND'//diag(icall),  horiz_only,     'A',   'W/m2', 'Downwelling Surface Flux in Band 9', &
+                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                       standard_name='downwelling_surface_flux_band_nine')
+          call addfld('SU_SPLT_BND'//diag(icall),  horiz_only,     'A',   'W/m2', 'Upwelling Surface Flux in Band 9', &
+                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                       standard_name='downwelling_surface_flux_band_nine')
 
           if (history_amwg) then
              call add_default('SOLIN'//diag(icall),   1, ' ')
@@ -1010,7 +1029,8 @@ end function radiation_nextsw_cday
     real(r8) fsn200c(pcols)       ! fcns interpolated to 200 mb
     real(r8) fnl(pcols,pverp)     ! net longwave flux
     real(r8) fcnl(pcols,pverp)    ! net clear-sky longwave flux
-
+    real(r8) sd_splt_bnd(pcols)          ! JPT downwelling surface flux in split rrtmg_sw band
+    real(r8) su_splt_bnd(pcols)          ! JPT upwelling   surface flux in split rrtmg_sw band  
     real(r8) pbr(pcols,pver)      ! Model mid-level pressures (dynes/cm2)
     real(r8) pnm(pcols,pverp)     ! Model interface pressures (dynes/cm2)
     real(r8) eccf                 ! Earth/sun distance factor
@@ -1024,6 +1044,7 @@ end function radiation_nextsw_cday
     real(r8), pointer, dimension(:,:) :: co2    ! co2   mass mixing ratio
     real(r8), dimension(pcols) :: co2_col_mean  ! co2 column mean mmr
     real(r8), pointer, dimension(:,:) :: sp_hum ! specific humidity
+    
 
     real(r8), pointer, dimension(:,:,:) :: su => NULL()  ! shortwave spectral flux up
     real(r8), pointer, dimension(:,:,:) :: sd => NULL()  ! shortwave spectral flux down
@@ -1302,8 +1323,10 @@ end function radiation_nextsw_cday
                        E_cld_tau=c_cld_tau, E_cld_tau_w=c_cld_tau_w, E_cld_tau_w_g=c_cld_tau_w_g, E_cld_tau_w_f=c_cld_tau_w_f, &
                        old_convert = .false.)
                   call t_stopf ('rad_rrtmg_sw')
-
-                  !  Output net fluxes at 200 mb
+                  sd_splt_bnd(:) = sd(:,1,9) !JPT
+                  su_splt_bnd(:) = su(:,1,9) !JPT
+                  
+                  !  Output net fluxes at 200 mb 
                   call vertinterp(ncol, pcols, pverp, state%pint, 20000._r8, fcns, fsn200c)
                   call vertinterp(ncol, pcols, pverp, state%pint, 20000._r8, fns, fsn200)
 
@@ -1372,7 +1395,13 @@ end function radiation_nextsw_cday
                   call outfld('FSN200'//diag(icall),fsn200,pcols,lchnk)
                   call outfld('FSN200C'//diag(icall),fsn200c,pcols,lchnk)
                   call outfld('SWCF'//diag(icall),swcf  ,pcols,lchnk)
-
+                  !JPT Added fields for forcing diagnostics
+                  !call outfld('ALDIR'//diag(icall),cam_in%aldir  ,pcols,lchnk)
+                  !call outfld('ASDIR'//diag(icall),cam_in%asdir  ,pcols,lchnk)
+                  !call outfld('ALDIF'//diag(icall),cam_in%aldif  ,pcols,lchnk)
+                  !call outfld('ASDIF'//diag(icall),cam_in%asdif  ,pcols,lchnk)
+                  call outfld('SD_SPLT_BND'//diag(icall),sd_splt_bnd ,pcols,lchnk) ! downwelling surface flux in band 9
+                  call outfld('SU_SPLT_BND'//diag(icall),su_splt_bnd ,pcols,lchnk) ! upwelling   surface flux in band 9
               end if ! (active_calls(icall))
           end do ! icall
           call t_stopf ('rad_sw_loop')

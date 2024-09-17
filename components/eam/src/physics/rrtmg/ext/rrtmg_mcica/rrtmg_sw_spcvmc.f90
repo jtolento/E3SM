@@ -264,7 +264,7 @@
       real(kind=r8) :: zfd(nlayers+1,ngptsw), zfu(nlayers+1,ngptsw)
 
 ! Ratio of flux in RRTMG_SW band 9 in VIS vs NIR Band
-      real(kind=r8) :: splt_vis_dir,splt_vis_ttl, splt_nir_dir, splt_nir_ttl       
+      real(kind=r8) :: vis_frc, nir_frc
 
 ! Inactive arrays
 !     real(kind=r8) :: zbbcd(nlayers+1), zbbcu(nlayers+1)
