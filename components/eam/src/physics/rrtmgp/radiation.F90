@@ -1964,6 +1964,7 @@ contains
       type(cam_out_t), intent(inout) :: cam_out
       character(len=*), intent(in) :: band
       integer :: icol
+      real(kind=r8) :: vis_frc, nir_frc     !JPT  Ratio of flux in RRTMG_SW band 9  (Band 10 in RRTMGP) in VIS vs NIR Band 
       real(r8), dimension(size(fluxes%bnd_flux_dn,1), &
                           size(fluxes%bnd_flux_dn,2), &
                           size(fluxes%bnd_flux_dn,3)) :: flux_dn_diffuse
@@ -2001,6 +2002,11 @@ contains
          ! Calculate diffuse flux from total and direct
          flux_dn_diffuse = fluxes%bnd_flux_dn - fluxes%bnd_flux_dn_dir
 
+         !vis_frc = 0.5             ! Default
+         !nir_frc = 1.0 - vis_frc   ! Default
+         vis_frc = 0.555            ! JPT: Proposed value                                                                                                       
+         nir_frc = 1.0 - vis_frc    ! JPT: Proposed value   
+
          ! Calculate broadband surface solar fluxes (UV/visible vs near IR) for
          ! each column.
          do icol = 1,size(fluxes%bnd_flux_dn, 1)
@@ -2008,17 +2014,17 @@ contains
             ! Direct fluxes
             cam_out%soll(icol) &
                = sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,1:9)) &
-               + 0.458_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
+               + nir_frc * fluxes%bnd_flux_dn_dir(icol,kbot+1,10)
             cam_out%sols(icol) &
-               = 0.542_r8 * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
+               = vis_frc * fluxes%bnd_flux_dn_dir(icol,kbot+1,10) &
                + sum(fluxes%bnd_flux_dn_dir(icol,kbot+1,11:14))
 
             ! Diffuse fluxes
             cam_out%solld(icol) &
                = sum(flux_dn_diffuse(icol,kbot+1,1:9)) &
-               + 0.438_r8 * flux_dn_diffuse(icol,kbot+1,10)
+               + nir_frc * flux_dn_diffuse(icol,kbot+1,10)
             cam_out%solsd(icol) &
-               = 0.562_r8 * flux_dn_diffuse(icol,kbot+1,10) &
+               = vis_frc * flux_dn_diffuse(icol,kbot+1,10) &
                + sum(flux_dn_diffuse(icol,kbot+1,11:14))
 
             ! Net shortwave flux at surface
@@ -2206,7 +2212,13 @@ contains
       real(r8), dimension(nswbands) :: lower_bounds, upper_bounds
       integer :: ncol, iband
       character(len=10) :: subname = 'set_albedo'
-
+      real(kind=r8) :: vis_frc, nir_frc     !JPT  Ratio of flux in RRTMG_SW band 9  (Band 10 in RRTMGP) in VIS vs NIR Band
+      
+      !vis_frc = 0.5             ! Default                                                                                                                     
+      !nir_frc = 1.0 - vis_frc   ! Default
+      vis_frc = 0.555            ! JPT: Proposed value
+      nir_frc = 1.0 - vis_frc    ! JPT: Proposed value
+      
       ! Check dimension sizes of output arrays.
       ! albedo_dir and albedo_dif should have sizes nswbands,ncol, but ncol
       ! can change so we just check that it is less than or equal to pcols (the
@@ -2256,8 +2268,10 @@ contains
             ! Band straddles the visible to near-infrared transition, so we take
             ! the albedo to be the average of the visible and near-infrared
             ! broadband albedos
-            albedo_dir(iband,1:ncol) = (0.458 * cam_in%aldir(1:ncol)) + (0.542 * cam_in%asdir(1:ncol))
-            albedo_dif(iband,1:ncol) = (0.438 * cam_in%aldif(1:ncol)) + (0.562 * cam_in%asdif(1:ncol))
+            ! JPT 20241025: Change from a linear average to a weighted average,
+            ! weighted by the vis/nir fraction of insolation within the split rrtmg/rrtmgp band
+            albedo_dir(iband,1:ncol) = (nir_frc * cam_in%aldir(1:ncol)) + (vis_frc * cam_in%asdir(1:ncol))
+            albedo_dif(iband,1:ncol) = (nir_frc * cam_in%aldif(1:ncol)) + (vis_frc * cam_in%asdif(1:ncol))
 
          end if
       end do
