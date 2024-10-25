@@ -102,7 +102,7 @@ readonly HIST_N="1"
 readonly OLD_EXECUTABLE=""
 
 # --- Toggle flags for what to do ----
-do_fetch_code=false
+do_fetch_code=true
 do_create_newcase=true
 do_case_setup=true
 do_case_build=false
