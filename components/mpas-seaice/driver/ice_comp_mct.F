@@ -40,6 +40,7 @@ module ice_comp_mct
    use mpas_bootstrapping
    use mpas_dmpar
    use mpas_log
+
 #ifdef HAVE_MOAB
    use mpas_moabmesh
    use seq_comm_mct, only: MPSIID
@@ -1295,7 +1296,7 @@ contains
 
         currTime = mpas_get_clock_time(domain % clock, MPAS_NOW, ierr)
         call mpas_get_time(curr_time=currTime, dateTimeString=timeStamp, ierr=ierr)
-        ! write time stamp on every step
+        ! write time stamp on evetrimry step
         call mpas_dmpar_get_time(current_wallclock_time)
         write (WCstring,'(F18.3)') current_wallclock_time
         call mpas_log_write(trim(timeStamp) // '  WC time:' // WCstring)
@@ -1311,10 +1312,12 @@ contains
         if (debugOn) call mpas_log_write('   Starting forward update', masterOnly=.true.)
         call mpas_timer_start("time integration", .false.)
         ierr = 0
+        if (debugOn) call mpas_log_write('   calling seaice_timestep', masterOnly=.true.)
         call seaice_timestep(domain, domain % clock, itimestep)
+        if (debugOn) call mpas_log_write('   calling mpas_timer_stop', masterOnly=.true.)
         call mpas_timer_stop("time integration")
         if (debugOn) call mpas_log_write('   Finished forward update', masterOnly=.true.)
-
+        
         ! update analysis members
         if (debugOn) call mpas_log_write('   Starting AM compute', masterOnly=.true.)
         call seaice_analysis_compute(domain, ierr)
@@ -2166,6 +2169,7 @@ contains
       shortwaveVisibleDiffuseDownField, &
       shortwaveIRDirectDownField,       &
       shortwaveIRDiffuseDownField,      &
+      nir_weight_dir_field,             &
       longwaveDownField,                &
       rainfallRateField,                &
       snowfallRateField,                &
@@ -2551,6 +2555,7 @@ contains
    call mpas_pool_get_field(atmosCoupling, 'shortwaveVisibleDiffuseDown', shortwaveVisibleDiffuseDownField)
    call mpas_pool_get_field(atmosCoupling, 'shortwaveIRDirectDown', shortwaveIRDirectDownField)
    call mpas_pool_get_field(atmosCoupling, 'shortwaveIRDiffuseDown', shortwaveIRDiffuseDownField)
+   call mpas_pool_get_field(atmosCoupling, 'nir_weight_dir', nir_weight_dir_field) !JPT
 
    call mpas_pool_get_field(atmosCoupling, 'longwaveDown', longwaveDownField)
    call mpas_pool_get_field(atmosCoupling, 'rainfallRate', rainfallRateField)
@@ -2609,6 +2614,7 @@ contains
    call mpas_dmpar_exch_halo_field(shortwaveVisibleDiffuseDownField)
    call mpas_dmpar_exch_halo_field(shortwaveIRDirectDownField)
    call mpas_dmpar_exch_halo_field(shortwaveIRDiffuseDownField)
+   call mpas_dmpar_exch_halo_field(nir_weight_dir_field)   
    call mpas_dmpar_exch_halo_field(longwaveDownField)
    call mpas_dmpar_exch_halo_field(rainfallRateField)
    call mpas_dmpar_exch_halo_field(snowfallRateField)
@@ -3784,6 +3790,7 @@ contains
       shortwaveVisibleDiffuseDownField, &
       shortwaveIRDirectDownField,       &
       shortwaveIRDiffuseDownField,      &
+      nir_weight_dir_field,             &
       longwaveDownField,                &
       rainfallRateField,                &
       snowfallRateField,                &
@@ -3829,6 +3836,7 @@ contains
       shortwaveVisibleDiffuseDown, &
       shortwaveIRDirectDown,       &
       shortwaveIRDiffuseDown,      &
+      nir_weight_dir,              &
       longwaveDown,                &
       rainfallRate,                &
       snowfallRate,                &
@@ -3930,6 +3938,7 @@ contains
       call mpas_pool_get_array(atmosCoupling, 'shortwaveVisibleDiffuseDown', shortwaveVisibleDiffuseDown)
       call mpas_pool_get_array(atmosCoupling, 'shortwaveIRDirectDown', shortwaveIRDirectDown)
       call mpas_pool_get_array(atmosCoupling, 'shortwaveIRDiffuseDown', shortwaveIRDiffuseDown)
+      call mpas_pool_get_array(atmosCoupling, 'nir_weight_dir', nir_weight_dir)
       call mpas_pool_get_array(atmosCoupling, 'longwaveDown', longwaveDown)
       call mpas_pool_get_array(atmosCoupling, 'rainfallRate', rainfallRate)
       call mpas_pool_get_array(atmosCoupling, 'snowfallRate', snowfallRate)
@@ -4018,6 +4027,7 @@ contains
         shortwaveVisibleDiffuseDown(i) = x2i_im(n,index_x2i_Faxa_swvdf)
         shortwaveIRDirectDown(i)       = x2i_im(n,index_x2i_Faxa_swndr)
         shortwaveIRDiffuseDown(i)      = x2i_im(n,index_x2i_Faxa_swndf)
+        nir_weight_dir(i)              = x2i_im(n,index_x2i_Faxa_nir_wght_dir)
         longwaveDown(i)                = x2i_im(n,index_x2i_Faxa_lwdn)
         rainfallRate(i)                = x2i_im(n,index_x2i_Faxa_rain)
         snowfallRate(i)                = x2i_im(n,index_x2i_Faxa_snow)
@@ -4187,6 +4197,7 @@ contains
    call mpas_pool_get_field(atmosCoupling, 'shortwaveVisibleDiffuseDown', shortwaveVisibleDiffuseDownField)
    call mpas_pool_get_field(atmosCoupling, 'shortwaveIRDirectDown', shortwaveIRDirectDownField)
    call mpas_pool_get_field(atmosCoupling, 'shortwaveIRDiffuseDown', shortwaveIRDiffuseDownField)
+   call mpas_pool_get_field(atmosCoupling, 'nir_weight_dir', nir_weight_dir_field)
    call mpas_pool_get_field(atmosCoupling, 'longwaveDown', longwaveDownField)
    call mpas_pool_get_field(atmosCoupling, 'rainfallRate', rainfallRateField)
    call mpas_pool_get_field(atmosCoupling, 'snowfallRate', snowfallRateField)
@@ -4242,6 +4253,7 @@ contains
    call mpas_dmpar_exch_halo_field(shortwaveVisibleDiffuseDownField)
    call mpas_dmpar_exch_halo_field(shortwaveIRDirectDownField)
    call mpas_dmpar_exch_halo_field(shortwaveIRDiffuseDownField)
+   call mpas_dmpar_exch_halo_field(nir_weight_dir_field)   
    call mpas_dmpar_exch_halo_field(longwaveDownField)
    call mpas_dmpar_exch_halo_field(rainfallRateField)
    call mpas_dmpar_exch_halo_field(snowfallRateField)
