@@ -71,7 +71,7 @@ integer :: irad_always = 0 ! Specifies length of time in timesteps (positive)
                            ! or hours (negative) SW/LW radiation will be
                            ! run continuously from the start of an
                            ! initial or restart run
-logical :: spectralflux  = .false. ! calculate fluxes (up and down) per band.
+logical :: spectralflux  = .true. ! calculate fluxes (up and down) per band. JPT .false.->true
 
 logical :: use_rad_dt_cosz  = .false. ! if true, uses the radiation dt for all cosz calculations !BSINGH - Added for solar insolation calc.
 
@@ -1373,7 +1373,7 @@ end function radiation_nextsw_cday
                   call outfld('FSN200C'//diag(icall),fsn200c,pcols,lchnk)
                   call outfld('SWCF'//diag(icall),swcf  ,pcols,lchnk)
                   !JPT
-                  cam_out%nir_wght_dir = 0.5
+                  cam_out%nir_wght_dir = sd(:,1,9)
               end if ! (active_calls(icall))
           end do ! icall
           call t_stopf ('rad_sw_loop')

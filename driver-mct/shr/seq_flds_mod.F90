@@ -940,11 +940,11 @@ contains
     ! JPT Add NIR WGHT for MPASSI (Direct)
     call seq_flds_add(a2x_fluxes,"Faxa_nir_wght_dir")
     call seq_flds_add(x2i_fluxes,"Faxa_nir_wght_dir")
-    !if (rof_heat) then
-    !   call seq_flds_add(x2r_fluxes,"Faxa_swndr")
-    !   call seq_flds_add(a2x_fluxes_to_rof,"Faxa_swndr")
-    !endif
-    !call seq_flds_add(x2l_fluxes,"Faxa_swndr")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_wght_dir")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_wght_dir")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_wght_dir")
     longname = 'near-infrared weight for split band (Direct)'
     stdname  = 'surface_downward_direct_shortwave_near_infrared_weight'
     units    = '1'
