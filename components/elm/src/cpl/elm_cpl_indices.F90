@@ -96,6 +96,7 @@ module elm_cpl_indices
   integer, public ::index_x2l_Faxa_swvdr      ! sw: vis direct  downward
   integer, public ::index_x2l_Faxa_swndf      ! sw: nir diffuse downward
   integer, public ::index_x2l_Faxa_swvdf      ! sw: vis diffuse downward
+  integer, public ::index_x2l_Faxa_nir_wght_dir !JPT
   integer, public ::index_x2l_Sa_co2prog      ! bottom atm level prognostic co2
   integer, public ::index_x2l_Sa_co2diag      ! bottom atm level diagnostic co2
   integer, public ::index_x2l_Faxa_bcphidry   ! flux: Black Carbon hydrophilic dry deposition
@@ -281,6 +282,7 @@ contains
     index_x2l_Faxa_swvdr    = mct_avect_indexra(x2l,'Faxa_swvdr')
     index_x2l_Faxa_swndf    = mct_avect_indexra(x2l,'Faxa_swndf')
     index_x2l_Faxa_swvdf    = mct_avect_indexra(x2l,'Faxa_swvdf')
+    index_x2l_Faxa_nir_wght_dir    = mct_avect_indexra(x2l,'Faxa_nir_wght_dir') !JPT
     index_x2l_Faxa_bcphidry = mct_avect_indexra(x2l,'Faxa_bcphidry')
     index_x2l_Faxa_bcphodry = mct_avect_indexra(x2l,'Faxa_bcphodry')
     index_x2l_Faxa_bcphiwet = mct_avect_indexra(x2l,'Faxa_bcphiwet')

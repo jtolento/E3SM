@@ -81,6 +81,7 @@ module atm2lndType
      real(r8), pointer :: forc_solad_grc                (:,:) => null() ! direct beam radiation (numrad) (vis=forc_sols , nir=forc_soll )
      real(r8), pointer :: forc_solai_grc                (:,:) => null() ! diffuse radiation (numrad) (vis=forc_solsd, nir=forc_solld)
      real(r8), pointer :: forc_solar_grc                (:)   => null() ! incident solar radiation
+     real(r8), pointer :: forc_nir_wght_dir             (:,:)  => null() ! JPT
      real(r8), pointer :: forc_ndep_grc                 (:)   => null() ! nitrogen deposition rate (gN/m2/s)
      real(r8), pointer :: forc_pdep_grc                 (:)   => null() ! phosphorus deposition rate (gP/m2/s)
      real(r8), pointer :: forc_pc13o2_grc               (:)   => null() ! C13O2 partial pressure (Pa)
@@ -245,6 +246,7 @@ contains
     allocate(this%forc_pco2_grc                 (begg:endg))        ; this%forc_pco2_grc                 (:)   = ival
     allocate(this%forc_solad_grc                (begg:endg,numrad)) ; this%forc_solad_grc                (:,:) = ival
     allocate(this%forc_solai_grc                (begg:endg,numrad)) ; this%forc_solai_grc                (:,:) = ival
+    allocate(this%forc_nir_wght_dir             (begp:endp,numrad)) ; this%forc_nir_wght_dir             (:,:) = ival !JPT
     allocate(this%forc_solar_grc                (begg:endg))        ; this%forc_solar_grc                (:)   = ival
     allocate(this%forc_ndep_grc                 (begg:endg))        ; this%forc_ndep_grc                 (:)   = ival
     allocate(this%forc_pdep_grc                 (begg:endg))        ; this%forc_pdep_grc                 (:)   = ival
@@ -322,7 +324,7 @@ contains
   subroutine InitHistory(this, bounds)
     !
     ! !USES:
-    use histFileMod, only : hist_addfld1d
+    use histFileMod, only : hist_addfld1d, hist_addfld2d
     !
     ! !ARGUMENTS:
     class(atm2lnd_type) :: this
@@ -331,9 +333,11 @@ contains
     ! !LOCAL VARIABLES:
     integer  :: begg, endg
     integer  :: begp, endp
+    integer  :: begc, endc
     !---------------------------------------------------------------------
 
     begg = bounds%begg; endg= bounds%endg
+    begc = bounds%begc; endc= bounds%endc
     begp = bounds%begp; endp= bounds%endp
 
     this%forc_flood_grc(begg:endg) = spval
@@ -503,6 +507,21 @@ contains
     call hist_addfld1d (fname='FSD240', units='W/m2',  &
          avgflag='A', long_name='direct radiation (last 240hrs)', &
          ptr_patch=this%fsd240_patch, default='inactive')
+
+    this%forc_nir_wght_dir(begp:endp,numrad) = spval !JPT
+    call hist_addfld2d (fname='NIR_WGHT_DIR', units='1', type2d='numrad', &
+         avgflag='A', long_name='Fraction of NIR flux in split band', &
+         ptr_patch=this%forc_nir_wght_dir, default='inactive')
+
+    !this%fsds_vis_i_patch(begp:endp) = spval
+    !call hist_addfld1d (fname='FSDSVI', units='W/m^2',  &
+    !     avgflag='A', long_name='diffuse vis incident solar radiation', &
+    !     ptr_patch=this%fsds_vis_i_patch)
+    !
+    !this%albgri_col(begc:endc,:) = spval
+    !call hist_addfld2d (fname='ALBGRD', units='proportion', type2d='numrad', &
+    !     avgflag='A', long_name='ground albedo (direct)', &
+    !     ptr_col=this%albgrd_col, default='inactive')
 
   end subroutine InitHistory
 

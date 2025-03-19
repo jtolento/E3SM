@@ -1372,6 +1372,7 @@ contains
        atm2lnd_vars%forc_solad_grc(g,1) = x2l_lm(i,index_x2l_Faxa_swvdr)   ! forc_solsxy  Atm flux  W/m^2
        atm2lnd_vars%forc_solai_grc(g,2) = x2l_lm(i,index_x2l_Faxa_swndf)   ! forc_solldxy Atm flux  W/m^2
        atm2lnd_vars%forc_solai_grc(g,1) = x2l_lm(i,index_x2l_Faxa_swvdf)   ! forc_solsdxy Atm flux  W/m^2
+       atm2lnd_vars%forc_nir_wght_dir(g,1) = x2l_lm(i,index_x2l_Faxa_nir_wght_dir)   ! JPT
 
        atm2lnd_vars%forc_th_not_downscaled_grc(g)    = x2l_lm(i,index_x2l_Sa_ptem)      ! forc_thxy Atm state K
        atm2lnd_vars%forc_q_not_downscaled_grc(g)     = x2l_lm(i,index_x2l_Sa_shum)      ! forc_qxy  Atm state kg/kg

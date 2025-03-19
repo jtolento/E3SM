@@ -645,6 +645,7 @@ contains
             atm2lnd_vars%forc_solad_grc(g,1) = swvdr
             atm2lnd_vars%forc_solai_grc(g,2) = swndf
             atm2lnd_vars%forc_solai_grc(g,1) = swvdf
+            atm2lnd_vars%forc_nir_wght_dir(g,1) = nir_wght_dir !JPT
         else
             swndr = max(((atm2lnd_vars%atm_input(4,g,1,tindex(4,2))*atm2lnd_vars%scale_factors(4)+ &
                                      atm2lnd_vars%add_offsets(4))*wt2(4)) * 0.50_R8, 0.0_r8)

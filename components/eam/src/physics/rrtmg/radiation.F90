@@ -661,6 +661,10 @@ end function radiation_nextsw_cday
           call addfld ('SWCF'//diag(icall),  horiz_only,     'A',   'W/m2', 'Shortwave cloud forcing', &
                        sampling_seq='rad_lwsw', flag_xyfill=.true., &
                        standard_name='toa_shortwave_cloud_radiative_effect')
+          !JPT
+          call addfld ('NIR_WGHT_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Spectral Weight', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_spectral_weight')
 
           if (history_amwg) then
              call add_default('SOLIN'//diag(icall),   1, ' ')
@@ -1010,7 +1014,9 @@ end function radiation_nextsw_cday
     real(r8) fsn200c(pcols)       ! fcns interpolated to 200 mb
     real(r8) fnl(pcols,pverp)     ! net longwave flux
     real(r8) fcnl(pcols,pverp)    ! net clear-sky longwave flux
-
+    real(r8) nir_wght_dir(pcols)  ! near-IR direct weight JPT
+    real(r8) asym_splt            ! Asymmetric band split weighting
+ 
     real(r8) pbr(pcols,pver)      ! Model mid-level pressures (dynes/cm2)
     real(r8) pnm(pcols,pverp)     ! Model interface pressures (dynes/cm2)
     real(r8) eccf                 ! Earth/sun distance factor
@@ -1303,6 +1309,15 @@ end function radiation_nextsw_cday
                        old_convert = .false.)
                   call t_stopf ('rad_rrtmg_sw')
 
+                  !JPT
+                  asym_splt = 0.555
+                  where ( (.not.isnan(sd(:,1,9))) )
+                     nir_wght_dir = (sd(:,1,9) * asym_splt)
+                  elsewhere
+                     nir_wght_dir = 0.1                     
+                  end where
+                  cam_out%nir_wght_dir = nir_wght_dir
+                  
                   !  Output net fluxes at 200 mb
                   call vertinterp(ncol, pcols, pverp, state%pint, 20000._r8, fcns, fsn200c)
                   call vertinterp(ncol, pcols, pverp, state%pint, 20000._r8, fns, fsn200)
@@ -1373,7 +1388,7 @@ end function radiation_nextsw_cday
                   call outfld('FSN200C'//diag(icall),fsn200c,pcols,lchnk)
                   call outfld('SWCF'//diag(icall),swcf  ,pcols,lchnk)
                   !JPT
-                  cam_out%nir_wght_dir = sd(:,1,9)
+                  call outfld('NIR_WGHT_DIR'//diag(icall),cam_out%nir_wght_dir  ,pcols,lchnk)
               end if ! (active_calls(icall))
           end do ! icall
           call t_stopf ('rad_sw_loop')
