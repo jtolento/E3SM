@@ -1783,7 +1783,7 @@ contains
    !-----------------------------------------------------------------------
    subroutine SNICAR_AD_RT (flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,  &
                          coszen, flg_slr_in, h2osno_liq, h2osno_ice, snw_rds,   &
-                         mss_cnc_aer_in, albsfc, albout, flx_abs)
+                         mss_cnc_aer_in, albsfc, nir_wght_dir, albout, flx_abs)
      !
      ! !DESCRIPTION:
      ! Determine reflectance of, and vertically-resolved solar absorption in,
@@ -1826,6 +1826,7 @@ contains
      integer           , intent(in)  :: snw_rds        ( bounds%begc: , -nlevsno+1: )      ! snow effective radius (col,lyr) [microns, m^-6]
      real(r8)          , intent(in)  :: mss_cnc_aer_in ( bounds%begc: , -nlevsno+1: , 1: ) ! mass concentration of all aerosol species (col,lyr,aer) [kg/kg]
      real(r8)          , intent(in)  :: albsfc         ( bounds%begc: , 1: )               ! albedo of surface underlying snow (col,bnd) [frc]
+     real(r8)          , intent(in)  :: nir_wght_dir   ( bounds%begc: , 1: )               ! JPT Weighting 6-band treatment (col, bnd) [frc]
      real(r8)          , intent(out) :: albout         ( bounds%begc: , 1: )               ! snow albedo, averaged into 2 bands (=0 if no sun or no snow) (col,bnd) [frc]
      real(r8)          , intent(out) :: flx_abs        ( bounds%begc: , -nlevsno+1: , 1: ) ! absorbed flux in each layer per unit flux incident (col, lyr, bnd)
      !
@@ -2314,6 +2315,26 @@ contains
              !  Band 4: 1.2-1.5um (NIR)
              !  Band 5: 1.5-5.0um (NIR)
              !
+             !
+             ! JPT (03072025): Introduce 6-band case, where spectral
+             ! grid matches RRTM grid partitions. Note band 2 (0.2-0.7um)
+             ! Will still come from the paraterized split of RRTMG_SW band 9
+             ! in EAM, and bands 3+4 will still be parameterized from the
+             ! incident flux sent to ELM withing this subroutine, as is done
+             ! in the othe cases done within this routine. All other bands
+             ! (1, 5, 6) will have fluxes and albedos passed directly
+             ! to and from EAM and ELM.
+             ! This should reduce sureface and lower tropospheric net flux
+             ! bias (Tolento et al. 2024) 
+             ! Spectral Bands (6-Band case)
+             !  Band 1: 0.2   - 0.7   um (VIS)
+             !  Band 2: 0.7   - 0.778 um (NIR) 
+             !  Band 3: 0.778 - 1.0   um (NIR)
+             !  Band 4: 1.0   - 1.242 um (NIR)
+             !  Band 5: 1.242 - 1.262 um (NIR)
+             !  Band 6: 1.625 - 12.2  um (NIR)
+             !
+             !
              ! The following weights are appropriate for surface-incident flux in a mid-latitude winter atmosphere
              !
              ! 3-band weights
@@ -2368,6 +2389,20 @@ contains
                      flx_wgt(5) = flx_wgt_dif(atm_type_index, 5)
                   endif
                 endif
+
+             !JPT 6-Band weights
+             elseif(numrad_snw==6) then
+                if (flg_slr_in == 1) then
+                  if (atm_type_index == atm_type_default) then
+                     !flx_wgt(1) = 1._r8
+                     !flx_wgt(2) = nir_wght_dir / 5
+                     !flx_wgt(3) = nir_wght_dir / 5
+                     !flx_wgt(4) = nir_wght_dir / 5
+                     !flx_wgt(5) = nir_wght_dir / 5
+                     !flx_wgt(6) = nir_wght_dir / 5
+                  endif 
+                endif
+                     
              endif ! end if numrad_snw
 
              ! Loop over snow spectral bands

@@ -134,6 +134,7 @@ contains
     allocate(this%fsds_sno_nd_patch     (begp:endp))              ; this%fsds_sno_nd_patch     (:)   = spval
     allocate(this%fsds_sno_vi_patch     (begp:endp))              ; this%fsds_sno_vi_patch     (:)   = spval
     allocate(this%fsds_sno_ni_patch     (begp:endp))              ; this%fsds_sno_ni_patch     (:)   = spval
+    
 
   end subroutine InitAllocate
 
