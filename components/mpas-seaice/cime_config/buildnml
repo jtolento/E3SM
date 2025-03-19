@@ -854,7 +854,7 @@ def buildnml(case, caseroot, compname):
             lines.append('    <var name="uVelocityGeo"/>')
             lines.append('    <var name="vVelocityGeo"/>')
             lines.append('    <var name="shortwaveIRDirectDown"/>')
-            lines.append('    <var name="nir_wght_dir"/>')
+            lines.append('    <var name="nir_weight_dir"/>')
             lines.append('</stream>')
             lines.append('')
             lines.append('<stream name="timeSeriesStatsDailyRestart"')
