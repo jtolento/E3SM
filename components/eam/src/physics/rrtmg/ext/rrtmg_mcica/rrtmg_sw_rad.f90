@@ -95,7 +95,7 @@
              tauaer  ,ssaaer  ,asmaer  , &
              swuflx  ,swdflx  ,swhr    ,swuflxc ,swdflxc ,swhrc, &
              dirdnuv, dirdnir, difdnuv, difdnir, ninflx, ninflxc, &
-             swuflxs, swdflxs)
+             swuflxs, swdflxs, swdflxs_dir)
 
 
 ! ------- Description -------
@@ -306,6 +306,7 @@
 
       real(kind=r8), intent(out)  :: swuflxs(:,:,:)     ! shortwave spectral flux up
       real(kind=r8), intent(out)  :: swdflxs(:,:,:)     ! shortwave spectral flux down
+      real(kind=r8), intent(out)  :: swdflxs_dir(:,:,:)     ! JPT
 
 ! ----- Local -----
 
@@ -457,6 +458,7 @@
       real(kind=r8) :: nidflx(nlay+2)         ! Total sky downward shortwave flux, near-IR  
       real(kind=r8) :: zbbfsu(nbndsw,nlay+2)  ! temporary upward shortwave flux spectral (w/m2)
       real(kind=r8) :: zbbfsd(nbndsw,nlay+2)  ! temporary downward shortwave flux spectral (w/m2)
+      real(kind=r8) :: sd_dir(nbndsw,nlay+2)  ! JPT
 
 ! Output - inactive
 !      real(kind=r8) :: zuvfu(nlay+2)         ! temporary upward UV shortwave flux (w/m2)
@@ -692,6 +694,7 @@
             znifu(i) = 0._r8
             zbbfsu(:,i) = 0._r8
             zbbfsd(:,i) = 0._r8
+            sd_dir(:,i) = 0._r8
          enddo
 
          call spcvmc_sw &
@@ -704,7 +707,7 @@
               fac00, fac01, fac10, fac11, &
               selffac, selffrac, indself, forfac, forfrac, indfor, &
               zbbfd, zbbfu, zbbcd, zbbcu, zuvfd, zuvcd, znifd, znicd, znifu, znicu, &
-              zbbfddir, zbbcddir, zuvfddir, zuvcddir, znifddir, znicddir, zbbfsu, zbbfsd)
+              zbbfddir, zbbcddir, zuvfddir, zuvcddir, znifddir, znicddir, zbbfsu, zbbfsd, sd_dir)
 
 ! Transfer up and down, clear and total sky fluxes to output arrays.
 ! Vertical indexing goes from bottom to top
@@ -716,6 +719,7 @@
             swdflx(iplon,i) = zbbfd(i)
             swuflxs(:,iplon,i) = zbbfsu(:,i)
             swdflxs(:,iplon,i) = zbbfsd(:,i)
+            swdflxs_dir(:,iplon,i) = sd_dir(:,i)
             uvdflx(i) = zuvfd(i)
             nidflx(i) = znifd(i)
 !  Direct/diffuse fluxes

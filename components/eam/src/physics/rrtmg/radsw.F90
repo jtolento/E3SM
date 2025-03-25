@@ -47,7 +47,7 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
                     fsnsc    ,fsdsc      ,fsds         ,sols         ,soll    , &
                     solsd    ,solld      ,fns          ,fcns         , &
                     Nday     ,Nnite      ,IdxDay       ,IdxNite      ,clm_rand_seed, &
-                    su       ,sd         ,                             &
+                    su       ,sd         ,sd_dir       ,                     &
                     E_cld_tau, E_cld_tau_w, E_cld_tau_w_g, E_cld_tau_w_f,  &
                     old_convert)
 
@@ -159,6 +159,7 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
 
    real(r8), pointer, dimension(:,:,:) :: su ! shortwave spectral flux up
    real(r8), pointer, dimension(:,:,:) :: sd ! shortwave spectral flux down
+   real(r8), pointer, dimension(:,:,:) :: sd_dir !JPT direct shortwave spectral flux down
 
    !---------------------------Local variables-----------------------------
 
@@ -230,6 +231,7 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
    real(r8) :: swhrc(pcols,rrtmg_levs)          ! Clear sky shortwave radiative heating rate (K/d)
    real(r8) :: swuflxs(nbndsw,pcols,rrtmg_levs+1)  ! Shortwave spectral flux up
    real(r8) :: swdflxs(nbndsw,pcols,rrtmg_levs+1)  ! Shortwave spectral flux down
+   real(r8) :: swdflxs_dir(nbndsw,pcols,rrtmg_levs+1)  ! JPT Direct shortwave spectral flux down
 
    real(r8) :: dirdnuv(pcols,rrtmg_levs+1)       ! Direct downward shortwave flux, UV/vis
    real(r8) :: difdnuv(pcols,rrtmg_levs+1)       ! Diffuse downward shortwave flux, UV/vis
@@ -309,6 +311,7 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
 
    if (associated(su)) su(1:ncol,:,:) = 0.0_r8
    if (associated(sd)) sd(1:ncol,:,:) = 0.0_r8
+   if (associated(sd_dir)) sd_dir(1:ncol,:,:) = 0.0_r8
 
    ! If night everywhere, return:
    if ( Nday == 0 ) then
@@ -529,7 +532,7 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
                  cicewp_stosw, cliqwp_stosw, rei, rel, &
                  tau_aer_sw, ssa_aer_sw, asm_aer_sw, &
                  swuflx, swdflx, swhr, swuflxc, swdflxc, swhrc, &
-                 dirdnuv, dirdnir, difdnuv, difdnir, ninflx, ninflxc, swuflxs, swdflxs)
+                 dirdnuv, dirdnir, difdnuv, difdnir, ninflx, ninflxc, swuflxs, swdflxs, swdflxs_dir)
 
    ! Flux units are in W/m2 on output from rrtmg_sw and contain output for
    ! extra layer above model top with vertical indexing from bottom to top.
@@ -593,6 +596,11 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
            (/Nday,rrtmg_levs,nbndsw/), order=(/3,1,2/))
    end if
 
+   if (associated(sd_dir)) then
+      sd_dir(1:Nday,pverp-rrtmg_levs+1:pverp,:) = reshape(swdflxs_dir(:,1:Nday,rrtmg_levs:1:-1), &
+           (/Nday,rrtmg_levs,nbndsw/), order=(/3,1,2/))
+   end if
+
    call t_stopf('rrtmg_sw')
 
    ! Rearrange output arrays.
@@ -630,6 +638,10 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
 
    if (associated(sd)) then
       call ExpDayNite(sd,	Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, pverp, 1, nbndsw)
+   end if
+
+   if (associated(sd_dir)) then
+      call ExpDayNite(sd_dir,   Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, pverp, 1, nbndsw)
    end if
 
 end subroutine rad_rrtmg_sw

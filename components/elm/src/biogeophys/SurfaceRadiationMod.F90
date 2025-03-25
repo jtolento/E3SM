@@ -66,6 +66,7 @@ module SurfaceRadiationMod
      real(r8), pointer  :: fsds_vis_i_patch      (:) => null() ! patch incident diffuse vis solar radiation (W/m**2)
      real(r8), pointer  :: fsds_vis_d_ln_patch   (:) => null() ! patch incident direct beam vis solar radiation at local noon (W/m**2)
      real(r8), pointer  :: fsds_vis_i_ln_patch   (:) => null() ! patch incident diffuse beam vis solar radiation at local noon (W/m**2)
+     real(r8), pointer  :: fsds_nir_wght_dir_patch     (:) => null() ! JPT
 
    contains
 
@@ -127,6 +128,7 @@ contains
     allocate(this%fsr_sno_ni_patch      (begp:endp))              ; this%fsr_sno_ni_patch      (:)   = spval
 
     allocate(this%fsds_vis_d_patch      (begp:endp))              ; this%fsds_vis_d_patch      (:)   = spval
+    allocate(this%fsds_nir_wght_dir_patch (begp:endp))         ; this%fsds_nir_wght_dir_patch  (:)   = spval !JPT
     allocate(this%fsds_vis_i_patch      (begp:endp))              ; this%fsds_vis_i_patch      (:)   = spval
     allocate(this%fsds_vis_d_ln_patch   (begp:endp))              ; this%fsds_vis_d_ln_patch   (:)   = spval
     allocate(this%fsds_vis_i_ln_patch   (begp:endp))              ; this%fsds_vis_i_ln_patch   (:)   = spval
@@ -207,6 +209,11 @@ contains
     call hist_addfld1d (fname='FSDSVD', units='W/m^2',  &
          avgflag='A', long_name='direct vis incident solar radiation', &
          ptr_patch=this%fsds_vis_d_patch)
+    
+    this%fsds_nir_wght_dir_patch(begp:endp) = spval
+    call hist_addfld1d (fname='NIR_WGHT_DIR', units='W/m^2',  &
+         avgflag='A', long_name='direct weight ', &
+         ptr_patch=this%fsds_nir_wght_dir_patch)
 
     this%fsds_vis_i_patch(begp:endp) = spval
     call hist_addfld1d (fname='FSDSVI', units='W/m^2',  &
@@ -389,7 +396,7 @@ contains
 
           forc_solad      =>    top_af%solad                      , & ! Input:  [real(r8) (:,:) ] direct beam radiation (W/m**2)
           forc_solai      =>    top_af%solai                      , & ! Input:  [real(r8) (:,:) ] diffuse radiation (W/m**2)
-
+          forc_nir_wght_dir  =>    atm2lnd_vars%forc_nir_wght_dir    , & ! JPT: Input:  [real(r8) (:,:) ]
           snow_depth      =>    col_ws%snow_depth    , & ! Input:  [real(r8) (:)   ] snow height (m)
           frac_sno        =>    col_ws%frac_sno      , & ! Input:  [real(r8) (:)   ] fraction of ground covered by snow (0 to 1)
 
@@ -454,6 +461,7 @@ contains
           fsds_vis_i_ln   =>    surfrad_vars%fsds_vis_i_ln_patch  , & ! Output: [real(r8) (:)   ] incident diffuse beam vis solar rad at local noon (W/m**2)
           fsr_vis_d_ln    =>    surfrad_vars%fsr_vis_d_ln_patch   , & ! Output: [real(r8) (:)   ] reflected direct beam vis solar rad at local noon (W/m**2)
           fsds_vis_d      =>    surfrad_vars%fsds_vis_d_patch     , & ! Output: [real(r8) (:)   ] incident direct beam vis solar radiation (W/m**2)
+          fsds_nir_wght_dir  => surfrad_vars%fsds_nir_wght_dir_patch     , & ! JPT
           fsds_vis_i      =>    surfrad_vars%fsds_vis_i_patch     , & ! Output: [real(r8) (:)   ] incident diffuse vis solar radiation (W/m**2)
           fsds_vis_d_ln   =>    surfrad_vars%fsds_vis_d_ln_patch  , & ! Output: [real(r8) (:)   ] incident direct beam vis solar rad at local noon (W/m**2)
           sfc_frc_aer     =>    surfrad_vars%sfc_frc_aer_patch    , & ! Output: [real(r8) (:)   ] surface forcing of snow with all aerosols (pft) [W/m2]
@@ -732,6 +740,8 @@ contains
           fsds_nir_d(p) = forc_solad(t,2)
           fsds_vis_i(p) = forc_solai(t,1)
           fsds_nir_i(p) = forc_solai(t,2)
+          fsds_nir_wght_dir(p) = forc_nir_wght_dir(t,1)
+          !print *, "JPT t=", t, " NIR_W=", forc_nir_wght_dir(t, 1)
           fsr_vis_d(p)  = albd(p,1)*forc_solad(t,1)
           fsr_nir_d(p)  = albd(p,2)*forc_solad(t,2)
           fsr_vis_i(p)  = albi(p,1)*forc_solai(t,1)
