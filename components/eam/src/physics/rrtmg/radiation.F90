@@ -1,4 +1,3 @@
-
 module radiation
 
 !---------------------------------------------------------------------------------
@@ -53,7 +52,8 @@ integer, public, allocatable :: rad_randn_seedrst(:,:,:), tot_chnk_till_this_prc
 integer :: qrs_idx      = 0 
 integer :: qrl_idx      = 0 
 integer :: su_idx       = 0 
-integer :: sd_idx       = 0 
+integer :: sd_idx       = 0
+integer :: sd_dir_idx   = 0 !JPT
 integer :: lu_idx       = 0 
 integer :: ld_idx       = 0 
 integer :: cldfsnow_idx = 0 
@@ -188,6 +188,7 @@ end subroutine radiation_readnl
     if (spectralflux) then
       call pbuf_add_field('SU'  , 'global',dtype_r8,(/pcols,pverp,nswbands/), su_idx) ! shortwave upward flux (per band)
       call pbuf_add_field('SD'  , 'global',dtype_r8,(/pcols,pverp,nswbands/), sd_idx) ! shortwave downward flux (per band)
+      call pbuf_add_field('SD_DIR','global',dtype_r8,(/pcols,pverp,nswbands/), sd_dir_idx) ! JPT
       call pbuf_add_field('LU'  , 'global',dtype_r8,(/pcols,pverp,nlwbands/), lu_idx) ! longwave upward flux (per band)
       call pbuf_add_field('LD'  , 'global',dtype_r8,(/pcols,pverp,nlwbands/), ld_idx) ! longwave downward flux (per band)
     end if
@@ -666,6 +667,32 @@ end function radiation_nextsw_cday
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_spectral_weight')
 
+          !          !JPT Additional fields
+!          ! Register new dimensions
+!          call get_sw_spectral_midpoints(sw_band_midpoints, 'cm-1')
+!          call get_lw_spectral_midpoints(lw_band_midpoints, 'cm-1')
+!          call add_hist_coord('swband', nswbands, 'Shortwave wavenumber', 'cm-1', sw_band_midpoints)
+!          call add_hist_coord('lwband', nlwbands, 'Longwave wavenumber', 'cm-1', lw_band_midpoints)
+!
+!          call addfld('SD', (/'ilev   ','swband'/), 'A', 'W/m2', &
+!                       'Downwelling Spectral Radiation', &
+!                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
+!          call addfld('SU', (/'ilev   ','swband'/), 'A', 'W/m2', &
+!                       'Upwelling Spectral Radiation', &
+!                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
+!          call addfld('SD_BOA', (/'swband'/), 'A', 'W/m2', &
+!                       'Downwelling Spectral Radiation at Surface', &
+!                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
+!          call addfld('SD_TOA', (/'swband'/), 'A', 'W/m2', &
+!                      'Downwelling Spectral Radiation at TOA', &
+!                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
+!          call addfld('SU_BOA', (/'swband'/), 'A', 'W/m2', &
+!                      'Upwelling Spectral Radiation at Surface', &
+!                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
+!          call addfld('SU_TOA', (/'swband'/), 'A', 'W/m2', &
+!                      'Upwelling Spectral Radiation at TOA', &
+!                      sampling_seq='rad_lwsw', flag_xyfill=.true.)
+
           if (history_amwg) then
              call add_default('SOLIN'//diag(icall),   1, ' ')
              call add_default('QRS'//diag(icall),     1, ' ')
@@ -1015,7 +1042,10 @@ end function radiation_nextsw_cday
     real(r8) fnl(pcols,pverp)     ! net longwave flux
     real(r8) fcnl(pcols,pverp)    ! net clear-sky longwave flux
     real(r8) nir_wght_dir(pcols)  ! near-IR direct weight JPT
+    real(r8) sd_slice(pcols)      ! JPT
+    real(r8) denom(pcols)                ! jpt
     real(r8) asym_splt            ! Asymmetric band split weighting
+    real(r8) threshold            ! JPT
  
     real(r8) pbr(pcols,pver)      ! Model mid-level pressures (dynes/cm2)
     real(r8) pnm(pcols,pverp)     ! Model interface pressures (dynes/cm2)
@@ -1033,6 +1063,7 @@ end function radiation_nextsw_cday
 
     real(r8), pointer, dimension(:,:,:) :: su => NULL()  ! shortwave spectral flux up
     real(r8), pointer, dimension(:,:,:) :: sd => NULL()  ! shortwave spectral flux down
+    real(r8), pointer, dimension(:,:,:) :: sd_dir => NULL()  ! JPT direct shortwave spectral flux down
     real(r8), pointer, dimension(:,:,:) :: lu => NULL()  ! longwave  spectral flux up
     real(r8), pointer, dimension(:,:,:) :: ld => NULL()  ! longwave  spectral flux down
 
@@ -1095,6 +1126,7 @@ end function radiation_nextsw_cday
     if (spectralflux) then
       call pbuf_get_field(pbuf, su_idx, su)
       call pbuf_get_field(pbuf, sd_idx, sd)
+      call pbuf_get_field(pbuf, sd_dir_idx, sd_dir)
       call pbuf_get_field(pbuf, lu_idx, lu)
       call pbuf_get_field(pbuf, ld_idx, ld)
     end if
@@ -1304,20 +1336,33 @@ end function radiation_nextsw_cday
                        fsnsc,        fsdsc,        fsds,         cam_out%sols, cam_out%soll,   &
                        cam_out%solsd,cam_out%solld,fns,          fcns,                         &
                        Nday,         Nnite,        IdxDay,       IdxNite,      clm_seed,       &
-                       su,           sd,                                                       &
+                       su,           sd,           sd_dir,                                     &
                        E_cld_tau=c_cld_tau, E_cld_tau_w=c_cld_tau_w, E_cld_tau_w_g=c_cld_tau_w_g, E_cld_tau_w_f=c_cld_tau_w_f, &
                        old_convert = .false.)
                   call t_stopf ('rad_rrtmg_sw')
 
                   !JPT
-                  asym_splt = 0.555
-                  where ( (.not.isnan(sd(:,1,9))) )
-                     nir_wght_dir = (sd(:,1,9) * asym_splt)
+                  asym_splt = 0.445
+                  threshold = 1.0e-5
+                  nir_wght_dir(:) = 0.0
+                  denom = cam_out%soll
+                  where ((.not.isnan(sd_dir(:,pver+1,9))) .and. &
+                       (.not.isnan(denom) ) .and. &
+                       (denom > threshold) )
+                     sd_slice(:) = sd_dir(:,pver+1,9)
+                     nir_wght_dir(:) = (sd_slice * asym_splt) / (denom)
+                     !nir_wght_dir = sd_slice
                   elsewhere
-                     nir_wght_dir = 0.1                     
+                     nir_wght_dir = 0.1
                   end where
-                  cam_out%nir_wght_dir = nir_wght_dir
-                  
+                  !nir_wght_dir(:) = sd_dir(:,81,9) - denom(:)
+                  !nir_wght_dir(:) = nir_wght_dir(:) * asym_splt
+                  print *, "JPT EAM sd shape       = ", shape(sd)
+                  print *, "JPT EAM sd_dir shape   = ", shape(sd_dir)
+                  print *, "JPT EAM sd_slice shape = ", shape(sd_slice)
+                  print *, "JPT EAM soll   shape   = ", shape(cam_out%soll)
+                  cam_out%nir_wght_dir = nir_wght_dir 
+
                   !  Output net fluxes at 200 mb
                   call vertinterp(ncol, pcols, pverp, state%pint, 20000._r8, fcns, fsn200c)
                   call vertinterp(ncol, pcols, pverp, state%pint, 20000._r8, fns, fsn200)
@@ -1389,6 +1434,16 @@ end function radiation_nextsw_cday
                   call outfld('SWCF'//diag(icall),swcf  ,pcols,lchnk)
                   !JPT
                   call outfld('NIR_WGHT_DIR'//diag(icall),cam_out%nir_wght_dir  ,pcols,lchnk)
+                  !JPT Add outflds
+!                  call outfld('SD'//diag(icall),ttem  ,pcols,lchnk)
+!                  note: toa = 1
+!                  boa = pver!1
+!                  call outfld('SD'//diag(icall), sd, pcols, lchnk)
+!                  call outfld('SU'//diag(icall), su, pcols, lchnk)
+!                  call outfld('SD_BOA'//diag(icall), sd(:,pver+1,:), pcols, lchnk)
+!                  call outfld('SD_TOA'//diag(icall), sd(:,1,:), pcols, lchnk)
+!                  call outfld('SU_BOA'//diag(icall), su(:,pver+1,:), pcols, lchnk)
+!                  call outfld('SU_TOA'//diag(icall), su(:,1,:), pcols, lchnk)
               end if ! (active_calls(icall))
           end do ! icall
           call t_stopf ('rad_sw_loop')

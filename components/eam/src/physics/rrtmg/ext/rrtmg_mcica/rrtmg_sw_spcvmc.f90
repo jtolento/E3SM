@@ -45,7 +45,7 @@
              selffac, selffrac, indself, forfac, forfrac, indfor, &
              pbbfd, pbbfu, pbbcd, pbbcu, puvfd, puvcd, pnifd, pnicd, pnifu, pnicu, &
              pbbfddir, pbbcddir, puvfddir, puvcddir, pnifddir, pnicddir, &
-             pbbfsu, pbbfsd)
+             pbbfsu, pbbfsd, sd_dir)
 ! ---------------------------------------------------------------------------
 !
 ! Purpose: Contains spectral loop to compute the shortwave radiative fluxes, 
@@ -214,6 +214,7 @@
 
       real(kind=r8), intent(out)  :: pbbfsu(:,:)                 ! shortwave spectral flux up (nswbands,nlayers+1)
       real(kind=r8), intent(out)  :: pbbfsd(:,:)                 ! shortwave spectral flux down (nswbands,nlayers+1)
+      real(kind=r8), intent(out)  :: sd_dir(:,:)                 ! JPT spectral downwelling direct flux nswbands,nlayers+1
 
 
 ! ------- Local -------
@@ -297,8 +298,8 @@
          pnifu(jk)=0._r8
       enddo
       pbbfsu(:,:) = 0.0_r8 !BSINGH(10/15/2014): uninitialized variable, setting it to zero
-      pbbfsd(:,:) = 0.0_r8 !BSINGH(10/15/2014): uninitialized variable, setting it to zero
-
+      pbbfsd(:,:) = 0.0_r8 !BSINGH(10/15/2014): uninitialized variable, setting it to zero      
+      sd_dir(:,:) = 0.0_r8 !JPT
 ! Calculate the optical depths for gaseous absorption and Rayleigh scattering
 
       call taumol_sw(klev, &
@@ -598,6 +599,12 @@
 
                pbbfsu(ibm,ikl) = pbbfsu(ibm,ikl) + zincflx(iw)*zfu(jk,iw)
                pbbfsd(ibm,ikl) = pbbfsd(ibm,ikl) + zincflx(iw)*zfd(jk,iw)
+               !JPT: Caluulate the direct beam  spectral fluxes
+               if (idelm .eq. 0) then
+                  sd_dir(ibm,ikl) = sd_dir(ibm,ikl) + zincflx(iw)*ztdbt_nodel(jk)
+               elseif (idelm .eq. 1) then
+                  sd_dir(ibm,ikl) = sd_dir(ibm,ikl) + zincflx(iw)*ztdbt(jk)
+               endif
 
 ! Accumulate spectral fluxes over whole spectrum  
                pbbfu(ikl) = pbbfu(ikl) + zincflx(iw)*zfu(jk,iw)
@@ -638,7 +645,7 @@
                      puvfddir(ikl) = puvfddir(ikl) + 0.5_r8*zincflx(iw)*ztdbt(jk)
                      puvcddir(ikl) = puvcddir(ikl) + 0.5_r8*zincflx(iw)*ztdbtc(jk)
                      pnifddir(ikl) = pnifddir(ikl) + 0.5_r8*zincflx(iw)*ztdbt(jk)
-                     pnicddir(ikl) = pnicddir(ikl) + 0.5_r8*zincflx(iw)*ztdbtc(jk)
+                     pnicddir(ikl) = pnicddir(ikl) + 0.5_r8*zincflx(iw)*ztdbtc(jk)                 
                   endif
                   pnicu(ikl) = pnicu(ikl) + 0.5_r8*zincflx(iw)*zcu(jk,iw)
                   pnifu(ikl) = pnifu(ikl) + 0.5_r8*zincflx(iw)*zfu(jk,iw)
