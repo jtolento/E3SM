@@ -41,9 +41,11 @@ module SnowSnicarMod
   logical,  public, parameter :: DO_SNO_AER =   .true.    ! parameter to include aerosols in snowpack radiative calculations
   !$acc declare copyin(sno_nbr_aer,DO_SNO_OC,DO_SNO_AER)
   ! !PRIVATE DATA MEMBERS:
-  integer,  parameter :: numrad_snw  =   5               ! number of spectral bands used in snow model [nbr]
+  !integer,  parameter :: numrad_snw  =   5               ! number of spectral bands used in snow model [nbr]
+  integer,  parameter :: numrad_snw  =   6               !JPT number of spectral bands used in snow model [nbr]
   integer,  parameter :: nir_bnd_bgn =   2               ! first band index in near-IR spectrum [idx]
-  integer,  parameter :: nir_bnd_end =   5               ! ending near-IR band index [idx]
+  !integer,  parameter :: nir_bnd_end =   5              ! ending near-IR band index [idx]
+  integer,  parameter :: nir_bnd_end =   6               !JPT 
   !$acc declare copyin(numrad_snw )
   !$acc declare copyin(nir_bnd_bgn)
   !$acc declare copyin(nir_bnd_end)
@@ -2392,17 +2394,57 @@ contains
 
              !JPT 6-Band weights
              elseif(numrad_snw==6) then
-                if (flg_slr_in == 1) then
-                  if (atm_type_index == atm_type_default) then
+                !if (flg_slr_in == 1) then
+                !  if (atm_type_index == atm_type_default) then
                      !flx_wgt(1) = 1._r8
                      !flx_wgt(2) = nir_wght_dir / 5
                      !flx_wgt(3) = nir_wght_dir / 5
                      !flx_wgt(4) = nir_wght_dir / 5
                      !flx_wgt(5) = nir_wght_dir / 5
                      !flx_wgt(6) = nir_wght_dir / 5
-                  endif 
+                !  endif 
+                !endif
+                ! Direct:
+                if (flg_slr_in == 1) then
+                  if (atm_type_index == atm_type_default) then
+                     flx_wgt(1) = 1._r8
+                     flx_wgt(2) = 0.49352158521175_r8
+                     flx_wgt(3) = 0.18099494230665_r8
+                     flx_wgt(4) = 0.12094898498813_r8
+                     flx_wgt(5) = 0.20453448749347_r8 / 2
+                     flx_wgt(6) = 0.20453448749347_r8 / 2
+                  else
+                     slr_zen = nint(acos(coszen(c_idx)) * 180._r8 / pi)
+                     if (slr_zen>89) then
+                        slr_zen = 89
+                     endif
+                     flx_wgt(1) = 1._r8
+                     flx_wgt(2) = flx_wgt_dir(atm_type_index, slr_zen+1, 2)
+                     flx_wgt(3) = flx_wgt_dir(atm_type_index, slr_zen+1, 3)
+                     flx_wgt(4) = flx_wgt_dir(atm_type_index, slr_zen+1, 4)
+                     flx_wgt(5) = flx_wgt_dir(atm_type_index, slr_zen+1, 5) / 2
+                     flx_wgt(6) = flx_wgt_dir(atm_type_index, slr_zen+1, 5) /2
+                  endif
+
+                  ! Diffuse:
+               elseif (flg_slr_in == 2) then
+                   if  (atm_type_index == atm_type_default) then
+                     flx_wgt(1) = 1._r8
+                     flx_wgt(2) = 0.58581507618433_r8
+                     flx_wgt(3) = 0.20156903770812_r8
+                     flx_wgt(4) = 0.10917889346386_r8
+                     flx_wgt(5) = 0.10343699264369_r8 / 2
+                     flx_wgt(6) = 0.10343699264369_r8 / 2
+                  else
+                     flx_wgt(1) = 1._r8
+                     flx_wgt(2) = flx_wgt_dif(atm_type_index, 2)
+                     flx_wgt(3) = flx_wgt_dif(atm_type_index, 3)
+                     flx_wgt(4) = flx_wgt_dif(atm_type_index, 4)
+                     flx_wgt(5) = flx_wgt_dif(atm_type_index, 5) /2
+                     flx_wgt(5) = flx_wgt_dif(atm_type_index, 5) /2
+                  endif
                 endif
-                     
+     
              endif ! end if numrad_snw
 
              ! Loop over snow spectral bands
