@@ -18,6 +18,6 @@
 <stream_year_last_popdens  phys="elm" use_cn=".true." ndepsrc="stream" >1850</stream_year_last_popdens>
 
 
-<fsnowoptics>lnd/clm2/snicardata/snicar_optics_5bnd_mam_c160322.nc</fsnowoptics>
-
+<!--<fsnowoptics>lnd/clm2/snicardata/snicar_optics_5bnd_mam_c160322.nc</fsnowoptics>!JPT-->
+<fsnowoptics>lnd/clm2/snicardata/snicar_optics_6bnd_test.nc</fsnowoptics>
 </namelist_defaults>

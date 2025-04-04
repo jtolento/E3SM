@@ -2317,22 +2317,22 @@ contains
              !
              !
              ! JPT (03072025): Introduce 6-band case, where spectral
-             ! grid matches RRTM grid partitions. Note band 2 (0.2-0.7um)
-             ! Will still come from the paraterized split of RRTMG_SW band 9
-             ! in EAM, and bands 3+4 will still be parameterized from the
-             ! incident flux sent to ELM withing this subroutine, as is done
+             ! grid matches RRTM grid partitions. Note band V (0.2-0.7um)
+             ! will still come from the paraterized split of RRTMG_SW band 9
+             ! in EAM, and bands B1 and B2 will still be parameterized from the
+             ! incident flux sent to ELM (Band B) within this subroutine, as is done
              ! in the othe cases done within this routine. All other bands
-             ! (1, 5, 6) will have fluxes and albedos passed directly
+             ! (A, C, D) will have fluxes and albedos passed directly
              ! to and from EAM and ELM.
-             ! This should reduce sureface and lower tropospheric net flux
+             ! This should reduce surface and lower tropospheric net flux
              ! bias (Tolento et al. 2024) 
              ! Spectral Bands (6-Band case)
-             !  Band 1: 0.2   - 0.7   um (VIS)
-             !  Band 2: 0.7   - 0.778 um (NIR) 
-             !  Band 3: 0.778 - 1.0   um (NIR)
-             !  Band 4: 1.0   - 1.242 um (NIR)
-             !  Band 5: 1.242 - 1.262 um (NIR)
-             !  Band 6: 1.625 - 12.2  um (NIR)
+             !  Band V:  0.2   - 0.7   um (VIS)
+             !  Band A:  0.7   - 0.778 um (NIR) 
+             !  Band B1: 0.778 - 1.0   um (NIR)
+             !  Band B2: 1.0   - 1.242 um (NIR)
+             !  Band C:  1.242 - 1.262 um (NIR)
+             !  Band D:  1.625 - 12.2  um (NIR)
              !
              !
              ! The following weights are appropriate for surface-incident flux in a mid-latitude winter atmosphere
