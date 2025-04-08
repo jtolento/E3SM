@@ -1806,6 +1806,7 @@ subroutine atm_import_moab(Eclock, cam_in, restart_init )
           cam_in(c)%u10withgusts(i) = x2a_am(ig,index_x2a_Sx_u10withgusts)
           cam_in(c)%icefrac(i)   =  x2a_am(ig,index_x2a_Sf_ifrac)
           cam_in(c)%ocnfrac(i)   =  x2a_am(ig,index_x2a_Sf_ofrac)
+          cam_in(c)%snowfrac(i)  =  x2a_am(ig,index_x2a_Sf_sfrac) !JPT
           cam_in(c)%landfrac(i)  =  x2a_am(ig,index_x2a_Sf_lfrac)
           if ( associated(cam_in(c)%ram1) ) &
                cam_in(c)%ram1(i) =  x2a_am(ig,index_x2a_Sl_ram1 )
