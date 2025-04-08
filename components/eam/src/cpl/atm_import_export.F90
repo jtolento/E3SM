@@ -101,6 +101,7 @@ contains
           cam_in(c)%u10withgusts(i) = x2a(index_x2a_Sx_u10withgusts, ig)
           cam_in(c)%icefrac(i)   =  x2a(index_x2a_Sf_ifrac, ig)
           cam_in(c)%ocnfrac(i)   =  x2a(index_x2a_Sf_ofrac, ig)
+          cam_in(c)%snowfrac(i)  =  x2a(index_x2a_Sf_sfrac, ig) !JPT
           cam_in(c)%landfrac(i)  =  x2a(index_x2a_Sf_lfrac, ig)
           if ( associated(cam_in(c)%ram1) ) &
                cam_in(c)%ram1(i) =  x2a(index_x2a_Sl_ram1 , ig)

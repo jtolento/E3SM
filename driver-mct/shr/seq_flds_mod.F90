@@ -1126,6 +1126,7 @@ contains
     call seq_flds_add(x2a_states,'Sf_lfrac')
     call seq_flds_add(x2a_states,'Sf_ifrac')
     call seq_flds_add(x2a_states,'Sf_ofrac')
+    call seq_flds_add(x2a_states,'Sf_sfrac') !JPT 
     longname = 'Surface land fraction'
     stdname  = 'land_area_fraction'
     units    = '1'
@@ -1138,6 +1139,10 @@ contains
     longname = 'Surface ocean fraction'
     stdname  = 'sea_area_fraction'
     attname  = 'Sf_ofrac'
+    call metadata_set(attname, longname, stdname, units)
+    longname = 'Surface land snow fraction'              !JPT
+    stdname  = 'land_snow_area_fraction'
+    attname  = 'Sf_sfrac'
     call metadata_set(attname, longname, stdname, units)
 
     ! Direct albedo (visible radiation)
