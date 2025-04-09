@@ -1796,17 +1796,18 @@ subroutine atm_import_moab(Eclock, cam_in, restart_init )
           cam_in(c)%aldir(i)     =  x2a_am(ig,index_x2a_Sx_anidr)
           cam_in(c)%asdif(i)     =  x2a_am(ig,index_x2a_Sx_avsdf)
           cam_in(c)%aldif(i)     =  x2a_am(ig,index_x2a_Sx_anidf)
-          cam_in(c)%ts(i)        =  x2a_am(ig,index_x2a_Sx_t)
-          cam_in(c)%sst(i)       =  x2a_am(ig,index_x2a_So_t)
+          cam_in(c)%ts(i)        =  x2a_am(ig,index_x2a_Sx_t)  
+          cam_in(c)%sst(i)       =  x2a_am(ig,index_x2a_So_t)             
           cam_in(c)%snowhland(i) =  x2a_am(ig,index_x2a_Sl_snowh)
-          cam_in(c)%snowhice(i)  =  x2a_am(ig,index_x2a_Si_snowh)
-          cam_in(c)%tref(i)      =  x2a_am(ig,index_x2a_Sx_tref)
+          cam_in(c)%snowfrac(i)  =  x2a_am(ig,index_x2a_Sl_snowfrac) !JPT
+          cam_in(c)%snowhice(i)  =  x2a_am(ig,index_x2a_Si_snowh)  
+          cam_in(c)%tref(i)      =  x2a_am(ig,index_x2a_Sx_tref)  
+
           cam_in(c)%qref(i)      =  x2a_am(ig,index_x2a_Sx_qref)
           cam_in(c)%u10(i)       =  x2a_am(ig,index_x2a_Sx_u10)
           cam_in(c)%u10withgusts(i) = x2a_am(ig,index_x2a_Sx_u10withgusts)
           cam_in(c)%icefrac(i)   =  x2a_am(ig,index_x2a_Sf_ifrac)
           cam_in(c)%ocnfrac(i)   =  x2a_am(ig,index_x2a_Sf_ofrac)
-          cam_in(c)%snowfrac(i)  =  x2a_am(ig,index_x2a_Sf_sfrac) !JPT
           cam_in(c)%landfrac(i)  =  x2a_am(ig,index_x2a_Sf_lfrac)
           if ( associated(cam_in(c)%ram1) ) &
                cam_in(c)%ram1(i) =  x2a_am(ig,index_x2a_Sl_ram1 )

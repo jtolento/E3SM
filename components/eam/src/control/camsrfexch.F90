@@ -112,11 +112,11 @@ module camsrfexch
      real(r8), allocatable :: ts(:)         ! merged surface temp 
      real(r8), allocatable :: sst(:)        ! sea surface temp
      real(r8), allocatable :: snowhland(:)  ! snow depth (liquid water equivalent) over land
+     real(r8), allocatable :: snowfrac(:)   !JPT
      real(r8), allocatable :: snowhice(:)   ! snow depth over ice
      real(r8), allocatable :: fco2_lnd(:)   ! co2 flux from lnd
      real(r8), allocatable :: fco2_ocn(:)   ! co2 flux from ocn
      real(r8), allocatable :: fdms(:)       ! dms flux
-     real(r8), allocatable :: snowfrac(:)   !JPT land snow area fraction
      real(r8), allocatable :: landfrac(:)   ! land area fraction
      real(r8), allocatable :: icefrac(:)    ! sea-ice areal fraction
      real(r8), allocatable :: ocnfrac(:)    ! ocean areal fraction
@@ -237,6 +237,9 @@ CONTAINS
        allocate (cam_in(c)%snowhland(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error snowhland')
 
+       allocate (cam_in(c)%snowfrac(pcols), stat=ierror) !JPT
+       if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error snowfrac')
+
        allocate (cam_in(c)%snowhice(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error snowhice')
 
@@ -248,9 +251,6 @@ CONTAINS
 
        allocate (cam_in(c)%fdms(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error fdms')
-
-       allocate (cam_in(c)%snowfrac(pcols), stat=ierror)!JPT 
-       if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error snowfrac')
 
        allocate (cam_in(c)%landfrac(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error landfrac')
@@ -324,11 +324,11 @@ CONTAINS
        cam_in(c)%ts       (:) = 0._r8
        cam_in(c)%sst      (:) = 0._r8
        cam_in(c)%snowhland(:) = 0._r8
+       cam_in(c)%snowfrac (:)  = 0._r8 !JPT
        cam_in(c)%snowhice (:) = 0._r8
        cam_in(c)%fco2_lnd (:) = 0._r8
        cam_in(c)%fco2_ocn (:) = 0._r8
        cam_in(c)%fdms     (:) = 0._r8
-       cam_in(c)%snowfrac (:) = posinf !JPT
        cam_in(c)%landfrac (:) = posinf
        cam_in(c)%icefrac  (:) = posinf
        cam_in(c)%ocnfrac  (:) = posinf
@@ -647,11 +647,11 @@ CONTAINS
           deallocate(cam_in(c)%ts)
           deallocate(cam_in(c)%sst)
           deallocate(cam_in(c)%snowhland)
+          deallocate(cam_in(c)%snowfrac) !JPT
           deallocate(cam_in(c)%snowhice)
           deallocate(cam_in(c)%fco2_lnd)
           deallocate(cam_in(c)%fco2_ocn)
           deallocate(cam_in(c)%fdms)
-          deallocate(cam_in(c)%snowfac) !JPT
           deallocate(cam_in(c)%landfrac)
           deallocate(cam_in(c)%icefrac)
           deallocate(cam_in(c)%ocnfrac)

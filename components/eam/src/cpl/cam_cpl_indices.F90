@@ -57,7 +57,6 @@ module cam_cpl_indices
 
   integer :: index_x2a_Sx_t            ! surface temperature             
   integer :: index_x2a_So_t            ! sea surface temperature
-  integer :: index_x2a_Sf_sfrac        !JPT surface land snow fraction
   integer :: index_x2a_Sf_lfrac        ! surface land fraction           
   integer :: index_x2a_Sf_ifrac        ! surface ice fraction            
   integer :: index_x2a_Sf_ofrac        ! surface ocn fraction            
@@ -67,7 +66,7 @@ module cam_cpl_indices
   integer :: index_x2a_Sx_anidr        ! albedo, near-ir, direct         
   integer :: index_x2a_Sx_avsdf        ! albedo, visible, diffuse        
   integer :: index_x2a_Sx_anidf        ! albedo, near-ir, diffuse        
-
+  integer :: index_x2a_Sl_snowfrac     ! surface snow area fraction over land     
   integer :: index_x2a_Sl_snowh        ! surface snow depth over land
   integer :: index_x2a_Si_snowh        ! surface snow depth over ice
   integer :: index_x2a_Sl_fv           ! friction velocity
@@ -116,6 +115,7 @@ contains
     index_x2a_Sx_t          = mct_avect_indexra(x2a,'Sx_t')
     index_x2a_So_t          = mct_avect_indexra(x2a,'So_t')
     index_x2a_Sl_snowh      = mct_avect_indexra(x2a,'Sl_snowh')
+    index_x2a_Sl_snowfrac   = mct_avect_indexra(x2a,'Sl_snowfrac')
     index_x2a_Si_snowh      = mct_avect_indexra(x2a,'Si_snowh')
 
     index_x2a_Sl_fv         = mct_avect_indexra(x2a,'Sl_fv')
@@ -127,7 +127,6 @@ contains
 
     index_x2a_Sf_ifrac      = mct_avect_indexra(x2a,'Sf_ifrac')
     index_x2a_Sf_ofrac      = mct_avect_indexra(x2a,'Sf_ofrac')
-    index_x2a_Sf_sfrac      = mct_avect_indexra(x2a,'Sf_sfrac') !JPT
     index_x2a_Sf_lfrac      = mct_avect_indexra(x2a,'Sf_lfrac')
 
     index_x2a_Sx_u10        = mct_avect_indexra(x2a,'Sx_u10')

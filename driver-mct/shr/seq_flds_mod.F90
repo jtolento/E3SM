@@ -1126,7 +1126,6 @@ contains
     call seq_flds_add(x2a_states,'Sf_lfrac')
     call seq_flds_add(x2a_states,'Sf_ifrac')
     call seq_flds_add(x2a_states,'Sf_ofrac')
-    call seq_flds_add(x2a_states,'Sf_sfrac') !JPT 
     longname = 'Surface land fraction'
     stdname  = 'land_area_fraction'
     units    = '1'
@@ -1140,10 +1139,7 @@ contains
     stdname  = 'sea_area_fraction'
     attname  = 'Sf_ofrac'
     call metadata_set(attname, longname, stdname, units)
-    longname = 'Surface land snow fraction'              !JPT
-    stdname  = 'land_snow_area_fraction'
-    attname  = 'Sf_sfrac'
-    call metadata_set(attname, longname, stdname, units)
+
 
     ! Direct albedo (visible radiation)
     call seq_flds_add(i2x_states,"Si_avsdr")
@@ -1290,6 +1286,15 @@ contains
     stdname  = 'surface_snow_water_equivalent'
     units    = 'm'
     attname  = 'Sl_snowh'
+    call metadata_set(attname, longname, stdname, units)
+
+    ! Surface snow land frac equivalent (land/atm only)
+    call seq_flds_add(l2x_states,"Sl_snowfrac")
+    call seq_flds_add(x2a_states,"Sl_snowfrac")
+    longname = 'Surface snow land area fraction'
+    stdname  = 'surface_snow_land_area_fraction'
+    units    = '1'
+    attname  = 'Sl_snowfrac'
     call metadata_set(attname, longname, stdname, units)
 
     ! Surface snow depth (ice/atm only)
