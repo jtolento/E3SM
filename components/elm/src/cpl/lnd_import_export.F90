@@ -1403,6 +1403,7 @@ contains
        i = 1 + (g-bounds%begg)
        l2x(index_l2x_Sl_t,i)        =  lnd2atm_vars%t_rad_grc(g)
        l2x(index_l2x_Sl_snowh,i)    =  lnd2atm_vars%h2osno_grc(g)
+       l2x(index_l2x_Sl_snowfrac,i)    =  lnd2atm_vars%snowfrac_grc(g) !JPT
        l2x(index_l2x_Sl_avsdr,i)    =  lnd2atm_vars%albd_grc(g,1)
        l2x(index_l2x_Sl_anidr,i)    =  lnd2atm_vars%albd_grc(g,2)
        l2x(index_l2x_Sl_avsdf,i)    =  lnd2atm_vars%albi_grc(g,1)

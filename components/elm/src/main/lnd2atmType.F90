@@ -34,6 +34,7 @@ module lnd2atmType
      real(r8), pointer :: u_ref10m_grc       (:)   => null() ! 10m surface wind speed (m/sec)
      real(r8), pointer :: u_ref10m_with_gusts_grc(:)=> null()! 10m surface wind speed with gusts included (m/sec)
      real(r8), pointer :: h2osno_grc         (:)   => null() ! snow water (mm H2O)
+     real(r8), pointer :: snowfrac_grc         (:)   => null() !JPT snow area fraction (mm H2O) 
      real(r8), pointer :: h2osoi_vol_grc     (:,:) => null() ! volumetric soil water (0~watsat, m3/m3, nlevgrnd) (for dust model)
      real(r8), pointer :: albd_grc           (:,:) => null() ! (numrad) surface albedo (direct)
      real(r8), pointer :: albi_grc           (:,:) => null() ! (numrad) surface albedo (diffuse)
@@ -124,6 +125,7 @@ contains
     allocate(this%u_ref10m_grc         (begg:endg))            ; this%u_ref10m_grc         (:) =ival
     allocate(this%u_ref10m_with_gusts_grc(begg:endg))          ; this%u_ref10m_with_gusts_grc(:)=ival
     allocate(this%h2osno_grc           (begg:endg))            ; this%h2osno_grc           (:) =ival
+    allocate(this%snowfrac_grc           (begg:endg))          ; this%snowfrac_grc         (:) =ival !JPT
     allocate(this%h2osoi_vol_grc       (begg:endg,1:nlevgrnd)) ; this%h2osoi_vol_grc     (:,:) =ival
     allocate(this%albd_grc             (begg:endg,1:numrad))   ; this%albd_grc           (:,:) =ival
     allocate(this%albi_grc             (begg:endg,1:numrad))   ; this%albi_grc           (:,:) =ival

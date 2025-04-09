@@ -79,6 +79,7 @@ contains
     associate( &
       h2osno => col_ws%h2osno  , &
       h2osno_grc => lnd2atm_vars%h2osno_grc , &
+      snowfrac_grc =>lnd2atm_vars%snowfrac_grc, & !JPT
       h2osoi_vol => col_ws%h2osoi_vol , &
       h2osoi_vol_grc => lnd2atm_vars%h2osoi_vol_grc , &
       albd_patch => surfalb_vars%albd_patch , &
@@ -91,6 +92,7 @@ contains
 
     call c2g(bounds, &
          h2osno    (bounds%begc:bounds%endc) , &
+!         snowfrac (bounds%begg:bounds%endg)
          h2osno_grc(bounds%begg:bounds%endg)    , &
          c2l_scale_type= urbanf, l2g_scale_type=unity)
 

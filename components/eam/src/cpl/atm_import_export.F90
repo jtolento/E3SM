@@ -91,17 +91,18 @@ contains
           cam_in(c)%aldir(i)     =  x2a(index_x2a_Sx_anidr, ig)
           cam_in(c)%asdif(i)     =  x2a(index_x2a_Sx_avsdf, ig)
           cam_in(c)%aldif(i)     =  x2a(index_x2a_Sx_anidf, ig)
-          cam_in(c)%ts(i)        =  x2a(index_x2a_Sx_t,     ig)
-          cam_in(c)%sst(i)       =  x2a(index_x2a_So_t,     ig)
+          cam_in(c)%ts(i)        =  x2a(index_x2a_Sx_t,     ig)  
+          cam_in(c)%sst(i)       =  x2a(index_x2a_So_t,     ig)             
           cam_in(c)%snowhland(i) =  x2a(index_x2a_Sl_snowh, ig)
-          cam_in(c)%snowhice(i)  =  x2a(index_x2a_Si_snowh, ig)
-          cam_in(c)%tref(i)      =  x2a(index_x2a_Sx_tref,  ig)
+          cam_in(c)%snowfrac(i)  =  x2a(index_x2a_Sl_snowfrac, ig) !JPT
+          cam_in(c)%snowhice(i)  =  x2a(index_x2a_Si_snowh, ig)  
+          cam_in(c)%tref(i)      =  x2a(index_x2a_Sx_tref,  ig)  
+
           cam_in(c)%qref(i)      =  x2a(index_x2a_Sx_qref,  ig)
           cam_in(c)%u10(i)       =  x2a(index_x2a_Sx_u10,   ig)
           cam_in(c)%u10withgusts(i) = x2a(index_x2a_Sx_u10withgusts, ig)
           cam_in(c)%icefrac(i)   =  x2a(index_x2a_Sf_ifrac, ig)
           cam_in(c)%ocnfrac(i)   =  x2a(index_x2a_Sf_ofrac, ig)
-          cam_in(c)%snowfrac(i)  =  x2a(index_x2a_Sf_sfrac, ig) !JPT
           cam_in(c)%landfrac(i)  =  x2a(index_x2a_Sf_lfrac, ig)
           if ( associated(cam_in(c)%ram1) ) &
                cam_in(c)%ram1(i) =  x2a(index_x2a_Sl_ram1 , ig)

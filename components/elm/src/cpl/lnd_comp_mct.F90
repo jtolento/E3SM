@@ -1069,6 +1069,7 @@ contains
        i = 1 + (g-bounds%begg)
        l2x_lm(i,index_l2x_Sl_t)        =  lnd2atm_vars%t_rad_grc(g)
        l2x_lm(i,index_l2x_Sl_snowh)    =  lnd2atm_vars%h2osno_grc(g)
+       l2x_lm(i,index_l2x_Sl_snowfrac)    =  lnd2atm_vars%snowfrac_grc(g) !JPT
        l2x_lm(i,index_l2x_Sl_avsdr)    =  lnd2atm_vars%albd_grc(g,1)
        l2x_lm(i,index_l2x_Sl_anidr)    =  lnd2atm_vars%albd_grc(g,2)
        l2x_lm(i,index_l2x_Sl_avsdf)    =  lnd2atm_vars%albi_grc(g,1)

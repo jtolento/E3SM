@@ -42,6 +42,7 @@ module elm_cpl_indices
   integer, public ::index_l2x_Sl_avsdf        ! albedo: diffuse, visible
   integer, public ::index_l2x_Sl_anidf        ! albedo: diffuse, near-ir
   integer, public ::index_l2x_Sl_snowh        ! snow height
+  integer, public ::index_l2x_Sl_snowfrac        !JPT Snow land area fraction
   integer, public ::index_l2x_Sl_u10          ! 10m wind
   integer, public ::index_l2x_Sl_u10withgusts ! 10m wind with gustiness included
   integer, public ::index_l2x_Sl_ddvel        ! dry deposition velocities (optional)
@@ -198,6 +199,7 @@ contains
     endif
     index_l2x_Sl_t          = mct_avect_indexra(l2x,'Sl_t')
     index_l2x_Sl_snowh      = mct_avect_indexra(l2x,'Sl_snowh')
+    index_l2x_Sl_snowfrac      = mct_avect_indexra(l2x,'Sl_snowfrac') !JPT 
     index_l2x_Sl_avsdr      = mct_avect_indexra(l2x,'Sl_avsdr')
     index_l2x_Sl_anidr      = mct_avect_indexra(l2x,'Sl_anidr')
     index_l2x_Sl_avsdf      = mct_avect_indexra(l2x,'Sl_avsdf')
