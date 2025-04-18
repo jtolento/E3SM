@@ -63,6 +63,22 @@ module camsrfexch
      !JPT NIR WGHT for MPASSI
      real(r8), allocatable :: nir_wght_dir(:)    ! 
      real(r8), allocatable :: nir_wght_dif(:)    !
+     real(r8), allocatable :: nir_a_dir(:)
+     real(r8), allocatable :: nir_b_dir(:)
+     real(r8), allocatable :: nir_c_dir(:)
+     real(r8), allocatable :: nir_d_dir(:)
+     real(r8), allocatable :: nir_e_dir(:)
+     real(r8), allocatable :: nir_f_dir(:)
+     real(r8), allocatable :: nir_g_dir(:)
+
+     real(r8), allocatable :: nir_a_dif(:)
+     real(r8), allocatable :: nir_b_dif(:)
+     real(r8), allocatable :: nir_c_dif(:)
+     real(r8), allocatable :: nir_d_dif(:)
+     real(r8), allocatable :: nir_e_dif(:)
+     real(r8), allocatable :: nir_f_dif(:)
+     real(r8), allocatable :: nir_g_dif(:)
+
      
      real(r8), allocatable :: thbot(:)    ! 
      real(r8), allocatable :: co2prog(:)  ! prognostic co2
@@ -451,10 +467,36 @@ CONTAINS
        !JPT add NIR WGHT for MPASSI
        allocate (cam_out(c)%nir_wght_dir(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_wght_dir')
-
        allocate (cam_out(c)%nir_wght_dif(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_wght_dif')
-
+       allocate (cam_out(c)%nir_a_dir(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_a_dir')
+       allocate (cam_out(c)%nir_b_dir(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_b_dir')
+       allocate (cam_out(c)%nir_c_dir(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_c_dir')
+       allocate (cam_out(c)%nir_d_dir(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_d_dir')
+       allocate (cam_out(c)%nir_e_dir(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_e_dir')
+       allocate (cam_out(c)%nir_f_dir(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_f_dir')
+       allocate (cam_out(c)%nir_g_dir(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_g_dir')
+       allocate (cam_out(c)%nir_a_dif(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_a_dif')
+       allocate (cam_out(c)%nir_b_dif(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_b_dif')
+       allocate (cam_out(c)%nir_c_dif(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_c_dif')
+       allocate (cam_out(c)%nir_d_dif(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_d_dif')
+       allocate (cam_out(c)%nir_e_dif(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_e_dif')
+       allocate (cam_out(c)%nir_f_dif(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_f_dif')
+       allocate (cam_out(c)%nir_g_dif(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error nir_g_dif')
 
        allocate (cam_out(c)%thbot(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error thbot')
@@ -546,6 +588,21 @@ CONTAINS
        !JPT add nir wght 
        cam_out(c)%nir_wght_dir(:)    = 0._r8
        cam_out(c)%nir_wght_dif(:)    = 0._r8
+       cam_out(c)%nir_a_dir(:) = 0._r8
+       cam_out(c)%nir_b_dir(:) = 0._r8
+       cam_out(c)%nir_c_dir(:) = 0._r8
+       cam_out(c)%nir_d_dir(:) = 0._r8
+       cam_out(c)%nir_e_dir(:) = 0._r8
+       cam_out(c)%nir_f_dir(:) = 0._r8
+       cam_out(c)%nir_g_dir(:) = 0._r8
+       
+       cam_out(c)%nir_a_dif(:) = 0._r8
+       cam_out(c)%nir_b_dif(:) = 0._r8
+       cam_out(c)%nir_c_dif(:) = 0._r8
+       cam_out(c)%nir_d_dif(:) = 0._r8
+       cam_out(c)%nir_e_dif(:) = 0._r8
+       cam_out(c)%nir_f_dif(:) = 0._r8
+       cam_out(c)%nir_g_dif(:) = 0._r8
        
        cam_out(c)%thbot(:)    = 0._r8
        cam_out(c)%co2prog(:)  = 0._r8
@@ -596,6 +653,22 @@ CONTAINS
           deallocate(cam_out(c)%sols)
           deallocate(cam_out(c)%solld)
           deallocate(cam_out(c)%solsd)
+          deallocate(cam_out(c)%nir_wght_dir)
+          deallocate(cam_out(c)%nir_wght_dif)
+          deallocate(cam_out(c)%nir_a_dir)
+          deallocate(cam_out(c)%nir_b_dir)
+          deallocate(cam_out(c)%nir_c_dir)
+          deallocate(cam_out(c)%nir_d_dir)
+          deallocate(cam_out(c)%nir_e_dir)
+          deallocate(cam_out(c)%nir_f_dir)
+          deallocate(cam_out(c)%nir_g_dir)
+          deallocate(cam_out(c)%nir_a_dif)
+          deallocate(cam_out(c)%nir_b_dif)
+          deallocate(cam_out(c)%nir_c_dif)
+          deallocate(cam_out(c)%nir_d_dif)
+          deallocate(cam_out(c)%nir_e_dif)
+          deallocate(cam_out(c)%nir_f_dif)
+          deallocate(cam_out(c)%nir_g_dif)
           deallocate(cam_out(c)%thbot)
           deallocate(cam_out(c)%co2prog)
           deallocate(cam_out(c)%co2diag)

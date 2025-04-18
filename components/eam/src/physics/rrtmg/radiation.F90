@@ -25,9 +25,11 @@ use cam_control_mod, only: lambm0, obliqr, mvelpp, eccen
 use iop_data_mod,    only: single_column
 use perf_mod,        only: t_startf, t_stopf
 use cam_logfile,     only: iulog
-
+use cam_history_support, only: add_hist_coord !JPT
 use rad_constituents, only: N_DIAG, rad_cnst_get_call_list, rad_cnst_get_info
-use radconstants,     only: rrtmg_sw_cloudsim_band, rrtmg_lw_cloudsim_band, nswbands, nlwbands
+use radconstants,     only: rrtmg_sw_cloudsim_band, rrtmg_lw_cloudsim_band, nswbands, nlwbands, &
+      get_sw_spectral_midpoints, get_lw_spectral_midpoints
+
 
 implicit none
 private
@@ -54,6 +56,7 @@ integer :: qrl_idx      = 0
 integer :: su_idx       = 0 
 integer :: sd_idx       = 0
 integer :: sd_dir_idx   = 0 !JPT
+integer :: sd_dif_idx   = 0
 integer :: lu_idx       = 0 
 integer :: ld_idx       = 0 
 integer :: cldfsnow_idx = 0 
@@ -92,6 +95,11 @@ real(r8) :: dt_avg=0.0_r8  ! time step to use for the shr_orb_cosz calculation, 
 
 logical :: pergro_mods = .false. ! for activating pergro mods
 integer :: firstblock, lastblock      ! global block indices
+
+!JPT
+! Band midpoints; these need to be module variables because of how cam_history works;                                                                                    
+! add_hist_coord sets up pointers to these, so they need to persist.                                                                                                     
+real(r8), target :: sw_band_midpoints(nswbands), lw_band_midpoints(nlwbands)
 
 !===============================================================================
 contains
@@ -189,6 +197,7 @@ end subroutine radiation_readnl
       call pbuf_add_field('SU'  , 'global',dtype_r8,(/pcols,pverp,nswbands/), su_idx) ! shortwave upward flux (per band)
       call pbuf_add_field('SD'  , 'global',dtype_r8,(/pcols,pverp,nswbands/), sd_idx) ! shortwave downward flux (per band)
       call pbuf_add_field('SD_DIR','global',dtype_r8,(/pcols,pverp,nswbands/), sd_dir_idx) ! JPT
+      call pbuf_add_field('SD_DIF','global',dtype_r8,(/pcols,pverp,nswbands/), sd_dif_idx) ! JPT
       call pbuf_add_field('LU'  , 'global',dtype_r8,(/pcols,pverp,nlwbands/), lu_idx) ! longwave upward flux (per band)
       call pbuf_add_field('LD'  , 'global',dtype_r8,(/pcols,pverp,nlwbands/), ld_idx) ! longwave downward flux (per band)
     end if
@@ -662,36 +671,75 @@ end function radiation_nextsw_cday
           call addfld ('SWCF'//diag(icall),  horiz_only,     'A',   'W/m2', 'Shortwave cloud forcing', &
                        sampling_seq='rad_lwsw', flag_xyfill=.true., &
                        standard_name='toa_shortwave_cloud_radiative_effect')
-          !JPT
+          !JPT Additional fields
+          ! Register new dimensions
+          call get_sw_spectral_midpoints(sw_band_midpoints, 'cm-1')
+          call get_lw_spectral_midpoints(lw_band_midpoints, 'cm-1')
+          call add_hist_coord('swband', nswbands, 'Shortwave wavenumber', 'cm-1', sw_band_midpoints)
+          call add_hist_coord('lwband', nlwbands, 'Longwave wavenumber', 'cm-1', lw_band_midpoints)
           call addfld ('NIR_WGHT_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Spectral Weight', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_spectral_weight')
-
-          !          !JPT Additional fields
-!          ! Register new dimensions
-!          call get_sw_spectral_midpoints(sw_band_midpoints, 'cm-1')
-!          call get_lw_spectral_midpoints(lw_band_midpoints, 'cm-1')
-!          call add_hist_coord('swband', nswbands, 'Shortwave wavenumber', 'cm-1', sw_band_midpoints)
-!          call add_hist_coord('lwband', nlwbands, 'Longwave wavenumber', 'cm-1', lw_band_midpoints)
-!
+          call addfld ('NIR_A_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (0.7-0.778)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dir')
+          call addfld ('NIR_B_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (0.778-1.242)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dir')
+          call addfld ('NIR_C_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.242-1.298)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dir')
+          call addfld ('NIR_D_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.298-1.626)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dir')
+          call addfld ('NIR_E_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.626-1.941)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dir')
+          call addfld ('NIR_F_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.941-2.150)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dir')
+          call addfld ('NIR_G_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (2.150-5.0)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dir')
+          call addfld ('NIR_A_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (0.7-0.778)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dif')
+          call addfld ('NIR_B_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (0.778-1.242)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dif')
+          call addfld ('NIR_C_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.242-1.298)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dif')
+          call addfld ('NIR_D_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.298-1.626)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dif')
+          call addfld ('NIR_E_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.626-1.941)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dif')
+          call addfld ('NIR_F_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.941-2.150)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dif')
+          call addfld ('NIR_G_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (2.150-5.0)', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true., &
+                      standard_name='nir_a_dif')
 !          call addfld('SD', (/'ilev   ','swband'/), 'A', 'W/m2', &
 !                       'Downwelling Spectral Radiation', &
 !                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
 !          call addfld('SU', (/'ilev   ','swband'/), 'A', 'W/m2', &
 !                       'Upwelling Spectral Radiation', &
 !                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
-!          call addfld('SD_BOA', (/'swband'/), 'A', 'W/m2', &
-!                       'Downwelling Spectral Radiation at Surface', &
-!                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
-!          call addfld('SD_TOA', (/'swband'/), 'A', 'W/m2', &
-!                      'Downwelling Spectral Radiation at TOA', &
-!                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
-!          call addfld('SU_BOA', (/'swband'/), 'A', 'W/m2', &
-!                      'Upwelling Spectral Radiation at Surface', &
-!                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
-!          call addfld('SU_TOA', (/'swband'/), 'A', 'W/m2', &
-!                      'Upwelling Spectral Radiation at TOA', &
-!                      sampling_seq='rad_lwsw', flag_xyfill=.true.)
+          call addfld('SD_BOA', (/'swband'/), 'A', 'W/m2', &
+                       'Downwelling Spectral Radiation at Surface', &
+                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
+          call addfld('SD_TOA', (/'swband'/), 'A', 'W/m2', &
+                      'Downwelling Spectral Radiation at TOA', &
+                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
+          call addfld('SU_BOA', (/'swband'/), 'A', 'W/m2', &
+                      'Upwelling Spectral Radiation at Surface', &
+                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
+          call addfld('SU_TOA', (/'swband'/), 'A', 'W/m2', &
+                      'Upwelling Spectral Radiation at TOA', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true.)
 
           if (history_amwg) then
              call add_default('SOLIN'//diag(icall),   1, ' ')
@@ -1042,6 +1090,20 @@ end function radiation_nextsw_cday
     real(r8) fnl(pcols,pverp)     ! net longwave flux
     real(r8) fcnl(pcols,pverp)    ! net clear-sky longwave flux
     real(r8) nir_wght_dir(pcols)  ! near-IR direct weight JPT
+    real(r8) nir_a_dir(pcols)     ! Direct Flux in NIR Band A (0.7   - 0.778 µm)
+    real(r8) nir_b_dir(pcols)     ! Direct Flux in NIR Band B (0.778 - 1.242 µm)
+    real(r8) nir_c_dir(pcols)     ! Direct Flux in NIR Band C (1.242 - 1.298 µm)
+    real(r8) nir_d_dir(pcols)     ! Direct Flux in NIR Band D (1.298 - 1.626 µm)
+    real(r8) nir_e_dir(pcols)     ! Direct Flux in NIR Band E (1.626 - 1.941 µm)
+    real(r8) nir_f_dir(pcols)     ! Direct Flux in NIR Band F (1.941 - 2.150 µm)
+    real(r8) nir_g_dir(pcols)     ! Direct Flux in NIR Band G (2.150 - 5.0   µm)
+    real(r8) nir_a_dif(pcols)     ! Diffuse Flux in NIR Band A (0.7   - 0.778 µm)
+    real(r8) nir_b_dif(pcols)     ! Diffuse Flux in NIR Band B (0.778 - 1.242 µm)
+    real(r8) nir_c_dif(pcols)     ! Diffuse Flux in NIR Band C (1.242 - 1.298 µm)
+    real(r8) nir_d_dif(pcols)     ! Diffuse Flux in NIR Band D (1.298 - 1.626 µm)
+    real(r8) nir_e_dif(pcols)     ! Diffuse Flux in NIR Band E (1.626 - 1.941 µm)
+    real(r8) nir_f_dif(pcols)     ! Diffuse Flux in NIR Band F (1.941 - 2.150 µm)
+    real(r8) nir_g_dif(pcols)     ! Diffuse Flux in NIR Band G (2.150 - 5.0   µm)
     real(r8) sd_slice(pcols)      ! JPT
     real(r8) denom(pcols)                ! jpt
     real(r8) asym_splt            ! Asymmetric band split weighting
@@ -1064,6 +1126,7 @@ end function radiation_nextsw_cday
     real(r8), pointer, dimension(:,:,:) :: su => NULL()  ! shortwave spectral flux up
     real(r8), pointer, dimension(:,:,:) :: sd => NULL()  ! shortwave spectral flux down
     real(r8), pointer, dimension(:,:,:) :: sd_dir => NULL()  ! JPT direct shortwave spectral flux down
+    real(r8), pointer, dimension(:,:,:) :: sd_dif => NULL()  ! JPT direct shortwave spectral flux down     
     real(r8), pointer, dimension(:,:,:) :: lu => NULL()  ! longwave  spectral flux up
     real(r8), pointer, dimension(:,:,:) :: ld => NULL()  ! longwave  spectral flux down
 
@@ -1127,6 +1190,7 @@ end function radiation_nextsw_cday
       call pbuf_get_field(pbuf, su_idx, su)
       call pbuf_get_field(pbuf, sd_idx, sd)
       call pbuf_get_field(pbuf, sd_dir_idx, sd_dir)
+      call pbuf_get_field(pbuf, sd_dif_idx, sd_dif)
       call pbuf_get_field(pbuf, lu_idx, lu)
       call pbuf_get_field(pbuf, ld_idx, ld)
     end if
@@ -1355,13 +1419,47 @@ end function radiation_nextsw_cday
                   elsewhere
                      nir_wght_dir = 0.1
                   end where
+                  nir_a_dir = sd_dir(:,pver+1,9)
+                  nir_b_dir = sd_dir(:,pver+1,8)
+                  nir_c_dir = sd_dir(:,pver+1,7)
+                  nir_d_dir = sd_dir(:,pver+1,6)
+                  nir_e_dir = sd_dir(:,pver+1,5)
+                  nir_f_dir = sd_dir(:,pver+1,4)
+                  nir_g_dir = sd_dir(:,pver+1,1)+ sd_dir(:,pver+1,2) + sd_dir(:,pver+1,3) &
+                       + sd_dir(:,pver+1,14)
+                  sd_dif(:,:,:) = sd(:,:,:) - sd_dir(:,:,:)
+                  nir_a_dif = sd_dif(:,pver+1,9)
+                  nir_b_dif = sd_dif(:,pver+1,8)
+                  nir_c_dif = sd_dif(:,pver+1,7)
+                  nir_d_dif = sd_dif(:,pver+1,6)
+                  nir_e_dif = sd_dif(:,pver+1,5)
+                  nir_f_dif = sd_dif(:,pver+1,4)
+                  nir_g_dif = sd_dif(:,pver+1,1)+ sd_dif(:,pver+1,2) + sd_dif(:,pver+1,3) &
+                       + sd_dif(:,pver+1,14)
+                  
                   !nir_wght_dir(:) = sd_dir(:,81,9) - denom(:)
                   !nir_wght_dir(:) = nir_wght_dir(:) * asym_splt
-                  print *, "JPT EAM sd shape       = ", shape(sd)
-                  print *, "JPT EAM sd_dir shape   = ", shape(sd_dir)
-                  print *, "JPT EAM sd_slice shape = ", shape(sd_slice)
-                  print *, "JPT EAM soll   shape   = ", shape(cam_out%soll)
-                  cam_out%nir_wght_dir = nir_wght_dir 
+                  !print *, "JPT EAM sd shape       = ", shape(sd)
+                  !print *, "JPT EAM sd_dir shape   = ", shape(sd_dir)
+                  !print *, "JPT EAM sd_slice shape = ", shape(sd_slice)
+                  !print *, "JPT EAM soll   shape   = ", shape(cam_out%soll)
+                  cam_out%nir_wght_dir = nir_wght_dir
+                  cam_out%nir_a_dir    = nir_a_dir
+                  cam_out%nir_b_dir    = nir_b_dir
+                  cam_out%nir_c_dir    = nir_c_dir
+                  cam_out%nir_d_dir    = nir_d_dir
+                  cam_out%nir_e_dir    = nir_e_dir
+                  cam_out%nir_f_dir    = nir_f_dir
+                  cam_out%nir_g_dir    = nir_g_dir
+
+                  cam_out%nir_a_dif    = nir_a_dif
+                  cam_out%nir_b_dif    = nir_b_dif
+                  cam_out%nir_c_dif    = nir_c_dif
+                  cam_out%nir_d_dif    = nir_d_dif
+                  cam_out%nir_e_dif    = nir_e_dif
+                  cam_out%nir_f_dif    = nir_f_dif
+                  cam_out%nir_g_dif    = nir_g_dif
+                  
 
                   !  Output net fluxes at 200 mb
                   call vertinterp(ncol, pcols, pverp, state%pint, 20000._r8, fcns, fsn200c)
@@ -1434,6 +1532,22 @@ end function radiation_nextsw_cday
                   call outfld('SWCF'//diag(icall),swcf  ,pcols,lchnk)
                   !JPT
                   call outfld('NIR_WGHT_DIR'//diag(icall),cam_out%nir_wght_dir  ,pcols,lchnk)
+                  call outfld('NIR_A_DIR'//diag(icall),cam_out%nir_a_dir  ,pcols,lchnk)
+                  call outfld('NIR_B_DIR'//diag(icall),cam_out%nir_b_dir  ,pcols,lchnk)
+                  call outfld('NIR_C_DIR'//diag(icall),cam_out%nir_c_dir  ,pcols,lchnk)
+                  call outfld('NIR_D_DIR'//diag(icall),cam_out%nir_d_dir  ,pcols,lchnk)
+                  call outfld('NIR_E_DIR'//diag(icall),cam_out%nir_e_dir  ,pcols,lchnk)
+                  call outfld('NIR_F_DIR'//diag(icall),cam_out%nir_f_dir  ,pcols,lchnk)
+                  call outfld('NIR_G_DIR'//diag(icall),cam_out%nir_g_dir  ,pcols,lchnk)
+
+                  call outfld('NIR_A_DIF'//diag(icall),cam_out%nir_a_dif  ,pcols,lchnk)
+                  call outfld('NIR_B_DIF'//diag(icall),cam_out%nir_b_dif  ,pcols,lchnk)
+                  call outfld('NIR_C_DIF'//diag(icall),cam_out%nir_c_dif  ,pcols,lchnk)
+                  call outfld('NIR_D_DIF'//diag(icall),cam_out%nir_d_dif  ,pcols,lchnk)
+                  call outfld('NIR_E_DIF'//diag(icall),cam_out%nir_e_dif  ,pcols,lchnk)
+                  call outfld('NIR_F_DIF'//diag(icall),cam_out%nir_f_dif  ,pcols,lchnk)
+                  call outfld('NIR_G_DIF'//diag(icall),cam_out%nir_g_dif  ,pcols,lchnk)
+                  
                   !JPT Add outflds
 !                  call outfld('SD'//diag(icall),ttem  ,pcols,lchnk)
 !                  note: toa = 1

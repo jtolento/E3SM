@@ -665,6 +665,7 @@ subroutine diag_init()
    call addfld ('TSMN',horiz_only,    'M','K','Minimum surface temperature over output period')
    call addfld ('TSMX',horiz_only,    'X','K','Maximum surface temperature over output period')
    call addfld ('SNOWHLND',horiz_only,    'A','m','Water equivalent snow depth')
+   call addfld ('SNOWFRAC',horiz_only,    'A','m','Snow Cover Fraction') !JPT
    call addfld ('SNOWHICE',horiz_only,    'A','m','Snow depth over ice', fill_value = 1.e30_r8)
    call addfld ('TBOT',horiz_only,    'A','K','Lowest model level temperature')
 
@@ -696,6 +697,7 @@ subroutine diag_init()
        call add_default ('TSMN    ', 1, ' ')
        call add_default ('TSMX    ', 1, ' ')
        call add_default ('SNOWHLND', 1, ' ')
+       call add_default ('SNOWFRAC', 1, ' ')!JPT
        call add_default ('SNOWHICE', 1, ' ')
     endif
 
@@ -2192,6 +2194,7 @@ subroutine diag_surf (cam_in, cam_out, ps, trefmxav, trefmnav )
     call outfld('TSMN',     cam_in%ts,        pcols, lchnk)
     call outfld('TSMX',     cam_in%ts,        pcols, lchnk)
     call outfld('SNOWHLND', cam_in%snowhland, pcols, lchnk)
+    call outfld('SNOWFRAC', cam_in%snowfrac,  pcols, lchnk) !JPT
     call outfld('SNOWHICE', cam_in%snowhice,  pcols, lchnk)
     call outfld('ASDIR',    cam_in%asdir,     pcols, lchnk)
     call outfld('ASDIF',    cam_in%asdif,     pcols, lchnk)

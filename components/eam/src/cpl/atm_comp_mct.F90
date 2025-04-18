@@ -1658,7 +1658,21 @@ CONTAINS
           !JPT add NIR WGHT 
           a2x_am(ig, index_a2x_Faxa_nir_wght_dir) = cam_out(c)%nir_wght_dir(i)
           a2x_am(ig, index_a2x_Faxa_nir_wght_dif) = cam_out(c)%nir_wght_dif(i)
-
+          a2x_am(ig, index_a2x_Faxa_nir_a_dir) = cam_out(c)%nir_a_dir(i)
+          a2x_am(ig, index_a2x_Faxa_nir_b_dir) = cam_out(c)%nir_b_dir(i)
+          a2x_am(ig, index_a2x_Faxa_nir_c_dir) = cam_out(c)%nir_c_dir(i)
+          a2x_am(ig, index_a2x_Faxa_nir_d_dir) = cam_out(c)%nir_d_dir(i)
+          a2x_am(ig, index_a2x_Faxa_nir_e_dir) = cam_out(c)%nir_e_dir(i)
+          a2x_am(ig, index_a2x_Faxa_nir_f_dir) = cam_out(c)%nir_f_dir(i)
+          a2x_am(ig, index_a2x_Faxa_nir_g_dir) = cam_out(c)%nir_g_dir(i)
+          
+          a2x_am(ig, index_a2x_Faxa_nir_a_dif) = cam_out(c)%nir_a_dif(i)
+          a2x_am(ig, index_a2x_Faxa_nir_b_dif) = cam_out(c)%nir_b_dif(i)
+          a2x_am(ig, index_a2x_Faxa_nir_c_dif) = cam_out(c)%nir_c_dif(i)
+          a2x_am(ig, index_a2x_Faxa_nir_d_dif) = cam_out(c)%nir_d_dif(i)
+          a2x_am(ig, index_a2x_Faxa_nir_e_dif) = cam_out(c)%nir_e_dif(i)
+          a2x_am(ig, index_a2x_Faxa_nir_f_dif) = cam_out(c)%nir_f_dif(i)
+          a2x_am(ig, index_a2x_Faxa_nir_g_dif) = cam_out(c)%nir_g_dif(i)
           ! aerosol deposition fluxes
           a2x_am(ig, index_a2x_Faxa_bcphidry) = cam_out(c)%bcphidry(i)
           a2x_am(ig, index_a2x_Faxa_bcphodry) = cam_out(c)%bcphodry(i)
