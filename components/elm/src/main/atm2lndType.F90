@@ -82,6 +82,8 @@ module atm2lndType
      real(r8), pointer :: forc_solai_grc                (:,:) => null() ! diffuse radiation (numrad) (vis=forc_solsd, nir=forc_solld)
      real(r8), pointer :: forc_solar_grc                (:)   => null() ! incident solar radiation
      real(r8), pointer :: forc_nir_wght_dir             (:,:) => null() ! JPT
+     real(r8), pointer :: forc_nir_bands_dir            (:,:) => null() ! JPT all the direct NIR band fluxes
+     real(r8), pointer :: forc_nir_bands_dif            (:,:) => null() ! JPT all the diffuse NIR band fluxes   
      real(r8), pointer :: forc_ndep_grc                 (:)   => null() ! nitrogen deposition rate (gN/m2/s)
      real(r8), pointer :: forc_pdep_grc                 (:)   => null() ! phosphorus deposition rate (gP/m2/s)
      real(r8), pointer :: forc_pc13o2_grc               (:)   => null() ! C13O2 partial pressure (Pa)
@@ -247,6 +249,8 @@ contains
     allocate(this%forc_solad_grc                (begg:endg,numrad)) ; this%forc_solad_grc                (:,:) = ival
     allocate(this%forc_solai_grc                (begg:endg,numrad)) ; this%forc_solai_grc                (:,:) = ival
     allocate(this%forc_nir_wght_dir             (begg:endg,numrad)) ; this%forc_nir_wght_dir             (:,:) = ival !JPT
+    allocate(this%forc_nir_bands_dir            (begg:endg,7))      ; this%forc_nir_bands_dir            (:,:) = ival !JPT
+    allocate(this%forc_nir_bands_dif            (begg:endg,7))      ; this%forc_nir_bands_dif            (:,:) = ival !JPT 
     allocate(this%forc_solar_grc                (begg:endg))        ; this%forc_solar_grc                (:)   = ival
     allocate(this%forc_ndep_grc                 (begg:endg))        ; this%forc_ndep_grc                 (:)   = ival
     allocate(this%forc_pdep_grc                 (begg:endg))        ; this%forc_pdep_grc                 (:)   = ival

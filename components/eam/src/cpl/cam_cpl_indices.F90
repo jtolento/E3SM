@@ -37,6 +37,22 @@ module cam_cpl_indices
   !JPT add nir_wght
   integer :: index_a2x_Faxa_nir_wght_dir      ! nir weight to be used by mpassi (direct)
   integer :: index_a2x_Faxa_nir_wght_dif      ! nir weight to be used by mpassi (diffuse)
+  integer :: index_a2x_Faxa_nir_a_dir
+  integer :: index_a2x_Faxa_nir_b_dir
+  integer :: index_a2x_Faxa_nir_c_dir
+  integer :: index_a2x_Faxa_nir_d_dir
+  integer :: index_a2x_Faxa_nir_e_dir
+  integer :: index_a2x_Faxa_nir_f_dir
+  integer :: index_a2x_Faxa_nir_g_dir
+
+  integer :: index_a2x_Faxa_nir_a_dif
+  integer :: index_a2x_Faxa_nir_b_dif
+  integer :: index_a2x_Faxa_nir_c_dif
+  integer :: index_a2x_Faxa_nir_d_dif
+  integer :: index_a2x_Faxa_nir_e_dif
+  integer :: index_a2x_Faxa_nir_f_dif
+  integer :: index_a2x_Faxa_nir_g_dif
+  
   
   integer :: index_a2x_Faxa_bcphidry   ! flux: Black Carbon hydrophilic dry deposition
   integer :: index_a2x_Faxa_bcphodry   ! flux: Black Carbon hydrophobic dry deposition
@@ -189,6 +205,23 @@ contains
     !JPT add NIR wghts 
     index_a2x_Faxa_nir_wght_dir = mct_avect_indexra(a2x,'Faxa_nir_wght_dir')
     index_a2x_Faxa_nir_wght_dif	= mct_avect_indexra(a2x,'Faxa_nir_wght_dif')
+
+    index_a2x_Faxa_nir_a_dir = mct_avect_indexra(a2x,'Faxa_nir_a_dir')
+    index_a2x_Faxa_nir_b_dir = mct_avect_indexra(a2x,'Faxa_nir_b_dir')
+    index_a2x_Faxa_nir_c_dir = mct_avect_indexra(a2x,'Faxa_nir_c_dir')
+    index_a2x_Faxa_nir_d_dir = mct_avect_indexra(a2x,'Faxa_nir_d_dir')
+    index_a2x_Faxa_nir_e_dir = mct_avect_indexra(a2x,'Faxa_nir_e_dir')
+    index_a2x_Faxa_nir_f_dir = mct_avect_indexra(a2x,'Faxa_nir_f_dir')
+    index_a2x_Faxa_nir_g_dir = mct_avect_indexra(a2x,'Faxa_nir_g_dir')
+    
+    index_a2x_Faxa_nir_a_dif = mct_avect_indexra(a2x,'Faxa_nir_a_dif')
+    index_a2x_Faxa_nir_b_dif = mct_avect_indexra(a2x,'Faxa_nir_b_dif')
+    index_a2x_Faxa_nir_c_dif = mct_avect_indexra(a2x,'Faxa_nir_c_dif')
+    index_a2x_Faxa_nir_d_dif = mct_avect_indexra(a2x,'Faxa_nir_d_dif')
+    index_a2x_Faxa_nir_e_dif = mct_avect_indexra(a2x,'Faxa_nir_e_dif')
+    index_a2x_Faxa_nir_f_dif = mct_avect_indexra(a2x,'Faxa_nir_f_dif')
+    index_a2x_Faxa_nir_g_dif = mct_avect_indexra(a2x,'Faxa_nir_g_dif')
+
     index_a2x_Faxa_bcphidry = mct_avect_indexra(a2x,'Faxa_bcphidry')
     index_a2x_Faxa_bcphodry = mct_avect_indexra(a2x,'Faxa_bcphodry')
     index_a2x_Faxa_bcphiwet = mct_avect_indexra(a2x,'Faxa_bcphiwet')

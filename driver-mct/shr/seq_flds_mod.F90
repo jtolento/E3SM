@@ -963,6 +963,176 @@ contains
     units    = '1'
     attname  = 'Faxa_nir_wght_dif'
     call metadata_set(attname, longname, stdname, units)
+    
+    !Spectral NIR Bands Direct
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_a_dir")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_a_dir")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_a_dir")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_a_dir")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_a_dir")
+    longname = 'near-infrared weight for split band (Direct)'
+    stdname  = 'surface_downward_direct_shortwave_near_infrared_weight_a'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_a_dir'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_b_dir")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_b_dir")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_b_dir")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_b_dir")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_b_dir")
+    longname = 'near-infrared weight for split band (Direct)'
+    stdname  = 'surface_downward_direct_shortwave_near_infrared_weight_b'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_b_dir'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_c_dir")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_c_dir")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_c_dir")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_c_dir")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_c_dir")
+    longname = 'near-infrared weight for split band (Direct)'
+    stdname  = 'surface_downward_direct_shortwave_near_infrared_weight_c'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_c_dir'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_d_dir")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_d_dir")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_d_dir")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_d_dir")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_d_dir")
+    longname = 'near-infrared weight for split band (Direct)'
+    stdname  = 'surface_downward_direct_shortwave_near_infrared_weight_d'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_d_dir'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_e_dir")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_e_dir")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_e_dir")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_e_dir")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_e_dir")
+    longname = 'near-infrared weight for split band (Direct)'
+    stdname  = 'surface_downward_direct_shortwave_near_infrared_weight_e'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_e_dir'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_f_dir")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_f_dir")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_f_dir")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_f_dir")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_f_dir")
+    longname = 'near-infrared weight for split band (Direct)'
+    stdname  = 'surface_downward_direct_shortwave_near_infrared_weight_f'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_f_dir'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_g_dir")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_g_dir")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_g_dir")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_g_dir")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_g_dir")
+    longname = 'near-infrared weight for split band (Direct)'
+    stdname  = 'surface_downward_direct_shortwave_near_infrared_weight_g'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_g_dir'
+
+    ! Spectral NIR (Diffuse)
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_a_dif")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_a_dif")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_a_dif")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_a_dif")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_a_dif")
+    longname = 'near-infrared weight for split band (Diffuse)'
+    stdname  = 'surface_downward_diffuse_shortwave_near_infrared_weight_a'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_a_dif'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_b_dif")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_b_dif")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_b_dif")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_b_dif")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_b_dif")
+    longname = 'near-infrared weight for split band (Diffuse)'
+    stdname  = 'surface_downward_diffuse_shortwave_near_infrared_weight_b'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_b_dif'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_c_dif")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_c_dif")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_c_dif")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_c_dif")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_c_dif")
+    longname = 'near-infrared weight for split band (Diffuse)'
+    stdname  = 'surface_downward_diffuse_shortwave_near_infrared_weight_c'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_c_dif'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_d_dif")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_d_dif")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_d_dif")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_d_dif")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_d_dif")
+    longname = 'near-infrared weight for split band (Diffuse)'
+    stdname  = 'surface_downward_diffuse_shortwave_near_infrared_weight_d'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_d_dif'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_e_dif")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_e_dif")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_e_dif")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_e_dif")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_e_dif")
+    longname = 'near-infrared weight for split band (Diffuse)'
+    stdname  = 'surface_downward_diffuse_shortwave_near_infrared_weight_e'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_e_dif'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_f_dif")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_f_dif")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_f_dif")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_f_dif")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_f_dif")
+    longname = 'near-infrared weight for split band (Diffuse)'
+    stdname  = 'surface_downward_diffuse_shortwave_near_infrared_weight_f'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_f_dif'
+
+    call seq_flds_add(a2x_fluxes,"Faxa_nir_g_dif")
+    call seq_flds_add(x2i_fluxes,"Faxa_nir_g_dif")
+    if (rof_heat) then
+       call seq_flds_add(x2r_fluxes,"Faxa_nir_g_dif")
+       call seq_flds_add(a2x_fluxes_to_rof,"Faxa_nir_g_dif")
+    endif
+    call seq_flds_add(x2l_fluxes,"Faxa_nir_g_dif")
+    longname = 'near-infrared weight for split band (Diffuse)'
+    stdname  = 'surface_downward_diffuse_shortwave_near_infrared_weight_g'
+    units    = 'W m-2'
+    attname  = 'Faxa_nir_g_dif'
 
     ! Black Carbon hydrophilic dry deposition
     call seq_flds_add(a2x_fluxes,"Faxa_bcphidry" )
