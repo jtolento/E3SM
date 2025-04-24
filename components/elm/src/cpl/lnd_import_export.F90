@@ -1105,22 +1105,22 @@ contains
        atm2lnd_vars%forc_solad_grc(g,1) = x2l(index_x2l_Faxa_swvdr,i)   ! forc_solsxy  Atm flux  W/m^2
        atm2lnd_vars%forc_solai_grc(g,2) = x2l(index_x2l_Faxa_swndf,i)   ! forc_solldxy Atm flux  W/m^2
        atm2lnd_vars%forc_solai_grc(g,1) = x2l(index_x2l_Faxa_swvdf,i)   ! forc_solsdxy Atm flux  W/m^2
-       atm2lnd_vars%forc_nir_wght_dir(g,1) = x2l(index_x2l_Faxa_nir_wght_dir,i) ! JPT
-       atm2lnd_vars%forc_nir_bands_dir(g,1) = x2l(index_x2l_Faxa_nir_a_dir,i)
-       atm2lnd_vars%forc_nir_bands_dir(g,2) = x2l(index_x2l_Faxa_nir_b_dir,i)
-       atm2lnd_vars%forc_nir_bands_dir(g,3) = x2l(index_x2l_Faxa_nir_c_dir,i)
-       atm2lnd_vars%forc_nir_bands_dir(g,4) = x2l(index_x2l_Faxa_nir_d_dir,i)
-       atm2lnd_vars%forc_nir_bands_dir(g,5) = x2l(index_x2l_Faxa_nir_e_dir,i)
-       atm2lnd_vars%forc_nir_bands_dir(g,6) = x2l(index_x2l_Faxa_nir_f_dir,i)
-       atm2lnd_vars%forc_nir_bands_dir(g,7) = x2l(index_x2l_Faxa_nir_g_dir,i)
+       atm2lnd_vars%forc_nir_wght_dir_not_downscaled(g,1) = x2l(index_x2l_Faxa_nir_wght_dir,i) ! JPT
+       atm2lnd_vars%forc_nir_bands_dir_not_downscaled(g,1) = x2l(index_x2l_Faxa_nir_a_dir,i)
+       atm2lnd_vars%forc_nir_bands_dir_not_downscaled(g,2) = x2l(index_x2l_Faxa_nir_b_dir,i)
+       atm2lnd_vars%forc_nir_bands_dir_not_downscaled(g,3) = x2l(index_x2l_Faxa_nir_c_dir,i)
+       atm2lnd_vars%forc_nir_bands_dir_not_downscaled(g,4) = x2l(index_x2l_Faxa_nir_d_dir,i)
+       atm2lnd_vars%forc_nir_bands_dir_not_downscaled(g,5) = x2l(index_x2l_Faxa_nir_e_dir,i)
+       atm2lnd_vars%forc_nir_bands_dir_not_downscaled(g,6) = x2l(index_x2l_Faxa_nir_f_dir,i)
+       atm2lnd_vars%forc_nir_bands_dir_not_downscaled(g,7) = x2l(index_x2l_Faxa_nir_g_dir,i)
        
-       atm2lnd_vars%forc_nir_bands_dif(g,1) = x2l(index_x2l_Faxa_nir_a_dif,i)
-       atm2lnd_vars%forc_nir_bands_dif(g,2) = x2l(index_x2l_Faxa_nir_b_dif,i)
-       atm2lnd_vars%forc_nir_bands_dif(g,3) = x2l(index_x2l_Faxa_nir_c_dif,i)
-       atm2lnd_vars%forc_nir_bands_dif(g,4) = x2l(index_x2l_Faxa_nir_d_dif,i)
-       atm2lnd_vars%forc_nir_bands_dif(g,5) = x2l(index_x2l_Faxa_nir_e_dif,i)
-       atm2lnd_vars%forc_nir_bands_dif(g,6) = x2l(index_x2l_Faxa_nir_f_dif,i)
-       atm2lnd_vars%forc_nir_bands_dif(g,7) = x2l(index_x2l_Faxa_nir_g_dif,i)
+       atm2lnd_vars%forc_nir_bands_dif_not_downscaled(g,1) = x2l(index_x2l_Faxa_nir_a_dif,i)
+       atm2lnd_vars%forc_nir_bands_dif_not_downscaled(g,2) = x2l(index_x2l_Faxa_nir_b_dif,i)
+       atm2lnd_vars%forc_nir_bands_dif_not_downscaled(g,3) = x2l(index_x2l_Faxa_nir_c_dif,i)
+       atm2lnd_vars%forc_nir_bands_dif_not_downscaled(g,4) = x2l(index_x2l_Faxa_nir_d_dif,i)
+       atm2lnd_vars%forc_nir_bands_dif_not_downscaled(g,5) = x2l(index_x2l_Faxa_nir_e_dif,i)
+       atm2lnd_vars%forc_nir_bands_dif_not_downscaled(g,6) = x2l(index_x2l_Faxa_nir_f_dif,i)
+       atm2lnd_vars%forc_nir_bands_dif_not_downscaled(g,7) = x2l(index_x2l_Faxa_nir_g_dif,i)
 
        
        !print *, 'JPT: This code is being read'

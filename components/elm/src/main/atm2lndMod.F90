@@ -83,7 +83,9 @@ contains
          forc_rho_g   => atm2lnd_vars%forc_rho_not_downscaled_grc  , & ! Input:  [real(r8) (:)]  atmospheric density (kg/m**3)           
          forc_rain_g  => atm2lnd_vars%forc_rain_not_downscaled_grc , & ! Input:  [real(r8) (:)]  rain rate [mm/s]
          forc_snow_g  => atm2lnd_vars%forc_snow_not_downscaled_grc , & ! Input:  [real(r8) (:)]  snow rate [mm/s]
-         
+         forc_nir_wght_dir_g => atm2lnd_vars%forc_nir_wght_dir_not_downscaled , &  !JPT
+         forc_nir_bands_dir_g => atm2lnd_vars%forc_nir_bands_dir_not_downscaled , & !JPT
+         forc_nir_bands_dif_g => atm2lnd_vars%forc_nir_bands_dif_not_downscaled , & !JPT
          ! Column-level downscaled fields:
          forc_t_c     => atm2lnd_vars%forc_t_downscaled_col        , & ! Output: [real(r8) (:)]  atmospheric temperature (Kelvin)        
          forc_th_c    => atm2lnd_vars%forc_th_downscaled_col       , & ! Output: [real(r8) (:)]  atmospheric potential temperature (Kelvin)
@@ -91,7 +93,10 @@ contains
          forc_pbot_c  => atm2lnd_vars%forc_pbot_downscaled_col     , & ! Output: [real(r8) (:)]  atmospheric pressure (Pa)               
          forc_rho_c   => atm2lnd_vars%forc_rho_downscaled_col      , & ! Output: [real(r8) (:)]  atmospheric density (kg/m**3)           
          forc_rain_c  => atm2lnd_vars%forc_rain_downscaled_col     , & ! Output: [real(r8) (:)]  rain rate [mm/s]
-         forc_snow_c  => atm2lnd_vars%forc_snow_downscaled_col       & ! Output: [real(r8) (:)]  snow rate [mm/s]
+         forc_snow_c  => atm2lnd_vars%forc_snow_downscaled_col     , & ! Output: [real(r8) (:)]  snow rate [mm/s]
+         forc_nir_wght_dir_c => atm2lnd_vars%forc_nir_wght_dir_downscaled , &  !JPT
+         forc_nir_bands_dir_c => atm2lnd_vars%forc_nir_bands_dir_downscaled, & !JPT
+         forc_nir_bands_dif_c => atm2lnd_vars%forc_nir_bands_dif_downscaled  &  !JPT
          )
       
       ! Initialize column forcing (needs to be done for ALL active columns)
@@ -106,6 +111,8 @@ contains
             forc_rho_c(c)   = forc_rho_g(g)
             forc_rain_c(c)  = forc_rain_g(g)
             forc_snow_c(c)  = forc_snow_g(g)
+            forc_nir_bands_dir_c(c,:) = forc_nir_bands_dir_g(g,:)
+            forc_nir_bands_dif_c(c,:) = forc_nir_bands_dif_g(g,:)
          end if
       end do
 

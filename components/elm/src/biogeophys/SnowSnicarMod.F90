@@ -1785,7 +1785,7 @@ contains
    !-----------------------------------------------------------------------
    subroutine SNICAR_AD_RT (flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,  &
                          coszen, flg_slr_in, h2osno_liq, h2osno_ice, snw_rds,   &
-                         mss_cnc_aer_in, albsfc, nir_wght_dir, albout, flx_abs)
+                         mss_cnc_aer_in, albsfc, nir_bands_flx, albout, flx_abs)
      !
      ! !DESCRIPTION:
      ! Determine reflectance of, and vertically-resolved solar absorption in,
@@ -1828,8 +1828,9 @@ contains
      integer           , intent(in)  :: snw_rds        ( bounds%begc: , -nlevsno+1: )      ! snow effective radius (col,lyr) [microns, m^-6]
      real(r8)          , intent(in)  :: mss_cnc_aer_in ( bounds%begc: , -nlevsno+1: , 1: ) ! mass concentration of all aerosol species (col,lyr,aer) [kg/kg]
      real(r8)          , intent(in)  :: albsfc         ( bounds%begc: , 1: )               ! albedo of surface underlying snow (col,bnd) [frc]
-     real(r8)          , intent(in)  :: nir_wght_dir   ( bounds%begc: , 1: )               ! JPT Weighting 6-band treatment (col, bnd) [frc]
+     real(r8)          , intent(in)  :: nir_bands_flx  ( bounds%begc: , 1: )               ! JPT Weighting 6-band treatment (col, bnd) [frc]
      real(r8)          , intent(out) :: albout         ( bounds%begc: , 1: )               ! snow albedo, averaged into 2 bands (=0 if no sun or no snow) (col,bnd) [frc]
+     !real(r8)          , intent(out) :: spc_albout     ( bounds%begc: , 8 )               ! JPT Spectral 8 band albedo 
      real(r8)          , intent(out) :: flx_abs        ( bounds%begc: , -nlevsno+1: , 1: ) ! absorbed flux in each layer per unit flux incident (col, lyr, bnd)
      !
      ! !LOCAL VARIABLES:
@@ -1866,6 +1867,8 @@ contains
                                                    ! (1= use, 0= don't use)
      real(r8):: flx_wgt(1:numrad_snw)              ! weights applied to spectral bands,
                                                    ! specific to direct and diffuse cases (bnd) [frc]
+     !real(r8):: flx_wgt( bounds%begc:, 1:numrad_snw) !JPT allow the flx weight to vary with columns
+     
      integer :: flg_nosnl                          ! flag: =1 if there is snow, but zero snow layers,
                                                    ! =0 if at least 1 snow layer [flg]
      !integer :: trip                               ! flag: =1 to redo RT calculation if result is unrealistic
@@ -2318,7 +2321,7 @@ contains
              !  Band 5: 1.5-5.0um (NIR)
              !
              !
-             ! JPT (03072025): Introduce 6-band case, where spectral
+             ! JPT (03072025): Introduce 8-band case, where spectral
              ! grid matches RRTM grid partitions. Note band V (0.2-0.7um)
              ! will still come from the paraterized split of RRTMG_SW band 9
              ! in EAM, and bands B1 and B2 will still be parameterized from the
@@ -2331,12 +2334,12 @@ contains
              ! Spectral Bands (6-Band case)
              !  Band V:  0.2   - 0.7   um (VIS)
              !  Band A:  0.7   - 0.778 um (NIR) 
-             !  Band B1: 0.778 - 1.0   um (NIR)
-             !  Band B2: 1.0   - 1.242 um (NIR)
+             !  Band B:  0.778 - 1.242 um (NIR)
              !  Band C:  1.242 - 1.262 um (NIR)
-             !  Band D:  1.625 - 12.2  um (NIR)
-             !
-             !
+             !  Band D:  1.626 - 1.941 um (NIR)
+             !  Band E:  1.941 - 2.150 um (NIR)
+             !  Band F:  2.150 - 2.500 um (NIR)
+             !  Band G:  2.500 - 5.0   um (NIR)
              ! The following weights are appropriate for surface-incident flux in a mid-latitude winter atmosphere
              !
              ! 3-band weights
@@ -2394,57 +2397,36 @@ contains
 
              !JPT 6-Band weights
              elseif(numrad_snw==6) then
-                !if (flg_slr_in == 1) then
-                !  if (atm_type_index == atm_type_default) then
-                     !flx_wgt(1) = 1._r8
-                     !flx_wgt(2) = nir_wght_dir / 5
-                     !flx_wgt(3) = nir_wght_dir / 5
-                     !flx_wgt(4) = nir_wght_dir / 5
-                     !flx_wgt(5) = nir_wght_dir / 5
-                     !flx_wgt(6) = nir_wght_dir / 5
-                !  endif 
-                !endif
-                ! Direct:
-                if (flg_slr_in == 1) then
+                if (flg_slr_in == 1 .or. flg_slr_in == 2 ) then
                   if (atm_type_index == atm_type_default) then
                      flx_wgt(1) = 1._r8
-                     flx_wgt(2) = 0.49352158521175_r8
-                     flx_wgt(3) = 0.18099494230665_r8
-                     flx_wgt(4) = 0.12094898498813_r8
-                     flx_wgt(5) = 0.20453448749347_r8 / 2
-                     flx_wgt(6) = 0.20453448749347_r8 / 2
-                  else
-                     slr_zen = nint(acos(coszen(c_idx)) * 180._r8 / pi)
-                     if (slr_zen>89) then
-                        slr_zen = 89
-                     endif
-                     flx_wgt(1) = 1._r8
-                     flx_wgt(2) = flx_wgt_dir(atm_type_index, slr_zen+1, 2)
-                     flx_wgt(3) = flx_wgt_dir(atm_type_index, slr_zen+1, 3)
-                     flx_wgt(4) = flx_wgt_dir(atm_type_index, slr_zen+1, 4)
-                     flx_wgt(5) = flx_wgt_dir(atm_type_index, slr_zen+1, 5) / 2
-                     flx_wgt(6) = flx_wgt_dir(atm_type_index, slr_zen+1, 5) /2
-                  endif
-
-                  ! Diffuse:
-               elseif (flg_slr_in == 2) then
-                   if  (atm_type_index == atm_type_default) then
-                     flx_wgt(1) = 1._r8
-                     flx_wgt(2) = 0.58581507618433_r8
-                     flx_wgt(3) = 0.20156903770812_r8
-                     flx_wgt(4) = 0.10917889346386_r8
-                     flx_wgt(5) = 0.10343699264369_r8 / 2
-                     flx_wgt(6) = 0.10343699264369_r8 / 2
-                  else
-                     flx_wgt(1) = 1._r8
-                     flx_wgt(2) = flx_wgt_dif(atm_type_index, 2)
-                     flx_wgt(3) = flx_wgt_dif(atm_type_index, 3)
-                     flx_wgt(4) = flx_wgt_dif(atm_type_index, 4)
-                     flx_wgt(5) = flx_wgt_dif(atm_type_index, 5) /2
-                     flx_wgt(5) = flx_wgt_dif(atm_type_index, 5) /2
-                  endif
+                     print *, "c_idx", c_idx
+                     print *, "JPT ELM SNICAR shape(snw_rds)        = ", shape(snw_rds)
+                     !print *, "JPT ELM SNICAR snw_rds        = ", snw_rds
+                     print *, "JPT ELM SNICAR shape(nir_bands_flx)        = ", shape(nir_bands_flx)
+                     print *, "JPT ELM SNICAR nir_bands_flx(c_idx,:)      = ", nir_bands_flx(c_idx,:)
+                     print *, "JPT ELM SNICAR sum(nir_bands_flx(c_idx,:)) = ", sum(nir_bands_flx(c_idx,:))
+                     !print *, "JPT ELM SNICAR bounds%begc:                = ", bounds%begc
+                     !print *, "JPT ELM SNICAR bounds%endc:                = ", bounds%endc
+                     if (sum(nir_bands_flx(c_idx,:)) >= 0.0001) then 
+                        flx_wgt(2) = nir_bands_flx(c_idx,1) / sum(nir_bands_flx(c_idx,:))
+                        flx_wgt(3) = nir_bands_flx(c_idx,2) / sum(nir_bands_flx(c_idx,:))
+                        flx_wgt(4) = nir_bands_flx(c_idx,3) / sum(nir_bands_flx(c_idx,:))
+                        flx_wgt(5) = nir_bands_flx(c_idx,4) / sum(nir_bands_flx(c_idx,:))
+                        flx_wgt(6) = 1._r8 - (flx_wgt(2) + flx_wgt(3) + flx_wgt(4) + flx_wgt(5))
+                     else
+                        flx_wgt(2) = 0.58581507618433_r8
+                        flx_wgt(3) = 0.20156903770812_r8
+                        flx_wgt(4) = 0.10917889346386_r8
+                        flx_wgt(5) = 0.10343699264369_r8 / 2
+                        flx_wgt(6) = 0.10343699264369_r8 / 2
+                     end if
+                     != nir_bands_flx(c_idx,5) / sum(nir_bands_flx(c_idx,:))
+                     !flx_wgt(7) = nir_bands_flx(c_idx,6) / sum(nir_bands_flx(c_idx,:))
+                     !flx_wgt(8) = nir_bands_flx(c_idx,7) / sum(nir_bands_flx(c_idx,:))
+                  endif 
                 endif
-     
+                     
              endif ! end if numrad_snw
 
              ! Loop over snow spectral bands
