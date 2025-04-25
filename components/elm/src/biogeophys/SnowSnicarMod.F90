@@ -1785,7 +1785,7 @@ contains
    !-----------------------------------------------------------------------
    subroutine SNICAR_AD_RT (flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,  &
                          coszen, flg_slr_in, h2osno_liq, h2osno_ice, snw_rds,   &
-                         mss_cnc_aer_in, albsfc, nir_bands_flx, albout, flx_abs)
+                         mss_cnc_aer_in, albsfc, nir_bands_flx, albout, flx_abs, spc_albout)
      !
      ! !DESCRIPTION:
      ! Determine reflectance of, and vertically-resolved solar absorption in,
@@ -1830,7 +1830,7 @@ contains
      real(r8)          , intent(in)  :: albsfc         ( bounds%begc: , 1: )               ! albedo of surface underlying snow (col,bnd) [frc]
      real(r8)          , intent(in)  :: nir_bands_flx  ( bounds%begc: , 1: )               ! JPT Weighting 6-band treatment (col, bnd) [frc]
      real(r8)          , intent(out) :: albout         ( bounds%begc: , 1: )               ! snow albedo, averaged into 2 bands (=0 if no sun or no snow) (col,bnd) [frc]
-     !real(r8)          , intent(out) :: spc_albout     ( bounds%begc: , 8 )               ! JPT Spectral 8 band albedo 
+     real(r8)          , intent(out) :: spc_albout     ( bounds%begc: , 1: )               ! JPT Spectral 8 band albedo 
      real(r8)          , intent(out) :: flx_abs        ( bounds%begc: , -nlevsno+1: , 1: ) ! absorbed flux in each layer per unit flux incident (col, lyr, bnd)
      !
      ! !LOCAL VARIABLES:
@@ -2400,12 +2400,12 @@ contains
                 if (flg_slr_in == 1 .or. flg_slr_in == 2 ) then
                   if (atm_type_index == atm_type_default) then
                      flx_wgt(1) = 1._r8
-                     print *, "c_idx", c_idx
-                     print *, "JPT ELM SNICAR shape(snw_rds)        = ", shape(snw_rds)
+                     !print *, "c_idx", c_idx
+                     !print *, "JPT ELM SNICAR shape(snw_rds)        = ", shape(snw_rds)
                      !print *, "JPT ELM SNICAR snw_rds        = ", snw_rds
-                     print *, "JPT ELM SNICAR shape(nir_bands_flx)        = ", shape(nir_bands_flx)
-                     print *, "JPT ELM SNICAR nir_bands_flx(c_idx,:)      = ", nir_bands_flx(c_idx,:)
-                     print *, "JPT ELM SNICAR sum(nir_bands_flx(c_idx,:)) = ", sum(nir_bands_flx(c_idx,:))
+                     !print *, "JPT ELM SNICAR shape(nir_bands_flx)        = ", shape(nir_bands_flx)
+                     !print *, "JPT ELM SNICAR nir_bands_flx(c_idx,:)      = ", nir_bands_flx(c_idx,:)
+                     !print *, "JPT ELM SNICAR sum(nir_bands_flx(c_idx,:)) = ", sum(nir_bands_flx(c_idx,:))
                      !print *, "JPT ELM SNICAR bounds%begc:                = ", bounds%begc
                      !print *, "JPT ELM SNICAR bounds%endc:                = ", bounds%endc
                      if (sum(nir_bands_flx(c_idx,:)) >= 0.0001) then 
@@ -3081,6 +3081,7 @@ contains
 
              ! Weight output NIR albedo appropriately
              albout(c_idx,1) = albout_lcl(1)
+             spc_albout(c_idx,:) = albout_lcl(:) !JPT
              flx_sum         = 0._r8
              do bnd_idx= nir_bnd_bgn,nir_bnd_end
                 flx_sum = flx_sum + flx_wgt(bnd_idx)*albout_lcl(bnd_idx)
@@ -3106,6 +3107,7 @@ contains
                 sza_factor = sza_c1 * (log10(snw_rds_lcl(snl_top) * c1) - c6) + sza_c0
                 flx_sza_adjust  = albout(c_idx,2) * (sza_factor-c1) * sum(flx_wgt(nir_bnd_bgn:nir_bnd_end))
                 albout(c_idx,2) = albout(c_idx,2) * sza_factor
+                spc_albout(c_idx,nir_bnd_bgn:nir_bnd_end) =  albout(c_idx,nir_bnd_bgn:nir_bnd_end) * sza_factor !JPT
                 flx_abs(c_idx,snl_top,2) = flx_abs(c_idx,snl_top,2) - flx_sza_adjust
              endif
 
