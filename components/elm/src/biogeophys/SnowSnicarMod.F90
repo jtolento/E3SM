@@ -3107,7 +3107,7 @@ contains
                 sza_factor = sza_c1 * (log10(snw_rds_lcl(snl_top) * c1) - c6) + sza_c0
                 flx_sza_adjust  = albout(c_idx,2) * (sza_factor-c1) * sum(flx_wgt(nir_bnd_bgn:nir_bnd_end))
                 albout(c_idx,2) = albout(c_idx,2) * sza_factor
-                spc_albout(c_idx,nir_bnd_bgn:nir_bnd_end) =  albout(c_idx,nir_bnd_bgn:nir_bnd_end) * sza_factor !JPT
+                spc_albout(c_idx, nir_bnd_bgn:nir_bnd_end) = spc_albout(c_idx,nir_bnd_bgn:nir_bnd_end) * sza_factor !JPT
                 flx_abs(c_idx,snl_top,2) = flx_abs(c_idx,snl_top,2) - flx_sza_adjust
              endif
 
