@@ -115,6 +115,7 @@ contains
     type(atm2lnd_type)     , intent(inout) :: atm2lnd_vars
     !
     ! !LOCAL VARIABLES:
+    integer,  parameter :: numrad_snw  =   6 !JPT
     integer  :: i                                                                         ! index for layers [idx]
     integer  :: aer                                                                       ! index for sno_nbr_aer
     real(r8) :: extkn                      ! nitrogen allocation coefficient
@@ -141,11 +142,22 @@ contains
     real(r8) :: rho(bounds%begp:bounds%endp,numrad)        ! leaf/stem refl weighted by fraction LAI and SAI
     real(r8) :: tau(bounds%begp:bounds%endp,numrad)        ! leaf/stem tran weighted by fraction LAI and SAI
     real(r8) :: albsfc          (bounds%begc:bounds%endc,numrad)                          ! albedo of surface underneath snow (col,bnd)
-    real(r8) :: nir_wght_dir    (bounds%begc:bounds%endc,numrad)                          ! JPT NIR weighting for 6-band albedo
-    real(r8) :: nir_bands_dir   (bounds%begc:bounds%endc,7)                               ! JPT NIR Spectral fluxes Direct
-    real(r8) :: nir_bands_dif   (bounds%begc:bounds%endc,7)                               ! JPT NIR Spectral Fluxes Diffuse
-    real(r8) :: albsnd(bounds%begc:bounds%endc,numrad)     ! snow albedo (direct)
-    real(r8) :: albsni(bounds%begc:bounds%endc,numrad)     ! snow albedo (diffuse)
+    real(r8) :: nir_wght_dir    (bounds%begc:bounds%endc,numrad)                          !JPT NIR weighting for 6-band albedo
+    real(r8) :: nir_bands_dir   (bounds%begc:bounds%endc,7)                               !JPT NIR Spectral fluxes Direct
+    real(r8) :: nir_bands_dif   (bounds%begc:bounds%endc,7)                               !JPT NIR Spectral Fluxes Diffuse
+    real(r8) :: spc_albout_dif     (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_dir     (bounds%begc:bounds%endc,numrad_snw)                   !JPT
+    real(r8) :: spc_albout_bc_dif  (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_bc_dir  (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_oc_dif  (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_oc_dir  (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_pur_dif (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_pur_dir (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_dst_dif (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_dst_dir (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    
+    real(r8) :: albsnd(bounds%begc:bounds%endc,numrad)                                    ! snow albedo (direct)
+    real(r8) :: albsni(bounds%begc:bounds%endc,numrad)                                    ! snow albedo (diffuse)
     real(r8) :: albsnd_pur      (bounds%begc:bounds%endc,numrad)                          ! direct pure snow albedo (radiative forcing)
     real(r8) :: albsni_pur      (bounds%begc:bounds%endc,numrad)                          ! diffuse pure snow albedo (radiative forcing)
     real(r8) :: albsnd_bc       (bounds%begc:bounds%endc,numrad)                          ! direct snow albedo without BC (radiative forcing)
@@ -167,8 +179,8 @@ contains
     real(r8) :: mss_cnc_aer_in_fdb     (bounds%begc:bounds%endc,-nlevsno+1:0,sno_nbr_aer) ! mass concentration of all aerosol species for feedback calculation (col,lyr,aer) [kg kg-1]
     real(r8), parameter :: mpe = 1.e-06_r8                                                ! prevents overflow for division by zero
     integer , parameter :: nband =numrad                                                  ! number of solar radiation waveband classes
-    print *, "JPT ELM Beg Surface albedo Mod shape(nir_bands_dir) = ", shape(nir_bands_dir)
-    print *, "JPT ELM Beg Surface albedo Mod shape(nir_bands_dir) = ", shape(nir_wght_dir)
+    !print *, "JPT ELM Beg Surface albedo Mod shape(nir_bands_dir) = ", shape(nir_bands_dir)
+    !print *, "JPT ELM Beg Surface albedo Mod shape(nir_bands_dir) = ", shape(nir_wght_dir)
   !-----------------------------------------------------------------------
 
    associate(&
@@ -243,10 +255,10 @@ contains
           nir_bands_dif  =>   atm2lnd_vars%forc_nir_bands_dif_downscaled       &
           
           )
-     print *, "JPT ELM after associate shape(nir_wght_dir) = ", shape(nir_wght_dir)
-     print *, "JPT ELM after associate shape(atm2lnd_vars%forc_nir_wght_dir) = ", shape(atm2lnd_vars%forc_nir_wght_dir_not_downscaled)
-     print *, "JPT ELM after associate shape(nir_bands_dir) = ", shape(nir_bands_dir)
-     print *, "JPT ELM after associate shape(atm2lnd_vars%forc_nir_bands_dir) = ", shape(atm2lnd_vars%forc_nir_bands_dir_downscaled)
+     !print *, "JPT ELM after associate shape(nir_wght_dir) = ", shape(nir_wght_dir)
+     !print *, "JPT ELM after associate shape(atm2lnd_vars%forc_nir_wght_dir) = ", shape(atm2lnd_vars%forc_nir_wght_dir_not_downscaled)
+     !print *, "JPT ELM after associate shape(nir_bands_dir) = ", shape(nir_bands_dir)
+     !print *, "JPT ELM after associate shape(atm2lnd_vars%forc_nir_bands_dir) = ", shape(atm2lnd_vars%forc_nir_bands_dir_downscaled)
     ! Cosine solar zenith angle for next time step
 
     do g = bounds%begg,bounds%endg
@@ -395,7 +407,8 @@ contains
                                 albsfc(bounds%begc:bounds%endc, :), &
                                 nir_bands_dir(bounds%begc:bounds%endc, :), & !JPT
                                 albsnd_bc(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :), &
+                                spc_albout_bc_dir(bounds%begc:bounds%endc, :) )
           else
                 call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -422,7 +435,8 @@ contains
                                 albsfc(bounds%begc:bounds%endc, :), &
                                 nir_bands_dif(bounds%begc:bounds%endc, :), & !JPT
                                 albsni_bc(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :), &
+                                spc_albout_bc_dif(bounds%begc:bounds%endc, :)  )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -459,7 +473,8 @@ contains
                                 albsfc(bounds%begc:bounds%endc, :), &
                                 nir_bands_dir(bounds%begc:bounds%endc, :), & !JPT
                                 albsnd_oc(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :), &
+                                spc_albout_oc_dir(bounds%begc:bounds%endc, :)  )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -485,7 +500,8 @@ contains
                                 albsfc(bounds%begc:bounds%endc, :), &
                                 nir_bands_dif(bounds%begc:bounds%endc, :), & !JPT
                                 albsni_oc(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :), &
+                                spc_albout_oc_dif(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -522,7 +538,8 @@ contains
                                 albsfc(bounds%begc:bounds%endc, :), &
                                 nir_bands_dir(bounds%begc:bounds%endc, :), & !JPT
                                 albsnd_dst(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :), &
+                                spc_albout_dst_dir(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -548,7 +565,8 @@ contains
                                 albsfc(bounds%begc:bounds%endc, :), &
                                 nir_bands_dif(bounds%begc:bounds%endc, :), & !JPT
                                 albsni_dst(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :), &
+                                spc_albout_dst_dif(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -576,7 +594,8 @@ contains
                                 albsfc(bounds%begc:bounds%endc, :), &
                                 nir_bands_dir(bounds%begc:bounds%endc, :), & !JPT
                                 albsnd_pur(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :), &
+                                spc_albout_pur_dir(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -602,7 +621,8 @@ contains
                                 albsfc(bounds%begc:bounds%endc, :), &
                                 nir_bands_dif(bounds%begc:bounds%endc, :), & !JPT
                                 albsni_pur(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :), &
+                                spc_albout_pur_dif(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -621,10 +641,10 @@ contains
     ! CLIMATE FEEDBACK CALCULATIONS, ALL AEROSOLS:
        flg_slr = 1; ! direct-beam
        if (use_snicar_ad) then
-           print *, "JPT ELM shape(snw_rds_in)        = ", shape(snw_rds_in)
-           !print *, "JPT ELM snw_rds_in        = ", snw_rds_in
-           print *, "JPT ELM shape(nir_bands_dir)        = ", shape(nir_bands_dir)           
-           print *, "JPT ELM nir_bands_dir          = ", nir_bands_dir(:,:)
+           !print *, "JPT ELM shape(snw_rds_in)        = ", shape(snw_rds_in)
+           !!print *, "JPT ELM snw_rds_in        = ", snw_rds_in
+           !print *, "JPT ELM shape(nir_bands_dir)        = ", shape(nir_bands_dir)           
+           !print *, "JPT ELM nir_bands_dir          = ", nir_bands_dir(:,:)
            !print *, "JPT ELM bounds%begc          = ", bounds%begc
            !print *, "JPT ELM bounds%endc          = ", bounds%endc
            
@@ -638,7 +658,8 @@ contains
                              albsfc(bounds%begc:bounds%endc, :), &
                              nir_bands_dir(bounds%begc:bounds%endc, :), & !JPT
                              albsnd(bounds%begc:bounds%endc, :), &
-                             flx_absd_snw(bounds%begc:bounds%endc, :, :) )
+                             flx_absd_snw(bounds%begc:bounds%endc, :, :), &
+                             spc_albout_dir(bounds%begc:bounds%endc, :) )
        else
             call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                            coszen_col(bounds%begc:bounds%endc), &
@@ -664,7 +685,8 @@ contains
                              albsfc(bounds%begc:bounds%endc, :), &
                              nir_bands_dif(bounds%begc:bounds%endc, :), & !JPT
                              albsni(bounds%begc:bounds%endc, :), &
-                             flx_absi_snw(bounds%begc:bounds%endc, :, :) )
+                             flx_absi_snw(bounds%begc:bounds%endc, :, :), &
+                             spc_albout_dif(bounds%begc:bounds%endc, :) )
        else
             call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                            coszen_col(bounds%begc:bounds%endc), &

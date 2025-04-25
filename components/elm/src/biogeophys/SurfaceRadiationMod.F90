@@ -214,10 +214,10 @@ contains
          avgflag='A', long_name='direct vis incident solar radiation', &
          ptr_patch=this%fsds_vis_d_patch)
     
-    !this%fsds_nir_wght_dir_patch(begc:endc) = spval
-    !call hist_addfld1d (fname='NIR_WGHT_DIR', units='W/m^2',  &
-    !     avgflag='A', long_name='direct weight ', &
-    !     ptr_patch=this%fsds_nir_wght_dir_patch)
+    this%fsds_nir_wght_dir_patch(begp:endp) = spval
+    call hist_addfld1d (fname='NIR_WGHT_DIR', units='W/m^2',  &
+         avgflag='A', long_name='direct weight ', &
+         ptr_patch=this%fsds_nir_wght_dir_patch)
     !this%fsds_nir_bands_dir_patch(begp:endp,:) = spval
     !call hist_addfld2d (fname='NIR_BANDS_DIR', units='W/m^2',  &
     !     avgflag='A', long_name='Direct Flux ', &
