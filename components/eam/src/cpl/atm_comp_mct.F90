@@ -1810,6 +1810,9 @@ subroutine atm_import_moab(Eclock, cam_in, restart_init )
           cam_in(c)%aldir(i)     =  x2a_am(ig,index_x2a_Sx_anidr)
           cam_in(c)%asdif(i)     =  x2a_am(ig,index_x2a_Sx_avsdf)
           cam_in(c)%aldif(i)     =  x2a_am(ig,index_x2a_Sx_anidf)
+
+          cam_in(c)%alb_nir_a_dir(i)     =  x2a_am(ig,index_x2a_Sx_alb_nir_a_dir) !JPT
+          
           cam_in(c)%ts(i)        =  x2a_am(ig,index_x2a_Sx_t)  
           cam_in(c)%sst(i)       =  x2a_am(ig,index_x2a_So_t)             
           cam_in(c)%snowhland(i) =  x2a_am(ig,index_x2a_Sl_snowh)

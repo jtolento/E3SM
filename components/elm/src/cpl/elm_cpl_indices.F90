@@ -41,6 +41,22 @@ module elm_cpl_indices
   integer, public ::index_l2x_Sl_anidr        ! albedo: direct , near-ir
   integer, public ::index_l2x_Sl_avsdf        ! albedo: diffuse, visible
   integer, public ::index_l2x_Sl_anidf        ! albedo: diffuse, near-ir
+  !JPT
+  integer, public ::index_l2x_Sl_alb_nir_a_dir        
+  integer, public ::index_l2x_Sl_alb_nir_b_dir        
+  integer, public ::index_l2x_Sl_alb_nir_c_dir        
+  integer, public ::index_l2x_Sl_alb_nir_d_dir        
+  integer, public ::index_l2x_Sl_alb_nir_e_dir        
+  integer, public ::index_l2x_Sl_alb_nir_f_dir        
+  integer, public ::index_l2x_Sl_alb_nir_g_dir        
+  integer, public ::index_l2x_Sl_alb_nir_a_dif        
+  integer, public ::index_l2x_Sl_alb_nir_b_dif        
+  integer, public ::index_l2x_Sl_alb_nir_c_dif        
+  integer, public ::index_l2x_Sl_alb_nir_d_dif        
+  integer, public ::index_l2x_Sl_alb_nir_e_dif        
+  integer, public ::index_l2x_Sl_alb_nir_f_dif        
+  integer, public ::index_l2x_Sl_alb_nir_g_dif 
+  
   integer, public ::index_l2x_Sl_snowh        ! snow height
   integer, public ::index_l2x_Sl_snowfrac        !JPT Snow land area fraction
   integer, public ::index_l2x_Sl_u10          ! 10m wind
@@ -220,6 +236,22 @@ contains
     index_l2x_Sl_anidr      = mct_avect_indexra(l2x,'Sl_anidr')
     index_l2x_Sl_avsdf      = mct_avect_indexra(l2x,'Sl_avsdf')
     index_l2x_Sl_anidf      = mct_avect_indexra(l2x,'Sl_anidf')
+    !JPT
+    index_l2x_Sl_alb_nir_a_dir   = mct_avect_indexra(l2x,'Sl_alb_nir_a_dir') 
+    index_l2x_Sl_alb_nir_b_dir   = mct_avect_indexra(l2x,'Sl_alb_nir_b_dir')
+    index_l2x_Sl_alb_nir_c_dir   = mct_avect_indexra(l2x,'Sl_alb_nir_c_dir')
+    index_l2x_Sl_alb_nir_d_dir   = mct_avect_indexra(l2x,'Sl_alb_nir_d_dir')
+    index_l2x_Sl_alb_nir_e_dir   = mct_avect_indexra(l2x,'Sl_alb_nir_e_dir')
+    !index_l2x_Sl_alb_nir_f_dir   = mct_avect_indexra(l2x,'Sl_alb_nir_f_dir')
+    !index_l2x_Sl_alb_nir_g_dir   = mct_avect_indexra(l2x,'Sl_alb_nir_g_dir')
+    index_l2x_Sl_alb_nir_a_dif   = mct_avect_indexra(l2x,'Sl_alb_nir_a_dif')
+    index_l2x_Sl_alb_nir_b_dif   = mct_avect_indexra(l2x,'Sl_alb_nir_b_dif')
+    index_l2x_Sl_alb_nir_c_dif   = mct_avect_indexra(l2x,'Sl_alb_nir_c_dif')
+    index_l2x_Sl_alb_nir_d_dif   = mct_avect_indexra(l2x,'Sl_alb_nir_d_dif')
+    index_l2x_Sl_alb_nir_e_dif   = mct_avect_indexra(l2x,'Sl_alb_nir_e_dif')
+    !index_l2x_Sl_alb_nir_f_dif   = mct_avect_indexra(l2x,'Sl_alb_nir_f_dif')
+    !index_l2x_Sl_alb_nir_g_dif   = mct_avect_indexra(l2x,'Sl_alb_nir_g_dif')
+    
     index_l2x_Sl_tref       = mct_avect_indexra(l2x,'Sl_tref')
     index_l2x_Sl_qref       = mct_avect_indexra(l2x,'Sl_qref')
     index_l2x_Sl_u10        = mct_avect_indexra(l2x,'Sl_u10')
@@ -301,6 +333,7 @@ contains
     index_x2l_Faxa_swndf    = mct_avect_indexra(x2l,'Faxa_swndf')
     index_x2l_Faxa_swvdf    = mct_avect_indexra(x2l,'Faxa_swvdf')
     index_x2l_Faxa_nir_wght_dir    = mct_avect_indexra(x2l,'Faxa_nir_wght_dir') !JPT
+    
     index_x2l_Faxa_nir_a_dir    = mct_avect_indexra(x2l,'Faxa_nir_a_dir')
     index_x2l_Faxa_nir_b_dir    = mct_avect_indexra(x2l,'Faxa_nir_b_dir')
     index_x2l_Faxa_nir_c_dir    = mct_avect_indexra(x2l,'Faxa_nir_c_dir')

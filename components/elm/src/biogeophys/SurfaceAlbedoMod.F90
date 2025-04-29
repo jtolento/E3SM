@@ -233,6 +233,10 @@ contains
           albsni_hst    =>    surfalb_vars%albsni_hst_col         , & ! Output:  [real(r8) (:,:) ]  snow ground albedo, diffuse, for history files (col,bnd) [frc]
           albd          =>    surfalb_vars%albd_patch             , & ! Output:  [real(r8) (:,:) ]  surface albedo (direct)
           albi          =>    surfalb_vars%albi_patch             , & ! Output:  [real(r8) (:,:) ]  surface albedo (diffuse)
+          
+          spc_albd      =>    surfalb_vars%spc_albd_patch         , & !JPT Output:  [real(r8) (:,numrad_snw) ]  surface albedo (direct)   
+          spc_albi      =>    surfalb_vars%spc_albi_patch         , & !JPT Output:  [real(r8) (:,numrad_snw) ]  surface albedo (diffuse)
+          
           fabd          =>    surfalb_vars%fabd_patch             , & ! Output:  [real(r8) (:,:) ]  flux absorbed by canopy per unit direct flux
           fabd_sun      =>    surfalb_vars%fabd_sun_patch         , & ! Output:  [real(r8) (:,:) ]  flux absorbed by sunlit canopy per unit direct flux
           fabd_sha      =>    surfalb_vars%fabd_sha_patch         , & ! Output:  [real(r8) (:,:) ]  flux absorbed by shaded canopy per unit direct flux
@@ -250,10 +254,11 @@ contains
           fabd_sha_z    =>    surfalb_vars%fabd_sha_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf direct  PAR (per unit lai+sai) for each canopy layer
           fabi_sun_z    =>    surfalb_vars%fabi_sun_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed sunlit leaf diffuse PAR (per unit lai+sai) for each canopy layer
           fabi_sha_z    =>    surfalb_vars%fabi_sha_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf diffuse PAR (per unit lai+sai) for each canopy layer
-          nir_wght_dir  =>    atm2lnd_vars%forc_nir_wght_dir_not_downscaled      , & ! JPT Input: Weighting for NIR fluxes
-          nir_bands_dir  =>   atm2lnd_vars%forc_nir_bands_dir_downscaled      , &
-          nir_bands_dif  =>   atm2lnd_vars%forc_nir_bands_dif_downscaled       &
-          
+          spc_alb_dir   =>    surfalb_vars%spc_albgrd_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (direct)
+          spc_alb_dif   =>    surfalb_vars%spc_albgri_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (diffuse)
+          nir_wght_dir  =>    atm2lnd_vars%forc_nir_wght_dir_not_downscaled   , & !JPT Input: Weighting for NIR fluxes
+          nir_bands_dir  =>   atm2lnd_vars%forc_nir_bands_dir_downscaled      , & !JPT Input: NIR fluxes (col,numrad_snw-1)
+          nir_bands_dif  =>   atm2lnd_vars%forc_nir_bands_dif_downscaled        & !JPT Input: NIR fluxes (col,numrad_snw-1)  
           )
      !print *, "JPT ELM after associate shape(nir_wght_dir) = ", shape(nir_wght_dir)
      !print *, "JPT ELM after associate shape(atm2lnd_vars%forc_nir_wght_dir) = ", shape(atm2lnd_vars%forc_nir_wght_dir_not_downscaled)
@@ -316,6 +321,15 @@ contains
        end do
 
     end do  ! end of numrad loop
+
+    do ib = 1, numrad_snw          !JPT
+       do fc = 1,num_nourbanc
+          c = filter_nourbanc(fc)
+          spc_alb_dir(c,ib) = 0._r8
+          spc_alb_dif(c,ib) = 0._r8
+       end do
+    end do
+    
 
     ! SoilAlbedo called before SNICAR_RT/SNICAR_AD_RT
     ! so that reflectance of soil beneath snow column is known
@@ -700,6 +714,27 @@ contains
                            flx_absi_snw(bounds%begc:bounds%endc, :, :) )
        endif ! end if use_snicar_ad
 
+
+    !JPT
+    do ib = 1, numrad_snw
+       do fc = 1,num_nourbanc
+          c = filter_nourbanc(fc)
+          if (coszen_col(c) > 0._r8) then
+             ! ground albedo was originally computed in SoilAlbedo, but is now computed here                   
+             ! because the order of SoilAlbedo and SNICAR_RT/SNICAR_AD_RT was switched for SNICAR/SNICAR_AD_RT.
+             if (ib == 1) then
+                print*,"JPT ELM spc_albout3(c_idx,:) = ", spc_albout_dir(c,:)
+                spc_alb_dir(c,ib) = albsod(c,1)*(1._r8-frac_sno(c)) + spc_albout_dir(c,ib)*frac_sno(c)
+                spc_alb_dif(c,ib) = albsoi(c,1)*(1._r8-frac_sno(c)) + spc_albout_dif(c,ib)*frac_sno(c)
+             else
+                spc_alb_dir(c,ib) = albsod(c,2)*(1._r8-frac_sno(c)) + spc_albout_dir(c,ib)*frac_sno(c)
+                spc_alb_dif(c,ib) = albsoi(c,2)*(1._r8-frac_sno(c)) + spc_albout_dif(c,ib)*frac_sno(c)
+             end if
+          end if
+       end do
+    end do
+    
+       
     ! ground albedos and snow-fraction weighting of snow absorption factors
     do ib = 1, nband
        do fc = 1,num_nourbanc
@@ -709,6 +744,7 @@ contains
              ! because the order of SoilAlbedo and SNICAR_RT/SNICAR_AD_RT was switched for SNICAR/SNICAR_AD_RT.
              albgrd(c,ib) = albsod(c,ib)*(1._r8-frac_sno(c)) + albsnd(c,ib)*frac_sno(c)
              albgri(c,ib) = albsoi(c,ib)*(1._r8-frac_sno(c)) + albsni(c,ib)*frac_sno(c)
+             
 
              ! albedos for radiative forcing calculations:
              if (use_snicar_frc) then
@@ -1024,6 +1060,15 @@ contains
           ftii(p,ib) = 1._r8
           albd(p,ib) = albgrd(c,ib)
           albi(p,ib) = albgri(c,ib)
+       end do
+    end do
+    
+    do ib = 1,numrad_snw
+       do fp = 1,num_novegsol
+	  p = filter_novegsol(fp)
+          c = veg_pp%column(p)
+          spc_albd(p,ib) = spc_albout_dir(c,ib)
+          spc_albi(p,ib) = spc_albout_dif(c,ib)
        end do
     end do
 
