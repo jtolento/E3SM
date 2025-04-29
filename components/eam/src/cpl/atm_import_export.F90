@@ -91,6 +91,7 @@ contains
           cam_in(c)%aldir(i)     =  x2a(index_x2a_Sx_anidr, ig)
           cam_in(c)%asdif(i)     =  x2a(index_x2a_Sx_avsdf, ig)
           cam_in(c)%aldif(i)     =  x2a(index_x2a_Sx_anidf, ig)
+          cam_in(c)%alb_nir_a_dir(i)     =  x2a(index_x2a_Sx_alb_nir_a_dir, ig) !JPT
           cam_in(c)%ts(i)        =  x2a(index_x2a_Sx_t,     ig)  
           cam_in(c)%sst(i)       =  x2a(index_x2a_So_t,     ig)             
           cam_in(c)%snowhland(i) =  x2a(index_x2a_Sl_snowh, ig)

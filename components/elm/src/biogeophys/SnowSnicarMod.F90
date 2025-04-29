@@ -3082,6 +3082,8 @@ contains
              ! Weight output NIR albedo appropriately
              albout(c_idx,1) = albout_lcl(1)
              spc_albout(c_idx,:) = albout_lcl(:) !JPT
+             !print*,"JPT ELM albout_lcl = ", shape(albout_lcl)
+             print*,"JPT ELM spc_albout1(c_idx,:) = ", spc_albout(c_idx,:)
              flx_sum         = 0._r8
              do bnd_idx= nir_bnd_bgn,nir_bnd_end
                 flx_sum = flx_sum + flx_wgt(bnd_idx)*albout_lcl(bnd_idx)
@@ -3107,7 +3109,7 @@ contains
                 sza_factor = sza_c1 * (log10(snw_rds_lcl(snl_top) * c1) - c6) + sza_c0
                 flx_sza_adjust  = albout(c_idx,2) * (sza_factor-c1) * sum(flx_wgt(nir_bnd_bgn:nir_bnd_end))
                 albout(c_idx,2) = albout(c_idx,2) * sza_factor
-                spc_albout(c_idx, nir_bnd_bgn:nir_bnd_end) = spc_albout(c_idx,nir_bnd_bgn:nir_bnd_end) * sza_factor !JPT
+                !spc_albout(c_idx, nir_bnd_bgn:nir_bnd_end) = spc_albout(c_idx,nir_bnd_bgn:nir_bnd_end) * sza_factor !JPT
                 flx_abs(c_idx,snl_top,2) = flx_abs(c_idx,snl_top,2) - flx_sza_adjust
              endif
 
@@ -3115,13 +3117,17 @@ contains
           elseif ( (coszen(c_idx) > 0._r8) .and. (h2osno_lcl < min_snw) .and. (h2osno_lcl > 0._r8) ) then
              albout(c_idx,1) = albsfc(c_idx,1)
              albout(c_idx,2) = albsfc(c_idx,2)
+             spc_albout(c_idx,:) = albsfc(c_idx,2)
+             spc_albout(c_idx,1) = albsfc(c_idx,1)
 
              ! There is either zero snow, or no sun
           else
              albout(c_idx,1) = 0._r8
              albout(c_idx,2) = 0._r8
+             spc_albout(c_idx,:) = 0._r8
           endif    ! if column has snow and coszen > 0
-
+          print*,"JPT ELM albout2(c_idx,:) = ", albout(c_idx,:)
+          print*,"JPT ELM spc_albout2(c_idx,:) = ", spc_albout(c_idx,:)
        enddo    ! loop over all columns
 
      end associate

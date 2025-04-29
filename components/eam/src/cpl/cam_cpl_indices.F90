@@ -81,7 +81,10 @@ module cam_cpl_indices
   integer :: index_x2a_Sx_avsdr        ! albedo, visible, direct         
   integer :: index_x2a_Sx_anidr        ! albedo, near-ir, direct         
   integer :: index_x2a_Sx_avsdf        ! albedo, visible, diffuse        
-  integer :: index_x2a_Sx_anidf        ! albedo, near-ir, diffuse        
+  integer :: index_x2a_Sx_anidf        ! albedo, near-ir, diffuse
+
+  integer :: index_x2a_Sx_alb_nir_a_dir ! JPT
+  
   integer :: index_x2a_Sl_snowfrac     ! surface snow area fraction over land     
   integer :: index_x2a_Sl_snowh        ! surface snow depth over land
   integer :: index_x2a_Si_snowh        ! surface snow depth over ice
@@ -128,6 +131,7 @@ contains
     index_x2a_Sx_anidr      = mct_avect_indexra(x2a,'Sx_anidr')
     index_x2a_Sx_avsdf      = mct_avect_indexra(x2a,'Sx_avsdf')
     index_x2a_Sx_anidf      = mct_avect_indexra(x2a,'Sx_anidf')
+    index_x2a_Sx_alb_nir_a_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_a_dir')
     index_x2a_Sx_t          = mct_avect_indexra(x2a,'Sx_t')
     index_x2a_So_t          = mct_avect_indexra(x2a,'So_t')
     index_x2a_Sl_snowh      = mct_avect_indexra(x2a,'Sl_snowh')

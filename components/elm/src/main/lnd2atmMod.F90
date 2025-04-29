@@ -75,6 +75,7 @@ contains
     !
     ! !LOCAL VARIABLES:
     integer :: g, t                                    ! index
+    integer :: numrad_snw = 6 !JPT
     !------------------------------------------------------------------------
     associate( &
       h2osno => col_ws%h2osno  , &
@@ -87,6 +88,10 @@ contains
       albd_grc   => lnd2atm_vars%albd_grc   , &
       albi_patch => surfalb_vars%albi_patch , &
       albi_grc   => lnd2atm_vars%albi_grc   , &
+      spc_albd_patch => surfalb_vars%spc_albd_patch , & !JPT
+      spc_albd_grc   => lnd2atm_vars%spc_albd_grc   , & !JPT
+      spc_albi_patch => surfalb_vars%spc_albi_patch , & !JPT
+      spc_albi_grc   => lnd2atm_vars%spc_albi_grc   , & !JPT
       eflx_lwrad_out => veg_ef%eflx_lwrad_out , &
       eflx_lwrad_out_grc => lnd2atm_vars%eflx_lwrad_out_grc   &
       )
@@ -118,6 +123,15 @@ contains
     call p2g(bounds, numrad, &
          albi_patch(bounds%begp:bounds%endp,:) , &
          albi_grc  (bounds%begg:bounds%endg,:) , &
+         p2c_scale_type=unity, c2l_scale_type= urbanf, l2g_scale_type=unity)
+
+    call p2g(bounds, numrad_snw, & !JPT
+         spc_albi_patch(bounds%begp:bounds%endp,:) , &
+         spc_albi_grc  (bounds%begg:bounds%endg,:) , &
+         p2c_scale_type=unity, c2l_scale_type= urbanf, l2g_scale_type=unity)
+    call p2g(bounds, numrad_snw, & !JPT
+         spc_albi_patch(bounds%begp:bounds%endp,:) , &
+         spc_albi_grc  (bounds%begg:bounds%endg,:) , &
          p2c_scale_type=unity, c2l_scale_type= urbanf, l2g_scale_type=unity)
 
     call p2g(bounds, &
