@@ -88,6 +88,7 @@
              play    ,plev    ,tlay    ,tlev    ,tsfc    , &
              h2ovmr  ,o3vmr   ,co2vmr  ,ch4vmr  ,o2vmr   ,n2ovmr  , &
              asdir   ,asdif   ,aldir   ,aldif   , &
+             alb_nir_dir, alb_nir_dif,            & !JPT
              coszen  ,adjes   ,dyofyr  ,solvar, &
              inflgsw ,iceflgsw,liqflgsw, &
              cldfmcl ,taucmcl ,ssacmcl ,asmcmcl ,fsfcmcl, &
@@ -238,6 +239,8 @@
                                                         !    Dimensions: (ncol)
       real(kind=r8), intent(in) :: aldif(:)             ! Near-IR surface albedo: diffuse rad
                                                         !    Dimensions: (ncol)
+      real(kind=r8), intent(in) :: alb_nir_dir(:,:)     !JPT
+      real(kind=r8), intent(in) :: alb_nir_dif(:,:)     !JPT        
 
       integer, intent(in) :: dyofyr                     ! Day of the year (used to get Earth/Sun
                                                         !  distance if adjflx not provided)

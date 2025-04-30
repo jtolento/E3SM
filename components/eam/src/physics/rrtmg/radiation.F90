@@ -1395,6 +1395,7 @@ end function radiation_nextsw_cday
                        aer_tau,      aer_tau_w,    aer_tau_w_g,  aer_tau_w_f,                  &
                        eccf,         coszrs,       solin,        sfac,                         &
                        cam_in%asdir, cam_in%asdif, cam_in%aldir, cam_in%aldif,                 &
+                       cam_in%alb_nir_dir, cam_in%alb_nir_dif,                                 & !JPT
                        qrs,          qrsc,         fsnt,         fsntc,        fsntoa, fsutoa, &
                        fsntoac,      fsnirt,       fsnrtc,       fsnirtsq,     fsns,           &
                        fsnsc,        fsdsc,        fsds,         cam_out%sols, cam_out%soll,   &
