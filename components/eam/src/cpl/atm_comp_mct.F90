@@ -1810,8 +1810,21 @@ subroutine atm_import_moab(Eclock, cam_in, restart_init )
           cam_in(c)%aldir(i)     =  x2a_am(ig,index_x2a_Sx_anidr)
           cam_in(c)%asdif(i)     =  x2a_am(ig,index_x2a_Sx_avsdf)
           cam_in(c)%aldif(i)     =  x2a_am(ig,index_x2a_Sx_anidf)
-
-          cam_in(c)%alb_nir_a_dir(i)     =  x2a_am(ig,index_x2a_Sx_alb_nir_a_dir) !JPT
+          !JPT
+          cam_in(c)%alb_nir_a_dir(i,1)     =  x2a_am(ig,index_x2a_Sx_alb_nir_a_dir) 
+          cam_in(c)%alb_nir_a_dir(i,2)     =  x2a_am(ig,index_x2a_Sx_alb_nir_b_dir)
+          cam_in(c)%alb_nir_a_dir(i,3)     =  x2a_am(ig,index_x2a_Sx_alb_nir_c_dir)
+          cam_in(c)%alb_nir_a_dir(i,4)     =  x2a_am(ig,index_x2a_Sx_alb_nir_d_dir)
+          cam_in(c)%alb_nir_a_dir(i,5)     =  x2a_am(ig,index_x2a_Sx_alb_nir_e_dir)
+          !cam_in(c)%alb_nir_a_dir(i,6)     =  x2a_am(ig,index_x2a_Sx_alb_nir_f_dir)
+          !cam_in(c)%alb_nir_a_dir(i,7)     =  x2a_am(ig,index_x2a_Sx_alb_nir_g_dir)
+          cam_in(c)%alb_nir_a_dif(i,1)     =  x2a_am(ig,index_x2a_Sx_alb_nir_a_dif)
+          cam_in(c)%alb_nir_a_dif(i,2)     =  x2a_am(ig,index_x2a_Sx_alb_nir_b_dif)
+          cam_in(c)%alb_nir_a_dif(i,3)     =  x2a_am(ig,index_x2a_Sx_alb_nir_c_dif)
+          cam_in(c)%alb_nir_a_dif(i,4)     =  x2a_am(ig,index_x2a_Sx_alb_nir_d_dif)
+          cam_in(c)%alb_nir_a_dif(i,5)     =  x2a_am(ig,index_x2a_Sx_alb_nir_e_dif)
+          !cam_in(c)%alb_nir_a_dif(i,6)     =  x2a_am(ig,index_x2a_Sx_alb_nir_f_dif)
+          !cam_in(c)%alb_nir_a_dif(i,7)     =  x2a_am(ig,index_x2a_Sx_alb_nir_g_dif)
           
           cam_in(c)%ts(i)        =  x2a_am(ig,index_x2a_Sx_t)  
           cam_in(c)%sst(i)       =  x2a_am(ig,index_x2a_So_t)             

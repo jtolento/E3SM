@@ -82,8 +82,21 @@ module cam_cpl_indices
   integer :: index_x2a_Sx_anidr        ! albedo, near-ir, direct         
   integer :: index_x2a_Sx_avsdf        ! albedo, visible, diffuse        
   integer :: index_x2a_Sx_anidf        ! albedo, near-ir, diffuse
-
-  integer :: index_x2a_Sx_alb_nir_a_dir ! JPT
+  !JPT
+  integer :: index_x2a_Sx_alb_nir_a_dir
+  integer :: index_x2a_Sx_alb_nir_b_dir
+  integer :: index_x2a_Sx_alb_nir_c_dir
+  integer :: index_x2a_Sx_alb_nir_d_dir
+  integer :: index_x2a_Sx_alb_nir_e_dir
+  !integer :: index_x2a_Sx_alb_nir_f_dir
+  !integer :: index_x2a_Sx_alb_nir_g_dir
+  integer :: index_x2a_Sx_alb_nir_a_dif
+  integer :: index_x2a_Sx_alb_nir_b_dif
+  integer :: index_x2a_Sx_alb_nir_c_dif
+  integer :: index_x2a_Sx_alb_nir_d_dif
+  integer :: index_x2a_Sx_alb_nir_e_dif
+  !integer :: index_x2a_Sx_alb_nir_f_dif
+  !integer :: index_x2a_Sx_alb_nir_g_dif
   
   integer :: index_x2a_Sl_snowfrac     ! surface snow area fraction over land     
   integer :: index_x2a_Sl_snowh        ! surface snow depth over land
@@ -131,7 +144,21 @@ contains
     index_x2a_Sx_anidr      = mct_avect_indexra(x2a,'Sx_anidr')
     index_x2a_Sx_avsdf      = mct_avect_indexra(x2a,'Sx_avsdf')
     index_x2a_Sx_anidf      = mct_avect_indexra(x2a,'Sx_anidf')
+    !JPT
     index_x2a_Sx_alb_nir_a_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_a_dir')
+    index_x2a_Sx_alb_nir_b_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_b_dir')
+    index_x2a_Sx_alb_nir_c_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_c_dir')
+    index_x2a_Sx_alb_nir_d_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_d_dir')
+    index_x2a_Sx_alb_nir_e_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_e_dir')
+    !index_x2a_Sx_alb_nir_f_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_f_dir')
+    !index_x2a_Sx_alb_nir_g_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_g_dir')
+    index_x2a_Sx_alb_nir_a_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_a_dif')
+    index_x2a_Sx_alb_nir_b_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_b_dif')
+    index_x2a_Sx_alb_nir_c_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_c_dif')
+    index_x2a_Sx_alb_nir_d_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_d_dif')
+    index_x2a_Sx_alb_nir_e_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_e_dif')
+    !index_x2a_Sx_alb_nir_f_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_f_dif')
+    !index_x2a_Sx_alb_nir_g_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_g_dif')
     index_x2a_Sx_t          = mct_avect_indexra(x2a,'Sx_t')
     index_x2a_So_t          = mct_avect_indexra(x2a,'So_t')
     index_x2a_Sl_snowh      = mct_avect_indexra(x2a,'Sl_snowh')
