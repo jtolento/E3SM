@@ -42,6 +42,7 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
                     E_aer_tau,E_aer_tau_w,E_aer_tau_w_g,E_aer_tau_w_f, &
                     eccf     ,E_coszrs   ,solin        ,sfac         , &
                     E_asdir  ,E_asdif    ,E_aldir      ,E_aldif      , &
+                    E_alb_nir_dir  ,E_alb_nir_dif,                     & !JPT
                     qrs      ,qrsc       ,fsnt         ,fsntc        ,fsntoa,fsutoa, &
                     fsntoac  ,fsnirtoa   ,fsnrtoac     ,fsnrtoaq     ,fsns    , &
                     fsnsc    ,fsdsc      ,fsds         ,sols         ,soll    , &
@@ -122,6 +123,8 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
    real(r8), intent(in) :: E_aldir(pcols)     ! 0.7-5.0 micro-meter srfc alb: direct rad
    real(r8), intent(in) :: E_asdif(pcols)     ! 0.2-0.7 micro-meter srfc alb: diffuse rad
    real(r8), intent(in) :: E_aldif(pcols)     ! 0.7-5.0 micro-meter srfc alb: diffuse rad
+   real(r8), intent(in) :: E_alb_nir_dir(pcols,5) !JPT
+   real(r8), intent(in) :: E_alb_nir_dif(pcols,5) !JPT
    real(r8), intent(in) :: sfac(nbndsw)            ! factor to account for solar variability in each band 
    integer,  intent(inout) :: clm_rand_seed(pcols,4)            ! rand # seeds for sw
 
@@ -178,6 +181,8 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
    real(r8) :: aldir(pcols)     ! 0.7-5.0 micro-meter srfc alb: direct rad
    real(r8) :: asdif(pcols)     ! 0.2-0.7 micro-meter srfc alb: diffuse rad
    real(r8) :: aldif(pcols)     ! 0.7-5.0 micro-meter srfc alb: diffuse rad
+   real(r8) :: alb_nir_dir(pcols,5)
+   real(r8) :: alb_nir_dif(pcols,5)
 
    real(r8) :: h2ovmr(pcols,rrtmg_levs)   ! h2o volume mixing ratio
    real(r8) :: o3vmr(pcols,rrtmg_levs)    ! o3 volume mixing ratio
@@ -335,6 +340,9 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
    call CmpDayNite(E_aldir,  aldir,     Nday, IdxDay, Nnite, IdxNite, 1, pcols)
    call CmpDayNite(E_asdif,  asdif,     Nday, IdxDay, Nnite, IdxNite, 1, pcols)
    call CmpDayNite(E_aldif,  aldif,     Nday, IdxDay, Nnite, IdxNite, 1, pcols)
+   !JPT
+   call CmpDayNite(E_alb_nir_dir,  alb_nir_dir,     Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, 5)
+   call CmpDayNite(E_alb_nir_dif,  alb_nir_dif,     Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, 5)
 
    call CmpDayNite(r_state%tlay,   tlay,   Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, rrtmg_levs)
    call CmpDayNite(r_state%tlev,   tlev,   Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, rrtmg_levs+1)
@@ -526,6 +534,7 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
                  pmidmb, pintmb, tlay, tlev, tsfc, &
                  h2ovmr, o3vmr, co2vmr, ch4vmr, o2vmr, n2ovmr, &
                  asdir, asdif, aldir, aldif, &
+                 alb_nir_dir, alb_nir_dif,   & !JPT
                  coszrs, eccf, dyofyr, solvar, &
                  inflgsw, iceflgsw, liqflgsw, &
                  cld_stosw, tauc_stosw, ssac_stosw, asmc_stosw, fsfc_stosw, &
