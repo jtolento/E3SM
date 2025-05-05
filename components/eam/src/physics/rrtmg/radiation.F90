@@ -704,22 +704,22 @@ end function radiation_nextsw_cday
           call addfld ('NIR_A_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (0.7-0.778)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_a_dif')
-          call addfld ('NIR_B_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (0.778-1.242)', &
+          call addfld ('NIR_B_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band B (0.778-1.242)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_a_dif')
-          call addfld ('NIR_C_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.242-1.298)', &
+          call addfld ('NIR_C_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band C (1.242-1.298)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_a_dif')
-          call addfld ('NIR_D_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.298-1.626)', &
+          call addfld ('NIR_D_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band D (1.298-1.626)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_a_dif')
-          call addfld ('NIR_E_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.626-1.941)', &
+          call addfld ('NIR_E_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band E (1.626-1.941)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_a_dif')
-          call addfld ('NIR_F_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.941-2.150)', &
+          call addfld ('NIR_F_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band F (1.941-2.150)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_a_dif')
-          call addfld ('NIR_G_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (2.150-5.0)', &
+          call addfld ('NIR_G_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band G (2.150-5.0)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_a_dif')
 !          call addfld('SD', (/'ilev   ','swband'/), 'A', 'W/m2', &
@@ -740,7 +740,49 @@ end function radiation_nextsw_cday
           call addfld('SU_TOA', (/'swband'/), 'A', 'W/m2', &
                       'Upwelling Spectral Radiation at TOA', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
-
+          !call addfld ('ALB_NIR_A_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band A (0.7-0.778)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_a_dir')          
+          !call addfld ('ALB_NIR_B_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band B (0.778-1.242)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_b_dir')
+          !call addfld ('ALB_NIR_C_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band C (1.242-1.298)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_c_dir')
+          !call addfld ('ALB_NIR_D_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band D (1.298-1.626)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_d_dir')
+          !call addfld ('ALB_NIR_E_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band E (1.626-1.941)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_e_dir')
+          !call addfld ('ALB_NIR_F_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band F (1.941-2.150)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_f_dir')
+          !call addfld ('ALB_NIR_G_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band G (2.150-5.0)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_g_dir')
+          !call addfld ('ALB_NIR_A_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band A (0.7-0.778)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_a_dif')
+          !call addfld ('ALB_NIR_B_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band B (0.778-1.242)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_b_dif')
+          !call addfld ('ALB_NIR_C_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band C (1.242-1.298)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_c_dif')
+          !call addfld ('ALB_NIR_D_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band D (1.298-1.626)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_d_dif')
+          !call addfld ('ALB_NIR_E_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band E (1.626-1.941)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_e_dif')
+          !call addfld ('ALB_NIR_F_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band F (1.941-2.150)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_f_dif')
+          !call addfld ('ALB_NIR_G_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band G (2.150-5.0)', &
+          !            sampling_seq='rad_lwsw', flag_xyfill=.true., &
+          !            standard_name='alb_nir_g_dif')
+          
           if (history_amwg) then
              call add_default('SOLIN'//diag(icall),   1, ' ')
              call add_default('QRS'//diag(icall),     1, ' ')
@@ -1421,6 +1463,7 @@ end function radiation_nextsw_cday
                      nir_wght_dir = 0.1
                   end where
                   nir_a_dir = sd_dir(:,pver+1,9)
+                  nir_a_dir = nir_a_dir * 0.5_r8
                   nir_b_dir = sd_dir(:,pver+1,8)
                   nir_c_dir = sd_dir(:,pver+1,7)
                   nir_d_dir = sd_dir(:,pver+1,6)
@@ -1548,14 +1591,30 @@ end function radiation_nextsw_cday
                   call outfld('NIR_E_DIF'//diag(icall),cam_out%nir_e_dif  ,pcols,lchnk)
                   call outfld('NIR_F_DIF'//diag(icall),cam_out%nir_f_dif  ,pcols,lchnk)
                   call outfld('NIR_G_DIF'//diag(icall),cam_out%nir_g_dif  ,pcols,lchnk)
+
+                  !call outfld('ALB_NIR_A_DIR'//diag(icall),cam_in%alb_nir_dir(:,1)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_B_DIR'//diag(icall),cam_in%alb_nir_dir(:,2)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_C_DIR'//diag(icall),cam_in%alb_nir_dir(:,3)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_D_DIR'//diag(icall),cam_in%alb_nir_dir(:,4)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_E_DIR'//diag(icall),cam_in%alb_nir_dir(:,5)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_F_DIR'//diag(icall),cam_in%alb_nir_dir(:,6)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_G_DIR'//diag(icall),cam_in%alb_nir_dir(:,7)  ,pcols,lchnk)
+
+                  !call outfld('ALB_NIR_A_DIF'//diag(icall),cam_in%alb_nir_dif(:,1)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_B_DIF'//diag(icall),cam_in%alb_nir_dif(:,2)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_C_DIF'//diag(icall),cam_in%alb_nir_dif(:,3)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_D_DIF'//diag(icall),cam_in%alb_nir_dif(:,4)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_E_DIF'//diag(icall),cam_in%alb_nir_dif(:,5)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_F_DIF'//diag(icall),cam_in%alb_nir_dif(:,6)  ,pcols,lchnk)
+                  !call outfld('ALB_NIR_G_DIF'//diag(icall),cam_in%alb_nir_dif(:,7)  ,pcols,lchnk)
                   
                   !JPT Add outflds
 !                  call outfld('SD'//diag(icall),ttem  ,pcols,lchnk)
 !                  note: toa = 1
-!                  boa = pver!1
+!                  boa = pver+1
 !                  call outfld('SD'//diag(icall), sd, pcols, lchnk)
 !                  call outfld('SU'//diag(icall), su, pcols, lchnk)
-!                  call outfld('SD_BOA'//diag(icall), sd(:,pver+1,:), pcols, lchnk)
+                  call outfld('SD_BOA'//diag(icall), sd(:,pver+1,:), pcols, lchnk)
 !                  call outfld('SD_TOA'//diag(icall), sd(:,1,:), pcols, lchnk)
 !                  call outfld('SU_BOA'//diag(icall), su(:,pver+1,:), pcols, lchnk)
 !                  call outfld('SU_TOA'//diag(icall), su(:,1,:), pcols, lchnk)

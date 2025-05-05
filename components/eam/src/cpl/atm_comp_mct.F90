@@ -1825,6 +1825,7 @@ subroutine atm_import_moab(Eclock, cam_in, restart_init )
           cam_in(c)%alb_nir_dif(i,5)     =  x2a_am(ig,index_x2a_Sx_alb_nir_e_dif)
           !cam_in(c)%alb_nir_dif(i,6)     =  x2a_am(ig,index_x2a_Sx_alb_nir_f_dif)
           !cam_in(c)%alb_nir_dif(i,7)     =  x2a_am(ig,index_x2a_Sx_alb_nir_g_dif)
+          print*,'JPT EAM atm_comp_mct alb_nir_a_dir = ', cam_in(c)%alb_nir_dir(i,1)
           
           cam_in(c)%ts(i)        =  x2a_am(ig,index_x2a_Sx_t)  
           cam_in(c)%sst(i)       =  x2a_am(ig,index_x2a_So_t)             

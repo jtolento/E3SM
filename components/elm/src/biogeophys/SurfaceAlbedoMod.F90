@@ -723,7 +723,7 @@ contains
              ! ground albedo was originally computed in SoilAlbedo, but is now computed here                   
              ! because the order of SoilAlbedo and SNICAR_RT/SNICAR_AD_RT was switched for SNICAR/SNICAR_AD_RT.
              if (ib == 1) then
-                print*,"JPT ELM spc_albout3(c_idx,:) = ", spc_albout_dir(c,:)
+                !print*,"JPT ELM spc_albout3(c_idx,:) = ", spc_albout_dir(c,:)
                 spc_alb_dir(c,ib) = albsod(c,1)*(1._r8-frac_sno(c)) + spc_albout_dir(c,ib)*frac_sno(c)
                 spc_alb_dif(c,ib) = albsoi(c,1)*(1._r8-frac_sno(c)) + spc_albout_dif(c,ib)*frac_sno(c)
              else
@@ -1062,13 +1062,14 @@ contains
           albi(p,ib) = albgri(c,ib)
        end do
     end do
-    
+    !JPT c->p ??? 
     do ib = 1,numrad_snw
        do fp = 1,num_novegsol
 	  p = filter_novegsol(fp)
           c = veg_pp%column(p)
-          spc_albd(p,ib) = spc_albout_dir(c,ib)
-          spc_albi(p,ib) = spc_albout_dif(c,ib)
+          spc_albd(p,ib) = spc_alb_dir(c,ib)
+          spc_albi(p,ib) = spc_alb_dif(c,ib)
+          print*, "JPT ELM SurfAlbedoMod spc_alb_dif(c,ib) =", spc_alb_dir(c,ib)
        end do
     end do
 
