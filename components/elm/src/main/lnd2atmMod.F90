@@ -95,7 +95,7 @@ contains
       eflx_lwrad_out => veg_ef%eflx_lwrad_out , &
       eflx_lwrad_out_grc => lnd2atm_vars%eflx_lwrad_out_grc   &
       )
-
+      
       call c2g(bounds, & !JPT
          snowfrac    (bounds%begc:bounds%endc) , &
          snowfrac_grc(bounds%begg:bounds%endg)    , &
@@ -130,10 +130,11 @@ contains
          spc_albi_grc  (bounds%begg:bounds%endg,:) , &
          p2c_scale_type=unity, c2l_scale_type= urbanf, l2g_scale_type=unity)
     call p2g(bounds, numrad_snw, & !JPT
-         spc_albi_patch(bounds%begp:bounds%endp,:) , &
-         spc_albi_grc  (bounds%begg:bounds%endg,:) , &
+         spc_albd_patch(bounds%begp:bounds%endp,:) , &
+         spc_albd_grc  (bounds%begg:bounds%endg,:) , &
          p2c_scale_type=unity, c2l_scale_type= urbanf, l2g_scale_type=unity)
-
+    !print*,'JPT ELM lnd2atm spc_albi_patch = ', spc_albi_patch(:,:)
+    !print*,'JPT ELM lnd2atm spc_albi_grd   = ', spc_albi_grc(:,:)
     call p2g(bounds, &
          eflx_lwrad_out     (bounds%begp:bounds%endp), &
          eflx_lwrad_out_grc (bounds%begg:bounds%endg), &

@@ -3083,7 +3083,7 @@ contains
              albout(c_idx,1) = albout_lcl(1)
              spc_albout(c_idx,:) = albout_lcl(:) !JPT
              !print*,"JPT ELM albout_lcl = ", shape(albout_lcl)
-             print*,"JPT ELM spc_albout1(c_idx,:) = ", spc_albout(c_idx,:)
+             !print*,"JPT ELM spc_albout1(c_idx,:) = ", spc_albout(c_idx,:)
              flx_sum         = 0._r8
              do bnd_idx= nir_bnd_bgn,nir_bnd_end
                 flx_sum = flx_sum + flx_wgt(bnd_idx)*albout_lcl(bnd_idx)
@@ -3126,8 +3126,8 @@ contains
              albout(c_idx,2) = 0._r8
              spc_albout(c_idx,:) = 0._r8
           endif    ! if column has snow and coszen > 0
-          print*,"JPT ELM albout2(c_idx,:) = ", albout(c_idx,:)
-          print*,"JPT ELM spc_albout2(c_idx,:) = ", spc_albout(c_idx,:)
+          !print*,"JPT ELM albout2(c_idx,:) = ", albout(c_idx,:)
+          !print*,"JPT ELM spc_albout2(c_idx,:) = ", spc_albout(c_idx,:)
        enddo    ! loop over all columns
 
      end associate

@@ -674,7 +674,49 @@ subroutine diag_init()
    call addfld ('ALDIR',       horiz_only,    'A',   '1','albedo: longwave, direct')
    call addfld ('ALDIF',       horiz_only,    'A',   '1','albedo: longwave, diffuse')
    call addfld ('SST',       horiz_only,    'A',     'K','sea surface temperature')
-
+   call addfld ('ALB_NIR_A_DIR',  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band A (0.7-0.778)', &
+        sampling_seq='rad_lwsw', flag_xyfill=.true., &
+        standard_name='alb_nir_a_dir')
+   call addfld ('ALB_NIR_B_DIR',  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band B (0.778-1.242)', &
+        sampling_seq='rad_lwsw', flag_xyfill=.true., &
+        standard_name='alb_nir_b_dir')
+   call addfld ('ALB_NIR_C_DIR',  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band C (1.242-1.298)', &
+        sampling_seq='rad_lwsw', flag_xyfill=.true., &
+        standard_name='alb_nir_c_dir')
+   call addfld ('ALB_NIR_D_DIR',  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band D (1.298-1.626)', &
+        sampling_seq='rad_lwsw', flag_xyfill=.true., &
+        standard_name='alb_nir_d_dir')
+   call addfld ('ALB_NIR_E_DIR',  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band E (1.626-1.941)', &
+        sampling_seq='rad_lwsw', flag_xyfill=.true., &
+        standard_name='alb_nir_e_dir')
+   !call addfld ('ALB_NIR_F_DIR',  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band F (1.941-2.150)', &
+   !     sampling_seq='rad_lwsw', flag_xyfill=.true., &
+   !     standard_name='alb_nir_f_dir')
+   !call addfld ('ALB_NIR_G_DIR',  horiz_only,     'A',    'W/m2', 'NIR Alb Dir in Band G (2.150-5.0)', &
+   !     sampling_seq='rad_lwsw', flag_xyfill=.true., &
+   !     standard_name='alb_nir_g_dir')
+   call addfld ('ALB_NIR_A_DIF',  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band A (0.7-0.778)', &
+        sampling_seq='rad_lwsw', flag_xyfill=.true., &
+        standard_name='alb_nir_a_dif')
+   call addfld ('ALB_NIR_B_DIF',  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band B (0.778-1.242)', &
+        sampling_seq='rad_lwsw', flag_xyfill=.true., &
+        standard_name='alb_nir_b_dif')
+   call addfld ('ALB_NIR_C_DIF',  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band C (1.242-1.298)', &
+        sampling_seq='rad_lwsw', flag_xyfill=.true., &
+        standard_name='alb_nir_c_dif')
+   call addfld ('ALB_NIR_D_DIF',  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band D (1.298-1.626)', &
+        sampling_seq='rad_lwsw', flag_xyfill=.true., &
+        standard_name='alb_nir_d_dif')
+   call addfld ('ALB_NIR_E_DIF',  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band E (1.626-1.941)', &
+        sampling_seq='rad_lwsw', flag_xyfill=.true., &
+        standard_name='alb_nir_e_dif')
+   !call addfld ('ALB_NIR_F_DIF',  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band F (1.941-2.150)', &
+   !     sampling_seq='rad_lwsw', flag_xyfill=.true., &
+   !     standard_name='alb_nir_f_dif')
+   !call addfld ('ALB_NIR_G_DIF',  horiz_only,     'A',    'W/m2', 'NIR Alb Dif in Band G (2.150-5.0)', &
+   !     sampling_seq='rad_lwsw', flag_xyfill=.true., &
+   !     standard_name='alb_nir_g_dif')
+   
    ! defaults
    if (history_amwg) then
        call add_default ('DTCOND  ', 1, ' ')
@@ -2201,6 +2243,20 @@ subroutine diag_surf (cam_in, cam_out, ps, trefmxav, trefmnav )
     call outfld('ALDIR',    cam_in%aldir,     pcols, lchnk)
     call outfld('ALDIF',    cam_in%aldif,     pcols, lchnk)
     call outfld('SST',      cam_in%sst,       pcols, lchnk)
+    call outfld('ALB_NIR_A_DIR',cam_in%alb_nir_dir(:,1)  ,pcols,lchnk)
+    call outfld('ALB_NIR_B_DIR',cam_in%alb_nir_dir(:,2)  ,pcols,lchnk)
+    call outfld('ALB_NIR_C_DIR',cam_in%alb_nir_dir(:,3)  ,pcols,lchnk)
+    call outfld('ALB_NIR_D_DIR',cam_in%alb_nir_dir(:,4)  ,pcols,lchnk)
+    call outfld('ALB_NIR_E_DIR',cam_in%alb_nir_dir(:,5)  ,pcols,lchnk)
+    !call outfld('ALB_NIR_F_DIR',cam_in%alb_nir_dir(:,6)  ,pcols,lchnk)
+    !call outfld('ALB_NIR_G_DIR',cam_in%alb_nir_dir(:,7)  ,pcols,lchnk)
+    call outfld('ALB_NIR_A_DIF',cam_in%alb_nir_dif(:,1)  ,pcols,lchnk)
+    call outfld('ALB_NIR_B_DIF',cam_in%alb_nir_dif(:,2)  ,pcols,lchnk)
+    call outfld('ALB_NIR_C_DIF',cam_in%alb_nir_dif(:,3)  ,pcols,lchnk)
+    call outfld('ALB_NIR_D_DIF',cam_in%alb_nir_dif(:,4)  ,pcols,lchnk)
+    call outfld('ALB_NIR_E_DIF',cam_in%alb_nir_dif(:,5)  ,pcols,lchnk)
+    !call outfld('ALB_NIR_F_DIF',cam_in%alb_nir_dif(:,6)  ,pcols,lchnk)
+    !call outfld('ALB_NIR_G_DIF',cam_in%alb_nir_dif(:,7)  ,pcols,lchnk)
 
     if (co2_transport()) then
        do m = 1,4
