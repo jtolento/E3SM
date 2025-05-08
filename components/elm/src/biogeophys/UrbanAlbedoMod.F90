@@ -72,6 +72,7 @@ contains
     type(surfalb_type)     , intent(inout) :: surfalb_vars
     !
     ! !LOCAL VARIABLES:
+    integer,  parameter :: numrad_snw  =   6 !JPT 
     integer  :: fl,fp,fc,g,l,p,c,ib                                  ! indices
     integer  :: ic                                                   ! 0=unit incoming direct; 1=unit incoming diffuse
     integer  :: num_solar                                            ! counter
@@ -149,7 +150,9 @@ contains
          albgrd             => surfalb_vars%albgrd_col              , & ! Output: [real(r8) (:,:) ]  urban col ground albedo (direct) 
          albgri             => surfalb_vars%albgri_col              , & ! Output: [real(r8) (:,:) ]  urban col ground albedo (diffuse)
          albd               => surfalb_vars%albd_patch              , & ! Output  [real(r8) (:,:) ]  urban pft surface albedo (direct)                         
-         albi               => surfalb_vars%albi_patch              , & ! Output: [real(r8) (:,:) ]  urban pft surface albedo (diffuse)                        
+         albi               => surfalb_vars%albi_patch              , & ! Output: [real(r8) (:,:) ]  urban pft surface albedo (diffuse)
+         spc_albd           => surfalb_vars%spc_albd_patch          , & !JPT
+         spc_albi           => surfalb_vars%spc_albi_patch          , & !JPT
          
          begl               => bounds%begl                          , &
          endl               => bounds%endl                            &
@@ -197,6 +200,26 @@ contains
                albi(p,ib) = 1._r8
             endif
 
+            if (ib == 1) then !JPT
+               spc_albd(p,ib) = albd(p,ib)
+               spc_albi(p,ib) = albi(p,ib)
+            else 
+               spc_albd(p,2) = albd(p,ib)
+               spc_albi(p,2) = albi(p,ib)
+               spc_albd(p,3) = albd(p,ib)
+               spc_albi(p,3) = albi(p,ib)
+               spc_albd(p,4) = albd(p,ib)
+               spc_albi(p,4) = albi(p,ib)
+               spc_albd(p,5) = albd(p,ib)
+               spc_albi(p,5) = albi(p,ib)
+               spc_albd(p,6) = albd(p,ib)
+               spc_albi(p,6) = albi(p,ib)
+               !spc_albd(p,7) = albd(p,ib)
+               !spc_albi(p,7) = albi(p,ib)
+               !spc_albd(p,8) = albd(p,ib)
+               !spc_albi(p,8) = albi(p,ib)
+            end if
+            
             fabd(p,ib)     = 0._r8
             fabd_sun(p,ib) = 0._r8
             fabd_sha(p,ib) = 0._r8
@@ -427,6 +450,25 @@ contains
                c = veg_pp%column(p)
                albd(p,ib) = albgrd(c,ib)
                albi(p,ib) = albgri(c,ib)
+               if (ib == 1) then !JPT
+                  spc_albd(p,ib) = albd(p,ib)
+                  spc_albi(p,ib) = albi(p,ib)
+               else
+                  spc_albd(p,2) = albd(p,ib)
+                  spc_albi(p,2) = albi(p,ib)
+                  spc_albd(p,3) = albd(p,ib)
+                  spc_albi(p,3) = albi(p,ib)
+                  spc_albd(p,4) = albd(p,ib)
+                  spc_albi(p,4) = albi(p,ib)
+                  spc_albd(p,5) = albd(p,ib)
+                  spc_albi(p,5) = albi(p,ib)
+                  spc_albd(p,6) = albd(p,ib)
+                  spc_albi(p,6) = albi(p,ib)
+                  !spc_albd(p,7) = albd(p,ib)
+                  !spc_albi(p,7) = albi(p,ib)
+                  !spc_albd(p,8) = albd(p,ib)
+                  !spc_albi(p,8) = albi(p,ib)
+               end if !JPT
             end do
          end do
       end if

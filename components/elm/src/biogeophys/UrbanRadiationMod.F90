@@ -133,6 +133,8 @@ contains
 
          albd               =>    surfalb_vars%albd_patch                    , & ! Input:  [real(r8) (:,:) ] pft surface albedo (direct)
          albi               =>    surfalb_vars%albi_patch                    , & ! Input:  [real(r8) (:,:) ] pft surface albedo (diffuse)
+         spc_albd               =>    surfalb_vars%spc_albd_patch                    , & !JPT
+         spc_albi               =>    surfalb_vars%spc_albi_patch                    , & !JPT
 
          sabs_roof_dir      =>    solarabs_vars%sabs_roof_dir_lun            , & ! Output: [real(r8) (:,:) ]  direct  solar absorbed  by roof per unit ground area per unit incident flux
          sabs_roof_dif      =>    solarabs_vars%sabs_roof_dif_lun            , & ! Output: [real(r8) (:,:) ]  diffuse solar absorbed  by roof per unit ground area per unit incident flux

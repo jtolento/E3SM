@@ -106,8 +106,8 @@ contains
           cam_in(c)%alb_nir_dif(i,5)     =  x2a(index_x2a_Sx_alb_nir_e_dif, ig)
           !cam_in(c)%alb_nir_dif(i,6)     =  x2a(index_x2a_Sx_alb_nir_f_dif, ig)
           !cam_in(c)%alb_nir_dif(i,7)     =  x2a(index_x2a_Sx_alb_nir_g_dif, ig)
-          print*,'JPT EAM atm import exp alb_nir_a_dir = ', cam_in(c)%alb_nir_dir(i,1)
-          print*,'JPT EAM atm import exp asdir = ', cam_in(c)%asdir(i)
+          !print*,'JPT EAM atm import exp alb_nir_a_dir = ', cam_in(c)%alb_nir_dir(i,1)
+          !print*,'JPT EAM atm import exp asdir = ', cam_in(c)%asdir(i)
           
           
           
