@@ -514,6 +514,7 @@ contains
     real(r8) :: flux_epbalfact
     real(r8) :: frac_sum
     real(r8) :: avsdr, anidr, avsdf, anidf   ! albedos
+    real(r8) :: alb_nir_a_dir !JPT
     real(r8) :: fswabsv, fswabsi             ! sw
     integer  :: noflds,naflds,niflds,nxflds
     integer  :: kof,kaf,kif,kxf
@@ -535,6 +536,7 @@ contains
     integer, save :: index_xao_So_avsdr
     integer, save :: index_xao_So_anidr
     integer, save :: index_xao_So_avsdf
+    integer, save :: index_xao_So_alb_nir_a_dir !JPT
     integer, save :: index_xao_So_anidf
     integer, save :: index_a2x_Faxa_snowc
     integer, save :: index_a2x_Faxa_snowl
@@ -592,6 +594,7 @@ contains
        index_xao_So_anidr       = mct_aVect_indexRA(xao_o,'So_anidr')
        index_xao_So_avsdf       = mct_aVect_indexRA(xao_o,'So_avsdf')
        index_xao_So_anidf       = mct_aVect_indexRA(xao_o,'So_anidf')
+       index_xao_So_alb_nir_a_dir       = mct_aVect_indexRA(xao_o,'So_alb_nir_a_dir') !JPT
        index_x2o_Foxx_swnet     = mct_aVect_indexRA(x2o_o,'Foxx_swnet')
 
        index_a2x_Faxa_snowc     = mct_aVect_indexRA(a2x_o,'Faxa_snowc')

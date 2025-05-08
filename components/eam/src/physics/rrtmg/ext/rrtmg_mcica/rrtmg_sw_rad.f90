@@ -585,18 +585,27 @@
          do ib=1,8
             albdir(ib) = aldir(iplon)
             albdif(ib) = aldif(iplon)
+            !albdir(ib) = 1.0
+            !albdif(ib) = 1.0
          enddo
          albdir(nbndsw) = aldir(iplon)
          albdif(nbndsw) = aldif(iplon)
+         !albdir(nbndsw) = 1.0
+         !albdif(nbndsw) = 1.0
 !  Set band 24 (or, band 9 counting from 1) to use linear average of UV/visible
 !  and near-IR values, since this band straddles 0.7 microns:
 ! JPT This can be improved as a nonlinear, or asymmetric split 
          albdir(9) = 0.5*(aldir(iplon) + asdir(iplon))
          albdif(9) = 0.5*(aldif(iplon) + asdif(iplon))
+         !albdir(9) = 1.0
+         !albdif(9) = 1.0
+         
 !  UV/visible bands 25-28 (10-13), 16000-50000 cm-1, 0.200-0.625 micron
          do ib=10,13
             albdir(ib) = asdir(iplon)
             albdif(ib) = asdif(iplon)
+            !albdir(ib) = 1.0
+            !albdif(ib) = 1.0
          enddo
 
 

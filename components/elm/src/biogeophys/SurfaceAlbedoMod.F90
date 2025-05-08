@@ -317,9 +317,7 @@ contains
           ftdd(p,ib) = 0._r8
           ftid(p,ib) = 0._r8
           ftii(p,ib) = 0._r8
-
        end do
-
     end do  ! end of numrad loop
 
     do ib = 1, numrad_snw          !JPT
@@ -328,7 +326,12 @@ contains
           spc_alb_dir(c,ib) = 0._r8
           spc_alb_dif(c,ib) = 0._r8
        end do
-    end do
+       do fp = 1,num_nourbanp
+          p = filter_nourbanp(fp)
+          spc_albd(p,ib) = 1._r8
+          spc_albi(p,ib) = 1._r8
+       end do
+    end do !end of rad loop 
     
 
     ! SoilAlbedo called before SNICAR_RT/SNICAR_AD_RT
@@ -1069,7 +1072,7 @@ contains
           c = veg_pp%column(p)
           spc_albd(p,ib) = spc_alb_dir(c,ib)
           spc_albi(p,ib) = spc_alb_dif(c,ib)
-          print*, "JPT ELM SurfAlbedoMod spc_alb_dif(c,ib) =", spc_alb_dir(c,ib)
+          !print*, "JPT ELM SurfAlbedoMod spc_alb_dif(c,ib) =", spc_alb_dir(c,ib)
        end do
     end do
 
@@ -1208,7 +1211,7 @@ contains
              ! This had to be done, because SoilAlbedo is called before SNICAR_RT/SNICAR_AD_RT, so at
              ! this point, snow albedo is not yet known.
           end if
-       end do
+       end do 
     end do
 
     end associate
@@ -1251,6 +1254,7 @@ contains
      
      !
      ! !LOCAL VARIABLES:
+     integer,  parameter :: numrad_snw  =   6 !JPT 
      integer  :: fp,p,c,iv        ! array indices
      integer  :: ib               ! waveband number
      real(r8) :: cosz             ! 0.001 <= coszen <= 1.000
@@ -1321,6 +1325,9 @@ contains
           fabi_sha_z    =>    surfalb_vars%fabi_sha_z_patch       , & ! Output: [real(r8) (:,:) ]  absorbed shaded leaf diffuse PAR (per unit lai+sai) for each canopy layer
           albd          =>    surfalb_vars%albd_patch             , & ! Output: [real(r8) (:,:) ]  surface albedo (direct)
           albi          =>    surfalb_vars%albi_patch             , & ! Output: [real(r8) (:,:) ]  surface albedo (diffuse)
+          
+          spc_albd      =>    surfalb_vars%spc_albd_patch         , & !JPT Output: [real(r8) (:,:) ]  surface albedo (direct)
+          spc_albi      =>    surfalb_vars%spc_albi_patch         , & !JPT Output: [real(r8) (:,:) ]  surface albedo (diffuse)
           fabd          =>    surfalb_vars%fabd_patch             , & ! Output: [real(r8) (:,:) ]  flux absorbed by canopy per unit direct flux
           fabd_sun      =>    surfalb_vars%fabd_sun_patch         , & ! Output: [real(r8) (:,:) ]  flux absorbed by sunlit canopy per unit direct flux
           fabd_sha      =>    surfalb_vars%fabd_sha_patch         , & ! Output: [real(r8) (:,:) ]  flux absorbed by shaded canopy per unit direct flux
@@ -1765,7 +1772,21 @@ contains
           end if
 
        end do   ! end of pft loop
-     end do   ! end of radiation band loop
+    end do   ! end of radiation band loop
+
+    do ib = 1, numrad_snw !JPT  loop through snow bands
+       do fp = 1,num_vegsol
+          p = filter_vegsol(fp)
+          c = veg_pp%column(p)
+          if (ib == 1) then 
+             spc_albd(p,ib) = albd(p,ib)
+             spc_albi(p,ib) = albi(p,ib)
+          else
+             spc_albd(p,ib) = albd(p,2)
+             spc_albi(p,ib) = albi(p,2)
+          end if
+       end do
+    end do !JPT loop through snow bands
 
      end associate
 
@@ -1801,6 +1822,7 @@ contains
 
 ! !OTHER LOCAL VARIABLES:
 !
+    integer,  parameter :: numrad_snw  =   6 !JPT   
     real(r8), parameter :: mpe = 1.e-06_r8                ! prevents overflow for division by zero
     real(r8), parameter :: pi = 3.14159265358979323846_r8 ! pi
     integer  :: fp,fc,g,c,p                               ! indices
@@ -1872,7 +1894,9 @@ contains
 	  sinsl_cosas    =>    grc_pp%sinsl_cosas                 , & ! Input:   sin(slope) * cos(aspect)
           sinsl_sinas    =>    grc_pp%sinsl_sinas                 , & ! Input:   sin(slope) * sin(aspect)
           albd           =>    surfalb_vars%albd_patch            , & ! Output:  surface albedo (direct)               
-          albi           =>    surfalb_vars%albi_patch            , & ! Output:  surface albedo (diffuse)              
+          albi           =>    surfalb_vars%albi_patch            , & ! Output:  surface albedo (diffuse)
+          spc_albd       =>    surfalb_vars%spc_albd_patch        , & !JPT Output:  surface albedo (direct)
+          spc_albi       =>    surfalb_vars%spc_albi_patch        , & !JPT Output:  surface albedo (diffuse) 
           fabd           =>    surfalb_vars%fabd_patch            , & ! Output:  flux absorbed by canopy per unit direct flux
           fabi           =>    surfalb_vars%fabi_patch            , & ! Output:  flux absorbed by canopy per unit diffuse flux
           ftdd           =>    surfalb_vars%ftdd_patch            , & ! Output:  down direct flux below canopy per unit direct flux
@@ -1998,6 +2022,22 @@ contains
                  fabi(p,ib) = fabi(p,ib) * fi_prime
                  ftii(p,ib) = ftii(p,ib) * fi_prime
                  fi_top_adjust(p,ib) = fi_prime
+                 if (ib == 1) then !JPT
+                    spc_albd(p,ib) = albd(p,ib)
+                    spc_albi(p,ib) = albi(p,ib)
+                 else
+                    spc_albd(p,2) = albd(p,2)
+                    spc_albi(p,2) = albi(p,2)
+                    spc_albd(p,3) = albd(p,2)
+                    spc_albi(p,3) = albi(p,2)
+                    spc_albd(p,4) = albd(p,2)
+                    spc_albi(p,4) = albi(p,2)
+                    spc_albd(p,5) = albd(p,2)
+                    spc_albi(p,5) = albi(p,2)
+                    spc_albd(p,6) = albd(p,2)
+                    spc_albi(p,6) = albi(p,2)
+                 end if
+                 
                enddo
             endif
             

@@ -1440,7 +1440,7 @@ contains
        l2x(index_l2x_Sl_alb_nir_e_dif,i)    =  lnd2atm_vars%spc_albi_grc(g,6)
        !l2x(index_l2x_Sl_alb_nir_f_dir,i)    =  lnd2atm_vars%albd_grc(g,7)
        !l2x(index_l2x_Sl_alb_nir_g_dif,i)    =  lnd2atm_vars%albi_grc(g,8)
-       print*, "JPT ELM lnd_import_export lnd2atm_vars%spc_albd_grc(g,2) = ", lnd2atm_vars%spc_albd_grc(g,2)
+       !print*, "JPT ELM lnd_import_export lnd2atm_vars%spc_albd_grc(g,2) = ", lnd2atm_vars%spc_albd_grc(g,2)
        
        l2x(index_l2x_Sl_tref,i)     =  lnd2atm_vars%t_ref2m_grc(g)
        l2x(index_l2x_Sl_qref,i)     =  lnd2atm_vars%q_ref2m_grc(g)
