@@ -10,7 +10,7 @@ module lnd2atmMod
   use abortutils             , only : endrun
   use shr_megan_mod        , only : shr_megan_mechcomps_n
   use shr_fan_mod          , only : shr_fan_to_atm
-  use elm_varpar           , only : numrad, ndst, nlevgrnd, nlevsno, nlevsoi !ndst = number of dust bins.
+  use elm_varpar           , only : numrad, ndst, nlevgrnd, nlevsno, nlevsoi, numrad_snw !ndst = number of dust bins.
   use elm_varcon           , only : rair, grav, cpair, hfus, tfrz, spval
   use elm_varctl           , only : iulog, use_c13, use_cn, use_lch4, use_voc, use_fates, use_atm_downscaling_to_topunit, use_fan
   use elm_varctl           , only : use_lnd_rof_two_way
@@ -75,7 +75,6 @@ contains
     !
     ! !LOCAL VARIABLES:
     integer :: g, t                                    ! index
-    integer :: numrad_snw = 6 !JPT
     !------------------------------------------------------------------------
     associate( &
       h2osno => col_ws%h2osno  , &

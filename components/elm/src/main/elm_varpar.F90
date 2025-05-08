@@ -41,6 +41,7 @@ module elm_varpar
   integer, parameter :: nvegwcs     =   4     ! number of vegetation water conductance segments
   integer, parameter :: numwat      =   5     ! number of water types (soil, ice, 2 lakes, wetland)
   integer, parameter :: numrad      =   2     ! number of solar radiation bands: vis, nir
+  integer, parameter :: numrad_snw  =   6     !JPT, should be 5, spc albedo will use 8, 6 for dev
   integer, parameter :: nmonth      =   12    ! number of months in year for crop planting
   integer, parameter :: ivis        =   1     ! index for visible band
   integer, parameter :: inir        =   2     ! index for near-infrared band
