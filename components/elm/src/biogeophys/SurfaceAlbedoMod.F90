@@ -13,7 +13,7 @@ module SurfaceAlbedoMod
   use decompMod         , only : bounds_type
   use landunit_varcon   , only : istsoil, istcrop, istdlak
   use elm_varcon        , only : grlnd, namep, namet
-  use elm_varpar        , only : numrad, nlevcan, nlevsno, nlevcan
+  use elm_varpar        , only : numrad, nlevcan, nlevsno, nlevcan, numrad_snw
   use elm_varctl        , only : fsurdat, iulog, subgridflag, use_snicar_frc, use_fates, use_snicar_ad, use_top_solar_rad
   use VegetationPropertiesType    , only : veg_vp
   use SnowSnicarMod     , only : sno_nbr_aer, SNICAR_RT, SNICAR_AD_RT, DO_SNO_AER, DO_SNO_OC
@@ -115,7 +115,6 @@ contains
     type(atm2lnd_type)     , intent(inout) :: atm2lnd_vars
     !
     ! !LOCAL VARIABLES:
-    integer,  parameter :: numrad_snw  =   6 !JPT
     integer  :: i                                                                         ! index for layers [idx]
     integer  :: aer                                                                       ! index for sno_nbr_aer
     real(r8) :: extkn                      ! nitrogen allocation coefficient
@@ -1254,7 +1253,6 @@ contains
      
      !
      ! !LOCAL VARIABLES:
-     integer,  parameter :: numrad_snw  =   6 !JPT 
      integer  :: fp,p,c,iv        ! array indices
      integer  :: ib               ! waveband number
      real(r8) :: cosz             ! 0.001 <= coszen <= 1.000
@@ -1822,7 +1820,6 @@ contains
 
 ! !OTHER LOCAL VARIABLES:
 !
-    integer,  parameter :: numrad_snw  =   6 !JPT   
     real(r8), parameter :: mpe = 1.e-06_r8                ! prevents overflow for division by zero
     real(r8), parameter :: pi = 3.14159265358979323846_r8 ! pi
     integer  :: fp,fc,g,c,p                               ! indices

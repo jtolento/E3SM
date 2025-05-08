@@ -12,6 +12,7 @@ module SnowSnicarMod
   use shr_sys_mod     , only : shr_sys_flush
   use shr_log_mod     , only : errMsg => shr_log_errMsg
   use elm_varctl      , only : iulog, use_firn_percolation_and_compaction
+  use elm_varpar      , only : numrad_snw
   use elm_varcon      , only : namec 
   use shr_const_mod   , only : SHR_CONST_RHOICE
   use abortutils      , only : endrun
@@ -42,10 +43,10 @@ module SnowSnicarMod
   !$acc declare copyin(sno_nbr_aer,DO_SNO_OC,DO_SNO_AER)
   ! !PRIVATE DATA MEMBERS:
   !integer,  parameter :: numrad_snw  =   5               ! number of spectral bands used in snow model [nbr]
-  integer,  parameter :: numrad_snw  =   6               !JPT number of spectral bands used in snow model [nbr]
+  !integer,  parameter :: numrad_snw  =   6               !JPT number of spectral bands used in snow model [nbr]
   integer,  parameter :: nir_bnd_bgn =   2               ! first band index in near-IR spectrum [idx]
   !integer,  parameter :: nir_bnd_end =   5              ! ending near-IR band index [idx]
-  integer,  parameter :: nir_bnd_end =   6               !JPT 
+  integer,  parameter :: nir_bnd_end =   numrad_snw               !JPT 
   !$acc declare copyin(numrad_snw )
   !$acc declare copyin(nir_bnd_bgn)
   !$acc declare copyin(nir_bnd_end)

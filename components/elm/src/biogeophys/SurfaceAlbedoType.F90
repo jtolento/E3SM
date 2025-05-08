@@ -6,7 +6,7 @@ module SurfaceAlbedoType
   use shr_kind_mod   , only : r8 => shr_kind_r8
   use shr_log_mod    , only : errMsg => shr_log_errMsg
   use decompMod      , only : bounds_type
-  use elm_varpar     , only : numrad, nlevcan, nlevsno
+  use elm_varpar     , only : numrad, nlevcan, nlevsno, numrad_snw
   use abortutils     , only : endrun
   use elm_varctl     , only : fsurdat, iulog
   use elm_varcon     , only : grlnd
@@ -42,7 +42,7 @@ module SurfaceAlbedoType
   ! lake_melt_icealb namelist to 0.60, 0.40 like alblak above.
   real(r8), public :: alblakwi(numrad)
   !$acc declare create(alblakwi)
-  integer,  parameter :: numrad_snw  =   6 !JPT
+  
 
   !
   ! DATA FUNCTIONS:

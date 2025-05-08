@@ -11,7 +11,7 @@ module lnd2atmType
   use shr_megan_mod , only : shr_megan_mechcomps_n
   use shr_fan_mod   , only : shr_fan_to_atm
   use abortutils    , only : endrun
-  use elm_varpar    , only : numrad, ndst, nlevsno, nlevgrnd !ndst = number of dust bins.
+  use elm_varpar    , only : numrad, ndst, nlevsno, nlevgrnd, numrad_snw !ndst = number of dust bins.
   use elm_varcon    , only : rair, grav, cpair, hfus, tfrz, spval
   use elm_varctl    , only : iulog, use_c13, use_cn, use_lch4, use_fan
   use seq_drydep_mod, only : n_drydep, drydep_method, DD_XLND
@@ -117,7 +117,6 @@ contains
     ! !LOCAL VARIABLES:
     real(r8) :: ival  = 0.0_r8  ! initial value
     integer  :: begg, endg
-    integer  :: numrad_snw = 6 !JPT 
     !------------------------------------------------------------------------
 
     begg = bounds%begg; endg= bounds%endg
