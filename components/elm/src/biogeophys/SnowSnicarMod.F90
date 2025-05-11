@@ -1812,7 +1812,7 @@ contains
      !
      ! !USES:
       !$acc routine seq
-     use elm_varpar       , only : nlevsno, numrad
+     use elm_varpar       , only : nlevsno, numrad, numrad_snw !JPT
      use elm_time_manager , only : get_nstep
      use shr_const_mod    , only : SHR_CONST_PI
      use elm_varctl       , only : snow_shape, snicar_atm_type, use_dust_snow_internal_mixing
@@ -1854,7 +1854,7 @@ contains
      real(r8):: ss_alb_aer_lcl(sno_nbr_aer)        ! single-scatter albedo of aerosol species (aer_nbr) [frc]
      real(r8):: asm_prm_aer_lcl(sno_nbr_aer)       ! asymmetry parameter of aerosol species (aer_nbr) [frc]
      real(r8):: ext_cff_mss_aer_lcl(sno_nbr_aer)   ! mass extinction coefficient of aerosol species (aer_nbr) [m2/kg]
-
+     !integer, parameter :: numrad_snw = 5 !JPT
 #ifdef MODAL_AER
      !mgf++
      real(r8) :: rds_bcint_lcl(-nlevsno+1:0)       ! effective radius of within-ice BC [nm]
@@ -2356,78 +2356,77 @@ contains
                    flx_wgt(2) = 0.77887652162877_r8
                    flx_wgt(3) = 0.22112347837123_r8
                 endif
-
+                
                 ! 5-band weights
              elseif(numrad_snw==5) then
                 ! Direct:
                 if (flg_slr_in == 1) then
-                  if (atm_type_index == atm_type_default) then
-                     flx_wgt(1) = 1._r8
-                     flx_wgt(2) = 0.49352158521175_r8
-                     flx_wgt(3) = 0.18099494230665_r8
-                     flx_wgt(4) = 0.12094898498813_r8
-                     flx_wgt(5) = 0.20453448749347_r8
-                  else                 
-                     slr_zen = nint(acos(coszen(c_idx)) * 180._r8 / pi)
-                     if (slr_zen>89) then
-                        slr_zen = 89
-                     endif
-                     flx_wgt(1) = 1._r8
-                     flx_wgt(2) = flx_wgt_dir(atm_type_index, slr_zen+1, 2)
-                     flx_wgt(3) = flx_wgt_dir(atm_type_index, slr_zen+1, 3)
-                     flx_wgt(4) = flx_wgt_dir(atm_type_index, slr_zen+1, 4)
-                     flx_wgt(5) = flx_wgt_dir(atm_type_index, slr_zen+1, 5)  
-                  endif
-				  
-                   ! Diffuse:
+                   if (atm_type_index == atm_type_default) then
+                      flx_wgt(1) = 1._r8
+                      flx_wgt(2) = 0.49352158521175_r8
+                      flx_wgt(3) = 0.18099494230665_r8
+                      flx_wgt(4) = 0.12094898498813_r8
+                      flx_wgt(5) = 0.20453448749347_r8
+                   else                 
+                      slr_zen = nint(acos(coszen(c_idx)) * 180._r8 / pi)
+                      if (slr_zen>89) then
+                         slr_zen = 89
+                      endif
+                      flx_wgt(1) = 1._r8
+                      flx_wgt(2) = flx_wgt_dir(atm_type_index, slr_zen+1, 2)
+                      flx_wgt(3) = flx_wgt_dir(atm_type_index, slr_zen+1, 3)
+                      flx_wgt(4) = flx_wgt_dir(atm_type_index, slr_zen+1, 4)
+                      flx_wgt(5) = flx_wgt_dir(atm_type_index, slr_zen+1, 5)  
+                   endif
+                ! Diffuse:
                 elseif (flg_slr_in == 2) then
                    if  (atm_type_index == atm_type_default) then
-                     flx_wgt(1) = 1._r8
-                     flx_wgt(2) = 0.58581507618433_r8
-                     flx_wgt(3) = 0.20156903770812_r8
-                     flx_wgt(4) = 0.10917889346386_r8
-                     flx_wgt(5) = 0.10343699264369_r8
-                  else
-                     flx_wgt(1) = 1._r8
-                     flx_wgt(2) = flx_wgt_dif(atm_type_index, 2)
-                     flx_wgt(3) = flx_wgt_dif(atm_type_index, 3)
-                     flx_wgt(4) = flx_wgt_dif(atm_type_index, 4)
-                     flx_wgt(5) = flx_wgt_dif(atm_type_index, 5)
-                  endif
+                      flx_wgt(1) = 1._r8
+                      flx_wgt(2) = 0.58581507618433_r8
+                      flx_wgt(3) = 0.20156903770812_r8
+                      flx_wgt(4) = 0.10917889346386_r8
+                      flx_wgt(5) = 0.10343699264369_r8
+                   else
+                      flx_wgt(1) = 1._r8
+                      flx_wgt(2) = flx_wgt_dif(atm_type_index, 2)
+                      flx_wgt(3) = flx_wgt_dif(atm_type_index, 3)
+                      flx_wgt(4) = flx_wgt_dif(atm_type_index, 4)
+                      flx_wgt(5) = flx_wgt_dif(atm_type_index, 5)
+                   endif
                 endif
-
-             !JPT 6-Band weights
+               
+                !JPT 6-Band weights
              elseif(numrad_snw==6) then
                 if (flg_slr_in == 1 .or. flg_slr_in == 2 ) then
-                  if (atm_type_index == atm_type_default) then
-                     flx_wgt(1) = 1._r8
-                     !print *, "c_idx", c_idx
-                     !print *, "JPT ELM SNICAR shape(snw_rds)        = ", shape(snw_rds)
-                     !print *, "JPT ELM SNICAR snw_rds        = ", snw_rds
-                     !print *, "JPT ELM SNICAR shape(nir_bands_flx)        = ", shape(nir_bands_flx)
-                     !print *, "JPT ELM SNICAR nir_bands_flx(c_idx,:)      = ", nir_bands_flx(c_idx,:)
-                     !print *, "JPT ELM SNICAR sum(nir_bands_flx(c_idx,:)) = ", sum(nir_bands_flx(c_idx,:))
-                     !print *, "JPT ELM SNICAR bounds%begc:                = ", bounds%begc
-                     !print *, "JPT ELM SNICAR bounds%endc:                = ", bounds%endc
-                     if (sum(nir_bands_flx(c_idx,:)) >= 0.0001) then 
-                        flx_wgt(2) = nir_bands_flx(c_idx,1) / sum(nir_bands_flx(c_idx,:))
-                        flx_wgt(3) = nir_bands_flx(c_idx,2) / sum(nir_bands_flx(c_idx,:))
-                        flx_wgt(4) = nir_bands_flx(c_idx,3) / sum(nir_bands_flx(c_idx,:))
-                        flx_wgt(5) = nir_bands_flx(c_idx,4) / sum(nir_bands_flx(c_idx,:))
-                        flx_wgt(6) = 1._r8 - (flx_wgt(2) + flx_wgt(3) + flx_wgt(4) + flx_wgt(5))
-                     else
-                        flx_wgt(2) = 0.58581507618433_r8
-                        flx_wgt(3) = 0.20156903770812_r8
-                        flx_wgt(4) = 0.10917889346386_r8
-                        flx_wgt(5) = 0.10343699264369_r8 / 2
-                        flx_wgt(6) = 0.10343699264369_r8 / 2
-                     end if
-                     != nir_bands_flx(c_idx,5) / sum(nir_bands_flx(c_idx,:))
-                     !flx_wgt(7) = nir_bands_flx(c_idx,6) / sum(nir_bands_flx(c_idx,:))
-                     !flx_wgt(8) = nir_bands_flx(c_idx,7) / sum(nir_bands_flx(c_idx,:))
-                  endif 
+                   if (atm_type_index == atm_type_default) then
+                      flx_wgt(1) = 1._r8
+                      !print *, "c_idx", c_idx
+                      !print *, "JPT ELM SNICAR shape(snw_rds)        = ", shape(snw_rds)
+                      !print *, "JPT ELM SNICAR snw_rds        = ", snw_rds
+                      !print *, "JPT ELM SNICAR shape(nir_bands_flx)        = ", shape(nir_bands_flx)
+                      !print *, "JPT ELM SNICAR nir_bands_flx(c_idx,:)      = ", nir_bands_flx(c_idx,:)
+                      !print *, "JPT ELM SNICAR sum(nir_bands_flx(c_idx,:)) = ", sum(nir_bands_flx(c_idx,:))
+                      !print *, "JPT ELM SNICAR bounds%begc:                = ", bounds%begc
+                      !print *, "JPT ELM SNICAR bounds%endc:                = ", bounds%endc
+                      if (sum(nir_bands_flx(c_idx,:)) >= 0.0001) then 
+                         flx_wgt(2) = nir_bands_flx(c_idx,1) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(3) = nir_bands_flx(c_idx,2) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(4) = nir_bands_flx(c_idx,3) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(5) = nir_bands_flx(c_idx,4) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(6) = 1._r8 - (flx_wgt(2) + flx_wgt(3) + flx_wgt(4) + flx_wgt(5))
+                      else
+                         flx_wgt(2) = 0.58581507618433_r8
+                         flx_wgt(3) = 0.20156903770812_r8
+                         flx_wgt(4) = 0.10917889346386_r8
+                         flx_wgt(5) = 0.10343699264369_r8 / 2
+                         flx_wgt(6) = 0.10343699264369_r8 / 2
+                      end if
+                      != nir_bands_flx(c_idx,5) / sum(nir_bands_flx(c_idx,:))
+                      !flx_wgt(7) = nir_bands_flx(c_idx,6) / sum(nir_bands_flx(c_idx,:))
+                      !flx_wgt(8) = nir_bands_flx(c_idx,7) / sum(nir_bands_flx(c_idx,:))
+                   endif
                 endif
-                     
+                
              endif ! end if numrad_snw
 
              ! Loop over snow spectral bands
