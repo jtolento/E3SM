@@ -38,3 +38,4 @@ hist_fincl2 = 'H2OSNO', 'FSNO', 'QRUNOFF', 'QSNOMELT', 'FSNO_EFF', 'SNORDSL', 'S
 hist_mfilt = 1,365
 hist_nhtfrq = -24,-24
 hist_avgflag_pertape = 'A','A'
+
