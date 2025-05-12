@@ -21,11 +21,13 @@ readonly MACHINE=pm-cpu
 readonly PROJECT="e3sm"
 
 # Simulation
-readonly COMPSET="WCYCL1850NS"
-readonly RESOLUTION="ne4pg2_oQU480"
+#readonly COMPSET="WCYCL1850NS"
+readonly COMPSET="WCYCL1850"
+readonly RESOLUTION="ne30pg2_r05_IcoswISC30E3r5"
+#readonly RESOLUTION="ne4pg2_oQU480"
 # BEFORE RUNNING : CHANGE the following CASE_NAME to desired value
 readonly CASE_NAME="btf_mpassi"
-readonly NL_MAPS=false
+#readonly NL_MAPS=false
 # If this is part of a simulation campaign, ask your group lead about using a case_group label
 # readonly CASE_GROUP=""
 
@@ -34,11 +36,11 @@ readonly NL_MAPS=false
 readonly CHECKOUT="20240305"
 readonly BRANCH="v3.0.0"
 readonly CHERRY=( )
-readonly DEBUG_COMPILE=True
+readonly DEBUG_COMPILE=False
 
 # Run options
 readonly MODEL_START_TYPE="initial"  # 'initial', 'continue', 'branch', 'hybrid'
-readonly START_DATE="0001-01-01"
+readonly START_DATE="0001-03-21"
 
 # Additional options for 'branch' and 'hybrid'
 readonly GET_REFCASE=FALSE
@@ -73,7 +75,8 @@ if [ "${run}" != "production" ]; then
   readonly PELAYOUT=${layout}
   readonly WALLTIME="0:30:00"
   readonly STOP_OPTION=${units}
-  readonly STOP_N=${length}
+  #readonly STOP_N=${length}
+  readonly STOP_N=10
   readonly REST_OPTION=${STOP_OPTION}
   readonly REST_N=${STOP_N}
   readonly RESUBMIT=${resubmit}
@@ -147,18 +150,19 @@ echo $'\n----- All done -----\n'
 user_nl() {
 
 cat << EOF >> user_nl_eam
-spectralflux  = .true.
+ spectralflux  = .true.
  nhtfrq =   -24
- mfilt  = 1
+ mfilt  = 12
  avgflag_pertape = 'A'
- fincl1 = 'NIR_WGHT_DIR'
+ fincl2 = 'NIR_WGHT_DIR','SOLS','SOLL','SOLSD','SOLLD','FSDS','SNOWFRAC','NIR_A_DIR','NIR_A_DIR','NIR_B_DIR','NIR_C_DIR','NIR_D_DIR','NIR_E_DIR', 'ALB_NIR_A_DIR', 'ALB_NIR_B_DIR', 'ALB_NIR_C_DIR', 'ALB_NIR_D_DIR', 'ALB_NIR_E_DIR','SD_BOA','FSNS','ASDIR','ASDIF','ALDIR','ALDIF'
 EOF
 
 cat << EOF >> user_nl_elm
+ use_snicar_ad = true
  hist_dov2xy = .true. 
- hist_fincl2 = 'NIR_WGHT_DIR','FSDSVI'
+ hist_fincl2 = 'FSDSVI','FSNO','NIR_WGHT_DIR','SNORDSL'
  hist_nhtfrq= -24
- hist_mfilt= 1
+ hist_mfilt= 12
  hist_avgflag_pertape= 'A'
 EOF
 
@@ -437,7 +441,7 @@ case_submit() {
     pushd ${CASE_SCRIPTS_DIR}
 
     # Run CIME case.submit
-    ./xmlchange --file env_workflow.xml --id JOB_QUEUE --val debug
+    #./xmlchange --file env_workflow.xml --id JOB_QUEUE --val debug
     ./case.submit -a="--mail-type=ALL --mail-user=$USER@nersc.gov --requeue"
 
     popd
