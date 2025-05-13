@@ -64,6 +64,7 @@ _TESTS = {
             "ERS.f19_g16.IERA56HRELM",
             "ERS_Ld20.f45_f45.IELMFATES.elm-fates",
             "ERS.f09_g16.IELMBC.elm-simple_decomp",
+            "ERS.hcru_hcru.IELM.elm-multi_inst",
             )
         },
 
@@ -365,7 +366,6 @@ _TESTS = {
             "SMS_D_Ld1.ne30pg2_r05_IcoswISC30E3r5.WCYCL1850.allactive-wcprod",
             "SMS_D_Ld1.ne30pg2_r05_IcoswISC30E3r5.WCYCLSSP370.allactive-wcprodssp",
             "ERS_Ld3.ne4pg2_oQU480.F2010",
-            #"ERT_Ld31.ne16_g37.B1850C5",#add this line back in with the new correct compset
             "NCK.ne4pg2_oQU480.WCYCL1850NS",
             "PET.f19_g16.X.allactive-mach-pet",
             "PET.f45_g37_rx1.A.allactive-mach-pet",
@@ -375,7 +375,6 @@ _TESTS = {
             "SMS_Ld2.ne30pg2_r05_IcoswISC30E3r5.BGCEXP_CNTL_CNPECACNT_1850.elm-bgcexp",
             "SMS_Ld2.ne30pg2_r05_IcoswISC30E3r5.BGCEXP_CNTL_CNPRDCTC_1850.elm-bgcexp",
             "SMS_D_Ld3.T62_oQU120.CMPASO-IAF",
-            "SMS_D_Ld1.ne30pg2_r05_IcoswISC30E3r5.WCYCL1850",
             "SMS_Ln5.ne30pg2_ne30pg2.F2010-SCREAM-LR-DYAMOND2",
             "ERS_Ld3.ne30pg2_r05_IcoswISC30E3r5.WCYCL1850.allactive-nlmaps",
             "SMS_D_Ld1.ne30pg2_r05_IcoswISC30E3r5.CRYO1850-DISMF",
@@ -422,7 +421,6 @@ _TESTS = {
     "e3sm_prod" : {
         "inherit" : "e3sm_atm_prod",
         "tests"   : (
-            "SMS_Ld1.ne30pg2_r05_IcoswISC30E3r5.WCYCL1850.allactive-wcprod_1850_r05",
             "SMS_Ld1.ne30pg2_r05_IcoswISC30E3r5.WCYCL1850-1pctCO2.allactive-wcprod_1850_1pctCO2",
             "SMS_Ld1.ne30pg2_r05_IcoswISC30E3r5.WCYCL1850-4xCO2.allactive-wcprod_1850_4xCO2",
             "SMS_Ld1.ne30pg2_r05_IcoswISC30E3r5.WCYCL1850.allactive-wcprod_1850",
@@ -446,11 +444,8 @@ _TESTS = {
     #e3sm performance-benching of production-like runs
     "e3sm_prod_bench" : {
         "tests"   : (
-            "PFS.ne30pg2_r05_oECv3.F2010.bench-noio",
-            "PFS.ne30pg2_r05_oECv3.F20TR.bench-noio",
-            "PFS.ne30pg2_r05_EC30to60E2r2.WCYCL1850.bench-noio",
-            "PFS.ne30pg2_EC30to60E2r2.WCYCL1850.bench-noio",
-            "PFS_PS.northamericax4v1pg2_WC14to60E2r3.WCYCL1850.bench-noio",
+            "PFS.ne30pg2_r05_IcoswISC30E3r5.F2010.bench-noio",
+            "PFS.ne30pg2_r05_IcoswISC30E3r5.WCYCL1850.bench-noio",
             )
         },
 
