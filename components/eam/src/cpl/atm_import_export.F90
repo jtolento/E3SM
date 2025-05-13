@@ -296,10 +296,13 @@ contains
           a2x(index_a2x_Faxa_rainl,ig) = (cam_out(c)%precl(i)-cam_out(c)%precsl(i))*1000._r8
           a2x(index_a2x_Faxa_snowc,ig) = cam_out(c)%precsc(i)*1000._r8
           a2x(index_a2x_Faxa_snowl,ig) = cam_out(c)%precsl(i)*1000._r8
-          a2x(index_a2x_Faxa_swndr,ig) = cam_out(c)%soll(i)
-          a2x(index_a2x_Faxa_swvdr,ig) = cam_out(c)%sols(i)
-          a2x(index_a2x_Faxa_swndf,ig) = cam_out(c)%solld(i)
+          a2x(index_a2x_Faxa_swndr,ig) = cam_out(c)%soll(i)   
+          a2x(index_a2x_Faxa_swvdr,ig) = cam_out(c)%sols(i)   
+          a2x(index_a2x_Faxa_swndf,ig) = cam_out(c)%solld(i)  
           a2x(index_a2x_Faxa_swvdf,ig) = cam_out(c)%solsd(i)
+          !JPT add nir_wght
+          a2x(index_a2x_Faxa_nir_wght_dir,ig) = cam_out(c)%nir_wght_dir(i)
+          a2x(index_a2x_Faxa_nir_wght_dif,ig) = cam_out(c)%nir_wght_dif(i)
 
           ! aerosol deposition fluxes
           a2x(index_a2x_Faxa_bcphidry,ig) = cam_out(c)%bcphidry(i)

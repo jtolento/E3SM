@@ -34,6 +34,10 @@ module cam_cpl_indices
   integer :: index_a2x_Faxa_swndf      ! sw: nir diffuse downward
   integer :: index_a2x_Faxa_swvdf      ! sw: vis diffuse downward
   integer :: index_a2x_Faxa_swnet      ! sw: net
+  !JPT add nir_wght
+  integer :: index_a2x_Faxa_nir_wght_dir      ! nir weight to be used by mpassi (direct)
+  integer :: index_a2x_Faxa_nir_wght_dif      ! nir weight to be used by mpassi (diffuse)
+  
   integer :: index_a2x_Faxa_bcphidry   ! flux: Black Carbon hydrophilic dry deposition
   integer :: index_a2x_Faxa_bcphodry   ! flux: Black Carbon hydrophobic dry deposition
   integer :: index_a2x_Faxa_bcphiwet   ! flux: Black Carbon hydrophilic wet deposition
