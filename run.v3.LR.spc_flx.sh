@@ -36,7 +36,7 @@ readonly CASE_NAME="btf_mpassi"
 readonly CHECKOUT="20240305"
 readonly BRANCH="v3.0.0"
 readonly CHERRY=( )
-readonly DEBUG_COMPILE=False
+readonly DEBUG_COMPILE=false
 
 # Run options
 readonly MODEL_START_TYPE="initial"  # 'initial', 'continue', 'branch', 'hybrid'
@@ -76,7 +76,7 @@ if [ "${run}" != "production" ]; then
   readonly WALLTIME="0:30:00"
   readonly STOP_OPTION=${units}
   #readonly STOP_N=${length}
-  readonly STOP_N=10
+  readonly STOP_N=5
   readonly REST_OPTION=${STOP_OPTION}
   readonly REST_N=${STOP_N}
   readonly RESUBMIT=${resubmit}

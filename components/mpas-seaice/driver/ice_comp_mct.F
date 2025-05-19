@@ -2968,6 +2968,21 @@ contains
                i2x_i % rAttr(index_i2x_Si_anidr ,n)  = albedoIRDirectCell(i)
                i2x_i % rAttr(index_i2x_Si_avsdf ,n)  = albedoVisibleDiffuseCell(i)
                i2x_i % rAttr(index_i2x_Si_anidf ,n)  = albedoIRDiffuseCell(i)
+               !JPT
+               i2x_i % rAttr(index_i2x_Si_alb_nir_a_dir ,n)  = albedoIRDirectCell(i)
+               i2x_i % rAttr(index_i2x_Si_alb_nir_b_dir ,n)  = albedoIRDirectCell(i)
+               i2x_i % rAttr(index_i2x_Si_alb_nir_c_dir ,n)  = albedoIRDirectCell(i)
+               i2x_i % rAttr(index_i2x_Si_alb_nir_d_dir ,n)  = albedoIRDirectCell(i)
+               i2x_i % rAttr(index_i2x_Si_alb_nir_e_dir ,n)  = albedoIRDirectCell(i)
+               !i2x_i % rAttr(index_i2x_Si_alb_nir_f_dir ,n)  = albedoIRDirectCell(i)
+               !i2x_i % rAttr(index_i2x_Si_alb_nir_g_dir ,n)  = albedoIRDirectCell(i)
+               i2x_i % rAttr(index_i2x_Si_alb_nir_a_dif ,n)  = albedoIRDiffuseCell(i)
+               i2x_i % rAttr(index_i2x_Si_alb_nir_b_dif ,n)  = albedoIRDiffuseCell(i)
+               i2x_i % rAttr(index_i2x_Si_alb_nir_c_dif ,n)  = albedoIRDiffuseCell(i)
+	       i2x_i % rAttr(index_i2x_Si_alb_nir_d_dif ,n)  = albedoIRDiffuseCell(i)
+               i2x_i % rAttr(index_i2x_Si_alb_nir_e_dif ,n)  = albedoIRDiffuseCell(i)
+               !i2x_i % rAttr(index_i2x_Si_alb_nir_f_dif ,n)  = albedoIRDiffuseCell(i)
+	       !i2x_i % rAttr(index_i2x_Si_alb_nir_g_dif ,n)  = albedoIRDiffuseCell(i)               
 
                i2x_i % rAttr(index_i2x_Faii_swnet,n) = absorbedShortwaveFlux(i)
             endif
@@ -3579,7 +3594,21 @@ contains
                   i2x_im(n, index_i2x_Si_anidr)  = albedoIRDirectCell(i)
                   i2x_im(n, index_i2x_Si_avsdf)  = albedoVisibleDiffuseCell(i)
                   i2x_im(n, index_i2x_Si_anidf)  = albedoIRDiffuseCell(i)
-
+                  !JPT
+                  i2x_i % rAttr(index_i2x_Si_alb_nir_a_dir ,n)  = albedoIRDirectCell(i)
+                  i2x_i % rAttr(index_i2x_Si_alb_nir_b_dir ,n)  = albedoIRDirectCell(i)   
+                  i2x_i % rAttr(index_i2x_Si_alb_nir_c_dir ,n)  = albedoIRDirectCell(i)
+                  i2x_i % rAttr(index_i2x_Si_alb_nir_d_dir ,n)  = albedoIRDirectCell(i)
+                  i2x_i % rAttr(index_i2x_Si_alb_nir_e_dir ,n)  = albedoIRDirectCell(i)
+                  !i2x_i % rAttr(index_i2x_Si_alb_nir_f_dir ,n)  = albedoIRDirectCell(i)
+                  !i2x_i % rAttr(index_i2x_Si_alb_nir_g_dir ,n)  = albedoIRDirectCell(i)
+                  i2x_i % rAttr(index_i2x_Si_alb_nir_a_dif ,n)  = albedoIRDiffuseCell(i)
+                  i2x_i % rAttr(index_i2x_Si_alb_nir_b_dif ,n)  = albedoIRDiffuseCell(i)
+                  i2x_i % rAttr(index_i2x_Si_alb_nir_c_dif ,n)  = albedoIRDiffuseCell(i)
+                  i2x_i % rAttr(index_i2x_Si_alb_nir_d_dif ,n)  = albedoIRDiffuseCell(i)
+                  i2x_i % rAttr(index_i2x_Si_alb_nir_e_dif ,n)  = albedoIRDiffuseCell(i)
+                  !i2x_i % rAttr(index_i2x_Si_alb_nir_f_dif ,n)  = albedoIRDiffuseCell(i)
+                  !i2x_i % rAttr(index_i2x_Si_alb_nir_g_dif ,n)  = albedoIRDiffuseCell(i)                  
                   i2x_im(n, index_i2x_Faii_swnet) = absorbedShortwaveFlux(i)
                endif
 
