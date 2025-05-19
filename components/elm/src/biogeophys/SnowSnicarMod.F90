@@ -2613,6 +2613,7 @@ contains
                    ! Weighted Mie parameters of each layer
                    do i=snl_top,snl_btm,1
 #ifdef MODAL_AER
+                    !print*, "JPT: IF MODAL_AER"
                     !mgf++ within-ice and external BC optical properties
                     !
                     ! Lookup table indices for BC optical properties,
@@ -2660,6 +2661,7 @@ contains
                     ext_cff_mss_aer_lcl(2)   = ext_cff_mss_bc2(bnd_idx,idx_bcext_nclrds)
 
 #else
+                    !print*, "JPT: ELSE MODAL_AER"
                     ! bulk aerosol treatment (BC optical properties independent
                     ! of BC and ice grain size)
                     ! aerosol species 1 optical properties (within-ice BC)

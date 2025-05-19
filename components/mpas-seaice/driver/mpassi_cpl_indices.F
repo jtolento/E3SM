@@ -9,8 +9,8 @@ module mpassi_cpl_indices
   public                               ! By default make data private
 
   ! ice -> drv
-
-  integer :: index_i2x_Si_ifrac        ! fractional ice coverage wrt ocean
+      
+  integer :: index_i2x_Si_ifrac ! fractional ice coverage wrt ocean
   integer :: index_i2x_Si_ithick       ! ice thickness (m)
   integer :: index_i2x_Si_snowh        ! snow height (m)
   integer :: index_i2x_Si_t            ! temperature                     
@@ -21,7 +21,22 @@ module mpassi_cpl_indices
   integer :: index_i2x_Si_avsdf        ! albedo: near ir, direct         
   integer :: index_i2x_Si_anidr        ! albedo: visible, diffuse        
   integer :: index_i2x_Si_anidf        ! albedo: near ir, diffuse        
-  integer :: index_i2x_Si_u10          ! 10m wind
+  !JPT
+  integer :: index_i2x_Si_alb_nir_a_dir
+  integer :: index_i2x_Si_alb_nir_b_dir
+  integer :: index_i2x_Si_alb_nir_c_dir
+  integer :: index_i2x_Si_alb_nir_d_dir
+  integer :: index_i2x_Si_alb_nir_e_dir
+!  integer :: index_i2x_Si_alb_nir_f_dir
+!  integer :: index_i2x_Si_alb_nir_g_dir
+  integer :: index_i2x_Si_alb_nir_a_dif
+  integer :: index_i2x_Si_alb_nir_b_dif
+  integer :: index_i2x_Si_alb_nir_c_dif
+  integer :: index_i2x_Si_alb_nir_d_dif
+  integer :: index_i2x_Si_alb_nir_e_dif
+  !integer :: index_i2x_Si_alb_nir_f_dif
+  !integer :: index_i2x_Si_alb_nir_g_dif    
+  integer :: index_i2x_Si_u10 ! 10m wind
   integer :: index_i2x_Si_u10withgusts ! 10m wind root-mean-square magnitude with gustiness
   integer :: index_i2x_Faii_lwup       ! upward longwave heat flux  
   integer :: index_i2x_Faii_lat        ! latent          heat flux  
@@ -153,6 +168,21 @@ contains
     index_i2x_Si_anidr      = mct_avect_indexra(i2x,'Si_anidr')
     index_i2x_Si_avsdf      = mct_avect_indexra(i2x,'Si_avsdf')
     index_i2x_Si_anidf      = mct_avect_indexra(i2x,'Si_anidf')
+    !JPT
+    index_i2x_Si_alb_nir_a_dir = mct_avect_indexra(i2x,'Si_alb_nir_a_dir')
+    index_i2x_Si_alb_nir_b_dir = mct_avect_indexra(i2x,'Si_alb_nir_b_dir')
+    index_i2x_Si_alb_nir_c_dir = mct_avect_indexra(i2x,'Si_alb_nir_c_dir')
+    index_i2x_Si_alb_nir_d_dir = mct_avect_indexra(i2x,'Si_alb_nir_d_dir')
+    index_i2x_Si_alb_nir_e_dir = mct_avect_indexra(i2x,'Si_alb_nir_e_dir') 
+    !index_i2x_Si_alb_nir_f_dir = mct_avect_indexra(i2x,'Si_alb_nir_f_dir')
+    !index_i2x_Si_alb_nir_g_dir = mct_avect_indexra(i2x,'Si_alb_nir_g_dir')
+    index_i2x_Si_alb_nir_a_dif = mct_avect_indexra(i2x,'Si_alb_nir_a_dif')
+    index_i2x_Si_alb_nir_b_dif = mct_avect_indexra(i2x,'Si_alb_nir_b_dif')
+    index_i2x_Si_alb_nir_c_dif = mct_avect_indexra(i2x,'Si_alb_nir_c_dif')
+    index_i2x_Si_alb_nir_d_dif = mct_avect_indexra(i2x,'Si_alb_nir_d_dif')
+    index_i2x_Si_alb_nir_e_dif = mct_avect_indexra(i2x,'Si_alb_nir_e_dif')
+    !index_i2x_Si_alb_nir_f_dif = mct_avect_indexra(i2x,'Si_alb_nir_f_dif')
+    !index_i2x_Si_alb_nir_g_dif = mct_avect_indexra(i2x,'Si_alb_nir_g_dif')       
     index_i2x_Si_snowh      = mct_avect_indexra(i2x,'Si_snowh')
     index_i2x_Si_u10        = mct_avect_indexra(i2x,'Si_u10')
     index_i2x_Si_u10withgusts = mct_avect_indexra(i2x,'Si_u10withgusts')

@@ -1386,12 +1386,15 @@ contains
 
     !JPT
     !Direct Spectral albedo (Band A)
+    call seq_flds_add(i2x_states,"Si_alb_nir_a_dir")
     call seq_flds_add(l2x_states,"Sl_alb_nir_a_dir")
     call seq_flds_add(xao_albedo,"So_alb_nir_a_dir")
     call seq_flds_add(x2a_states,"Sx_alb_nir_a_dir")
     longname = 'Direct Spectral albedo (Band A)'
     stdname  = 'direct_spectral_albedo_band_A'
     units    = '1'
+    attname  = 'Si_alb_nir_a_dir'
+    call metadata_set(attname, longname, stdname, units)
     attname  = 'Sl_alb_nir_a_dir'
     call metadata_set(attname, longname, stdname, units)
     attname  = 'So_alb_nir_a_dir'
@@ -1400,12 +1403,15 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Direct Spectral albedo (Band B)
+    call seq_flds_add(i2x_states,"Si_alb_nir_b_dir")
     call seq_flds_add(l2x_states,"Sl_alb_nir_b_dir")
     call seq_flds_add(xao_albedo,"So_alb_nir_b_dir")
     call seq_flds_add(x2a_states,"Sx_alb_nir_b_dir")
     longname = 'Direct Spectral albedo (Band B)'
     stdname  = 'direct_spectral_albedo_band_B'
     units    = '1'
+    attname  = 'Si_alb_nir_b_dir'
+    call metadata_set(attname, longname, stdname, units)
     attname  = 'Sl_alb_nir_b_dir'
     call metadata_set(attname, longname, stdname, units)
     attname  = 'So_alb_nir_b_dir'
@@ -1414,12 +1420,15 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Direct Spectral albedo (Band C)
+    call seq_flds_add(i2x_states,"Si_alb_nir_c_dir")
     call seq_flds_add(l2x_states,"Sl_alb_nir_c_dir")
     call seq_flds_add(xao_albedo,"So_alb_nir_c_dir")
     call seq_flds_add(x2a_states,"Sx_alb_nir_c_dir")
     longname = 'Direct Spectral albedo (Band C)'
     stdname  = 'direct_spectral_albedo_band_C'
     units    = '1'
+    attname  = 'Si_alb_nir_c_dir'
+    call metadata_set(attname, longname, stdname, units)
     attname  = 'Sl_alb_nir_c_dir'
     call metadata_set(attname, longname, stdname, units)
     attname  = 'So_alb_nir_c_dir'
@@ -1428,12 +1437,15 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Direct Spectral albedo (Band D)
+    call seq_flds_add(i2x_states,"Si_alb_nir_d_dir")
     call seq_flds_add(l2x_states,"Sl_alb_nir_d_dir")
     call seq_flds_add(xao_albedo,"So_alb_nir_d_dir")
     call seq_flds_add(x2a_states,"Sx_alb_nir_d_dir")
     longname = 'Direct Spectral albedo (Band D)'
     stdname  = 'direct_spectral_albedo_band_D'
     units    = '1'
+    attname  = 'Si_alb_nir_d_dir'
+    call metadata_set(attname, longname, stdname, units)
     attname  = 'Sl_alb_nir_d_dir'
     call metadata_set(attname, longname, stdname, units)
     attname  = 'So_alb_nir_d_dir'
@@ -1442,12 +1454,15 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Direct Spectral albedo (Band E)
+    call seq_flds_add(i2x_states,"Si_alb_nir_e_dir")
     call seq_flds_add(l2x_states,"Sl_alb_nir_e_dir")
     call seq_flds_add(xao_albedo,"So_alb_nir_e_dir")
     call seq_flds_add(x2a_states,"Sx_alb_nir_e_dir")
     longname = 'Direct Spectral albedo (Band E)'
     stdname  = 'direct_spectral_albedo_band_E'
     units    = '1'
+    attname  = 'Si_alb_nir_e_dir'
+    call metadata_set(attname, longname, stdname, units)
     attname  = 'Sl_alb_nir_e_dir'
     call metadata_set(attname, longname, stdname, units)
     attname  = 'So_alb_nir_e_dir'
@@ -1456,12 +1471,15 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Direct Spectral albedo (Band F)
+    !call seq_flds_add(i2x_states,"Si_alb_nir_f_dir")
     !call seq_flds_add(l2x_states,"Sl_alb_nir_f_dir")
     !call seq_flds_add(xao_albedo,"So_alb_nir_f_dir")
     !call seq_flds_add(x2a_states,"Sx_alb_nir_f_dir")
     !longname = 'Direct Spectral albedo (Band F)'
     !stdname  = 'direct_spectral_albedo_band_F'
     !units    = '1'
+    !attname  = 'Si_alb_nir_f_dir'
+    !call metadata_set(attname, longname, stdname, units)
     !attname  = 'Sl_alb_nir_f_dir'
     !call metadata_set(attname, longname, stdname, units)
     !attname  = 'So_alb_nir_f_dir'
@@ -1470,12 +1488,15 @@ contains
     !call metadata_set(attname, longname, stdname, units)
 
     !Direct Spectral albedo (Band G)
+    !call seq_flds_add(i2x_states,"Si_alb_nir_g_dir")
     !call seq_flds_add(l2x_states,"Sl_alb_nir_g_dir")
     !call seq_flds_add(xao_albedo,"So_alb_nir_g_dir")
     !call seq_flds_add(x2a_states,"Sx_alb_nir_g_dir")
     !longname = 'Direct Spectral albedo (Band g)'
     !stdname  = 'direct_spectral_albedo_band_g'
     !units    = '1'
+    !attname  = 'Si_alb_nir_g_dir'
+    !call metadata_set(attname, longname, stdname, units)
     !attname  = 'Sl_alb_nir_g_dir'
     !call metadata_set(attname, longname, stdname, units)
     !attname  = 'So_alb_nir_g_dir'
@@ -1484,12 +1505,15 @@ contains
     !call metadata_set(attname, longname, stdname, units)
 
     !Diffuse Spectral albedo (Band A)
+    call seq_flds_add(i2x_states,"Si_alb_nir_a_dif")
     call seq_flds_add(l2x_states,"Sl_alb_nir_a_dif")
     call seq_flds_add(xao_albedo,"So_alb_nir_a_dif")
     call seq_flds_add(x2a_states,"Sx_alb_nir_a_dif")
     longname = 'Diffuse Spectral albedo (Band A)'
     stdname  = 'diffuse_spectral_albedo_band_A'
     units    = '1'
+    attname  = 'Si_alb_nir_a_dif'
+    call metadata_set(attname, longname, stdname, units)
     attname  = 'Sl_alb_nir_a_dif'
     call metadata_set(attname, longname, stdname, units)
     attname  = 'So_alb_nir_a_dif'
@@ -1498,12 +1522,15 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Diffuse Spectral albedo (Band B)
+    call seq_flds_add(i2x_states,"Si_alb_nir_b_dif")
     call seq_flds_add(l2x_states,"Sl_alb_nir_b_dif")
     call seq_flds_add(xao_albedo,"So_alb_nir_b_dif")
     call seq_flds_add(x2a_states,"Sx_alb_nir_b_dif")
     longname = 'Diffuse Spectral albedo (Band B)'
     stdname  = 'diffuse_spectral_albedo_band_B'
     units    = '1'
+    attname  = 'Si_alb_nir_b_dif'
+    call metadata_set(attname, longname, stdname, units)
     attname  = 'Sl_alb_nir_b_dif'
     call metadata_set(attname, longname, stdname, units)
     attname  = 'So_alb_nir_b_dif'
@@ -1512,12 +1539,15 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Diffuse Spectral albedo (Band C)
+    call seq_flds_add(i2x_states,"Si_alb_nir_c_dif")
     call seq_flds_add(l2x_states,"Sl_alb_nir_c_dif")
     call seq_flds_add(xao_albedo,"So_alb_nir_c_dif")
     call seq_flds_add(x2a_states,"Sx_alb_nir_c_dif")
     longname = 'Diffuse Spectral albedo (Band C)'
     stdname  = 'diffuse_spectral_albedo_band_C'
     units    = '1'
+    attname  = 'Si_alb_nir_c_dif'
+    call metadata_set(attname, longname, stdname, units)
     attname  = 'Sl_alb_nir_c_dif'
     call metadata_set(attname, longname, stdname, units)
     attname  = 'So_alb_nir_c_dif'
@@ -1526,12 +1556,15 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Diffuse Spectral albedo (Band D)
+    call seq_flds_add(i2x_states,"Si_alb_nir_d_dif")
     call seq_flds_add(l2x_states,"Sl_alb_nir_d_dif")
     call seq_flds_add(xao_albedo,"So_alb_nir_d_dif")
     call seq_flds_add(x2a_states,"Sx_alb_nir_d_dif")
     longname = 'Diffuse Spectral albedo (Band D)'
     stdname  = 'diffuse_spectral_albedo_band_D'
     units    = '1'
+    attname  = 'Si_alb_nir_d_dif'
+    call metadata_set(attname, longname, stdname, units)
     attname  = 'Sl_alb_nir_d_dif'
     call metadata_set(attname, longname, stdname, units)
     attname  = 'So_alb_nir_d_dif'
@@ -1540,12 +1573,15 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Diffuse Spectral albedo (Band E)
+    call seq_flds_add(i2x_states,"Si_alb_nir_e_dif")
     call seq_flds_add(l2x_states,"Sl_alb_nir_e_dif")
     call seq_flds_add(xao_albedo,"So_alb_nir_e_dif")
     call seq_flds_add(x2a_states,"Sx_alb_nir_e_dif")
     longname = 'Diffuse Spectral albedo (Band E)'
     stdname  = 'diffuse_spectral_albedo_band_E'
     units    = '1'
+    attname  = 'Si_alb_nir_e_dif'
+    call metadata_set(attname, longname, stdname, units)
     attname  = 'Sl_alb_nir_e_dif'
     call metadata_set(attname, longname, stdname, units)
     attname  = 'So_alb_nir_e_dif'
@@ -1554,12 +1590,15 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Diffuse Spectral albedo (Band F)
+    !call seq_flds_add(i2x_states,"Si_alb_nir_f_dif")
     !call seq_flds_add(l2x_states,"Sl_alb_nir_f_dif")
     !call seq_flds_add(xao_albedo,"So_alb_nir_f_dif")
     !call seq_flds_add(x2a_states,"Sx_alb_nir_f_dif")
     !longname = 'Diffuse Spectral albedo (Band F)'
     !stdname  = 'diffuse_spectral_albedo_band_F'
     !units    = '1'
+    !attname  = 'Si_alb_nir_f_dif'
+    !call metadata_set(attname, longname, stdname, units)
     !attname  = 'Sl_alb_nir_f_dif'
     !call metadata_set(attname, longname, stdname, units)
     !attname  = 'So_alb_nir_f_dif'
@@ -1568,12 +1607,15 @@ contains
     !call metadata_set(attname, longname, stdname, units)
 
     !Diffuse Spectral albedo (Band G)
+    !call seq_flds_add(i2x_states,"Si_alb_nir_g_dif")
     !call seq_flds_add(l2x_states,"Sl_alb_nir_g_dif")
     !call seq_flds_add(xao_albedo,"So_alb_nir_g_dif")
     !call seq_flds_add(x2a_states,"Sx_alb_nir_g_dif")
     !longname = 'Diffuse Spectral albedo (Band g)'
     !stdname  = 'diffuse_spectral_albedo_band_g'
     !units    = '1'
+    !attname  = 'Si_alb_nir_g_dif'
+    !call metadata_set(attname, longname, stdname, units)
     !attname  = 'Sl_alb_nir_g_dif'
     !call metadata_set(attname, longname, stdname, units)
     !attname  = 'So_alb_nir_g_dif'
