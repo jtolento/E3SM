@@ -36,11 +36,11 @@ readonly CASE_NAME="btf_mpassi"
 readonly CHECKOUT="20240305"
 readonly BRANCH="v3.0.0"
 readonly CHERRY=( )
-readonly DEBUG_COMPILE=false
+readonly DEBUG_COMPILE=False
 
 # Run options
 readonly MODEL_START_TYPE="initial"  # 'initial', 'continue', 'branch', 'hybrid'
-readonly START_DATE="0001-03-21"
+readonly START_DATE="0001-12-21"
 
 # Additional options for 'branch' and 'hybrid'
 readonly GET_REFCASE=FALSE
@@ -96,8 +96,8 @@ else
 fi
 
 # Coupler history
-readonly HIST_OPTION="nsteps"
-readonly HIST_N="1"
+readonly HIST_OPTION="ndays"
+readonly HIST_N="5"
 
 # Leave empty (unless you understand what it does)
 readonly OLD_EXECUTABLE=""
@@ -153,7 +153,7 @@ cat << EOF >> user_nl_eam
  spectralflux  = .true.
  nhtfrq =   -24
  mfilt  = 12
- avgflag_pertape = 'A'
+ avgflag_pertape = 'I'
  fincl2 = 'NIR_WGHT_DIR','SOLS','SOLL','SOLSD','SOLLD','FSDS','SNOWFRAC','NIR_A_DIR','NIR_A_DIR','NIR_B_DIR','NIR_C_DIR','NIR_D_DIR','NIR_E_DIR', 'ALB_NIR_A_DIR', 'ALB_NIR_B_DIR', 'ALB_NIR_C_DIR', 'ALB_NIR_D_DIR', 'ALB_NIR_E_DIR','SD_BOA','FSNS','ASDIR','ASDIF','ALDIR','ALDIF'
 EOF
 
@@ -441,7 +441,7 @@ case_submit() {
     pushd ${CASE_SCRIPTS_DIR}
 
     # Run CIME case.submit
-    #./xmlchange --file env_workflow.xml --id JOB_QUEUE --val debug
+    ./xmlchange --file env_workflow.xml --id JOB_QUEUE --val debug
     ./case.submit -a="--mail-type=ALL --mail-user=$USER@nersc.gov --requeue"
 
     popd

@@ -1743,7 +1743,7 @@ contains
     ! wrapper calls to define the history file contents.
     !
     ! !USES:
-    use elm_varpar      , only : nlevgrnd, nlevsno, nlevlak, nlevurb, numrad, nmonth
+    use elm_varpar      , only : nlevgrnd, nlevsno, nlevlak, nlevurb, numrad, nmonth, numrad_snw !JPT
     use elm_varpar      , only : natpft_size, cft_size, maxpatch_glcmec, nlevdecomp_full, nlevtrc_full, nvegwcs
     use elm_varpar      , only : nlevsoi
     use landunit_varcon , only : max_lunit, max_non_poly_lunit
@@ -1903,6 +1903,7 @@ contains
     end if
     call ncd_defdim(lnfid, 'levlak' , nlevlak, dimid)
     call ncd_defdim(lnfid, 'numrad' , numrad , dimid)
+    call ncd_defdim(lnfid, 'numrad_snw' , numrad_snw , dimid) !JPT
     call ncd_defdim(lnfid, 'month'  , nmonth,  dimid)
     call ncd_defdim(lnfid, 'levsno' , nlevsno , dimid)
     if (use_polygonal_tundra) then
@@ -3557,7 +3558,7 @@ contains
     use elm_varctl      , only : nsrest, caseid, inst_suffix, nsrStartup, nsrBranch
     use fileutils       , only : getfil
     use domainMod       , only : ldomain
-    use elm_varpar      , only : nlevgrnd, nlevlak, numrad, nlevdecomp_full, nmonth
+    use elm_varpar      , only : nlevgrnd, nlevlak, numrad, nlevdecomp_full, nmonth, numrad_snw !JPT
     use elm_time_manager, only : is_restart
     use restUtilMod     , only : iflag_skip
     use pio
@@ -4704,7 +4705,7 @@ contains
     ! initial or branch run to initialize the actual history tapes.
     !
     ! !USES:
-    use elm_varpar      , only : nlevgrnd, nlevsno, nlevlak, numrad, nlevdecomp_full, nlevtrc_soil, nmonth, nvegwcs
+    use elm_varpar      , only : nlevgrnd, nlevsno, nlevlak, numrad, nlevdecomp_full, nlevtrc_soil, nmonth, nvegwcs, numrad_snw !JPT
     use elm_varpar      , only : natpft_size, cft_size, maxpatch_glcmec
     use elm_varpar      , only : nlevsoi
     use landunit_varcon , only : max_lunit, max_non_poly_lunit
@@ -4788,8 +4789,10 @@ contains
        num2d = nlevsoi
     case ('levlak')
        num2d = nlevlak
-    case ('numrad')
+    case ('numrad') 
        num2d = numrad
+    case ('numrad_snw')
+       num2d = numrad_snw
     case ('month')
        num2d = nmonth
     case ('levdcmp')

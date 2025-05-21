@@ -685,43 +685,43 @@ end function radiation_nextsw_cday
                       standard_name='nir_a_dir')
           call addfld ('NIR_B_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (0.778-1.242)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dir')
+                      standard_name='nir_b_dir')
           call addfld ('NIR_C_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.242-1.298)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dir')
+                      standard_name='nir_c_dir')
           call addfld ('NIR_D_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.298-1.626)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dir')
+                      standard_name='nir_d_dir')
           call addfld ('NIR_E_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.626-1.941)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dir')
+                      standard_name='nir_e_dir')
           call addfld ('NIR_F_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (1.941-2.150)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dir')
+                      standard_name='nir_f_dir')
           call addfld ('NIR_G_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (2.150-5.0)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dir')
+                      standard_name='nir_g_dir')
           call addfld ('NIR_A_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (0.7-0.778)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_a_dif')
           call addfld ('NIR_B_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band B (0.778-1.242)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dif')
+                      standard_name='nir_b_dif')
           call addfld ('NIR_C_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band C (1.242-1.298)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dif')
+                      standard_name='nir_c_dif')
           call addfld ('NIR_D_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band D (1.298-1.626)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dif')
+                      standard_name='nir_d_dif')
           call addfld ('NIR_E_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band E (1.626-1.941)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dif')
+                      standard_name='nir_e_dif')
           call addfld ('NIR_F_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band F (1.941-2.150)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dif')
+                      standard_name='nir_f_dif')
           call addfld ('NIR_G_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band G (2.150-5.0)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
-                      standard_name='nir_a_dif')
+                      standard_name='nir_g_dif')
 !          call addfld('SD', (/'ilev   ','swband'/), 'A', 'W/m2', &
 !                       'Downwelling Spectral Radiation', &
 !                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
@@ -1423,13 +1423,12 @@ end function radiation_nextsw_cday
           do icall = N_DIAG, 0, -1
 
               if (active_calls(icall)) then
-
                   ! update the concentrations in the RRTMG state object
                   call  rrtmg_state_update( state, pbuf, icall, r_state )
 
                   call aer_rad_props_sw( icall, dt, state, pbuf, nnite, idxnite, is_cmip6_volc, &
                                          aer_tau, aer_tau_w, aer_tau_w_g, aer_tau_w_f)
-
+                  
                   call t_startf ('rad_rrtmg_sw')
                   call rad_rrtmg_sw( &
                        lchnk,        ncol,         num_rrtmg_levs, r_state,                    &
@@ -1453,17 +1452,19 @@ end function radiation_nextsw_cday
                   threshold = 1.0e-5
                   nir_wght_dir(:) = 0.0
                   denom = cam_out%soll
+                  !nir_a_dir(:) = 0.0
                   where ((.not.isnan(sd_dir(:,pver+1,9))) .and. &
                        (.not.isnan(denom) ) .and. &
                        (denom > threshold) )
                      sd_slice(:) = sd_dir(:,pver+1,9)
                      nir_wght_dir(:) = (sd_slice * asym_splt) / (denom)
+                     !nir_a_dir = sd_slice(:) * asym_splt  
                      !nir_wght_dir = sd_slice
                   elsewhere
                      nir_wght_dir = 0.1
                   end where
                   nir_a_dir = sd_dir(:,pver+1,9)
-                  nir_a_dir = nir_a_dir * 0.5_r8
+                  nir_a_dir = nir_a_dir * asym_splt
                   nir_b_dir = sd_dir(:,pver+1,8)
                   nir_c_dir = sd_dir(:,pver+1,7)
                   nir_d_dir = sd_dir(:,pver+1,6)
