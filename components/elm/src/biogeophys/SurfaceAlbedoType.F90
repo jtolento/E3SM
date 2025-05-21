@@ -364,6 +364,11 @@ contains
     call hist_addfld2d (fname='ALBI', units='proportion', type2d='numrad', &
          avgflag='A', long_name='surface albedo (indirect)', &
          ptr_patch=this%albi_patch, default='inactive', c2l_scale_type='urbanf')
+    !JPT
+    !this%spc_albd_patch(begp:endp,:) = spval
+    !call hist_addfld2d (fname='SPC_ALBD', units='proportion', type2d='numrad_snw', &
+    !     avgflag='A', long_name='spectral surface albedo (direct)', &
+    !     ptr_patch=this%spc_albd_patch, default='inactive', c2l_scale_type='urbanf')
     
   end subroutine InitHistory
 

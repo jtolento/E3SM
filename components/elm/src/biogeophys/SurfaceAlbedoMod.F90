@@ -253,8 +253,8 @@ contains
           fabd_sha_z    =>    surfalb_vars%fabd_sha_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf direct  PAR (per unit lai+sai) for each canopy layer
           fabi_sun_z    =>    surfalb_vars%fabi_sun_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed sunlit leaf diffuse PAR (per unit lai+sai) for each canopy layer
           fabi_sha_z    =>    surfalb_vars%fabi_sha_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf diffuse PAR (per unit lai+sai) for each canopy layer
-          spc_alb_dir   =>    surfalb_vars%spc_albgrd_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (direct)
-          spc_alb_dif   =>    surfalb_vars%spc_albgri_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (diffuse)
+          spc_albgrd   =>    surfalb_vars%spc_albgrd_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (direct)
+          spc_albgri   =>    surfalb_vars%spc_albgri_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (diffuse)
           nir_wght_dir  =>    atm2lnd_vars%forc_nir_wght_dir_not_downscaled   , & !JPT Input: Weighting for NIR fluxes
           nir_bands_dir  =>   atm2lnd_vars%forc_nir_bands_dir_downscaled      , & !JPT Input: NIR fluxes (col,numrad_snw-1)
           nir_bands_dif  =>   atm2lnd_vars%forc_nir_bands_dif_downscaled        & !JPT Input: NIR fluxes (col,numrad_snw-1)  
@@ -322,8 +322,8 @@ contains
     do ib = 1, numrad_snw          !JPT
        do fc = 1,num_nourbanc
           c = filter_nourbanc(fc)
-          spc_alb_dir(c,ib) = 0._r8
-          spc_alb_dif(c,ib) = 0._r8
+          spc_albgrd(c,ib) = 0._r8
+          spc_albgri(c,ib) = 0._r8
        end do
        do fp = 1,num_nourbanp
           p = filter_nourbanp(fp)
@@ -726,11 +726,11 @@ contains
              ! because the order of SoilAlbedo and SNICAR_RT/SNICAR_AD_RT was switched for SNICAR/SNICAR_AD_RT.
              if (ib == 1) then
                 !print*,"JPT ELM spc_albout3(c_idx,:) = ", spc_albout_dir(c,:)
-                spc_alb_dir(c,ib) = albsod(c,1)*(1._r8-frac_sno(c)) + spc_albout_dir(c,ib)*frac_sno(c)
-                spc_alb_dif(c,ib) = albsoi(c,1)*(1._r8-frac_sno(c)) + spc_albout_dif(c,ib)*frac_sno(c)
+                spc_albgrd(c,ib) = albsod(c,1)*(1._r8-frac_sno(c)) + spc_albout_dir(c,ib)*frac_sno(c)
+                spc_albgri(c,ib) = albsoi(c,1)*(1._r8-frac_sno(c)) + spc_albout_dif(c,ib)*frac_sno(c)
              else
-                spc_alb_dir(c,ib) = albsod(c,2)*(1._r8-frac_sno(c)) + spc_albout_dir(c,ib)*frac_sno(c)
-                spc_alb_dif(c,ib) = albsoi(c,2)*(1._r8-frac_sno(c)) + spc_albout_dif(c,ib)*frac_sno(c)
+                spc_albgrd(c,ib) = albsod(c,2)*(1._r8-frac_sno(c)) + spc_albout_dir(c,ib)*frac_sno(c)
+                spc_albgri(c,ib) = albsoi(c,2)*(1._r8-frac_sno(c)) + spc_albout_dif(c,ib)*frac_sno(c)
              end if
           end if
        end do
@@ -1069,9 +1069,9 @@ contains
        do fp = 1,num_novegsol
 	  p = filter_novegsol(fp)
           c = veg_pp%column(p)
-          spc_albd(p,ib) = spc_alb_dir(c,ib)
-          spc_albi(p,ib) = spc_alb_dif(c,ib)
-          !print*, "JPT ELM SurfAlbedoMod spc_alb_dif(c,ib) =", spc_alb_dir(c,ib)
+          spc_albd(p,ib) = spc_albgrd(c,ib)
+          spc_albi(p,ib) = spc_albgri(c,ib)
+          !print*, "JPT ELM SurfAlbedoMod spc_albgri(c,ib) =", spc_albgrd(c,ib)
        end do
     end do
 
