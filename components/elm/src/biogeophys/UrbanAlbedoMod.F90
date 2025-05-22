@@ -199,7 +199,7 @@ contains
                albi(p,ib) = 1._r8
             endif
 
-            if (ib == 1) then !JPT
+            if (ib == 1) then !JPT               
                spc_albd(p,ib) = albd(p,ib)
                spc_albi(p,ib) = albi(p,ib)
             else 

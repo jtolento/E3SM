@@ -1776,7 +1776,7 @@ contains
        do fp = 1,num_vegsol
           p = filter_vegsol(fp)
           c = veg_pp%column(p)
-          if (ib == 1) then 
+          if (ib == 1) then
              spc_albd(p,ib) = albd(p,ib)
              spc_albi(p,ib) = albi(p,ib)
           else
@@ -2019,6 +2019,10 @@ contains
                  fabi(p,ib) = fabi(p,ib) * fi_prime
                  ftii(p,ib) = ftii(p,ib) * fi_prime
                  fi_top_adjust(p,ib) = fi_prime
+                 !JPT:These line currently overwrite SPC ALB between 60N/S:
+                 ! Commenting them out makes the SPC_ALB-NIR(NonSnow)!=0.0
+                 ! over most land surfaces
+                 ! Including them makes SPC_ALB-NIR(Snow)== 0.0 
                  if (ib == 1) then !JPT
                     spc_albd(p,ib) = albd(p,ib)
                     spc_albi(p,ib) = albi(p,ib)
@@ -2035,11 +2039,10 @@ contains
                     spc_albi(p,6) = albi(p,2)
                  end if
                  
-               enddo
-            endif
-            
-         endif
-      enddo
+              enddo !do ib = 1, numrad
+           endif !if(.not. is_veg) then            
+        endif ! if (cosz > 0._r8 .and. abs(lat(g)) < 1.047_r8 .and. stdev_elev(g) > 0._r8) then
+     enddo !do fp = 1,num_pft
 	
      end associate
 

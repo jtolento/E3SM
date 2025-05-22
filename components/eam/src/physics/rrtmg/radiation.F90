@@ -1463,6 +1463,11 @@ end function radiation_nextsw_cday
                   elsewhere
                      nir_wght_dir = 0.1
                   end where
+                  !print*,"JPT EAM: SD Shape     = ", shape(sd)
+                  !print*,"JPT EAM: SD_dir Shape = ", shape(sd_dir)
+                  !print*,"JPT EAM: SD           = ", sd(:,pver+1,9)
+                  !print*,"JPT EAM: SD_dir       = ", sd_dir(:,pver+1,9)
+
                   nir_a_dir = sd_dir(:,pver+1,9)
                   nir_a_dir = nir_a_dir * asym_splt
                   nir_b_dir = sd_dir(:,pver+1,8)

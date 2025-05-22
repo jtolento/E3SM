@@ -40,7 +40,7 @@ readonly DEBUG_COMPILE=False
 
 # Run options
 readonly MODEL_START_TYPE="initial"  # 'initial', 'continue', 'branch', 'hybrid'
-readonly START_DATE="0001-12-21"
+readonly START_DATE="0001-03-21"
 
 # Additional options for 'branch' and 'hybrid'
 readonly GET_REFCASE=FALSE
