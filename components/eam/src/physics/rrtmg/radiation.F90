@@ -1448,7 +1448,7 @@ end function radiation_nextsw_cday
                   call t_stopf ('rad_rrtmg_sw')
 
                   !JPT
-                  asym_splt = 0.445
+                  asym_splt = 0.5
                   threshold = 1.0e-5
                   nir_wght_dir(:) = 0.0
                   denom = cam_out%soll

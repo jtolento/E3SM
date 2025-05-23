@@ -582,32 +582,53 @@
 ! Surface albedo
 !  Near-IR bands 16-24 and 29 (1-9 and 14), 820-16000 cm-1, 0.625-12.195 microns
 !         do ib=1,9
-         do ib=1,8
-            albdir(ib) = aldir(iplon)
-            albdif(ib) = aldif(iplon)
-            !albdir(ib) = 1.0
-            !albdif(ib) = 1.0
-         enddo
-         albdir(nbndsw) = aldir(iplon)
-         albdif(nbndsw) = aldif(iplon)
-         !albdir(nbndsw) = 1.0
-         !albdif(nbndsw) = 1.0
+         !do ib=1,8
+         !   albdir(ib) = aldir(iplon)
+         !   albdif(ib) = aldif(iplon)
+         !enddo
+         !albdir(nbndsw) = aldir(iplon)
+         !albdif(nbndsw) = aldif(iplon)
 !  Set band 24 (or, band 9 counting from 1) to use linear average of UV/visible
 !  and near-IR values, since this band straddles 0.7 microns:
 ! JPT This can be improved as a nonlinear, or asymmetric split 
-         albdir(9) = 0.5*(aldir(iplon) + asdir(iplon))
-         albdif(9) = 0.5*(aldif(iplon) + asdif(iplon))
-         !albdir(9) = 1.0
-         !albdif(9) = 1.0
-         
+         !albdir(9) = 0.5*(aldir(iplon) + asdir(iplon))
+         !albdif(9) = 0.5*(aldif(iplon) + asdif(iplon))
 !  UV/visible bands 25-28 (10-13), 16000-50000 cm-1, 0.200-0.625 micron
-         do ib=10,13
-            albdir(ib) = asdir(iplon)
-            albdif(ib) = asdif(iplon)
-            !albdir(ib) = 1.0
-            !albdif(ib) = 1.0
-         enddo
+         !do ib=10,13
+         !   albdir(ib) = asdir(iplon)
+         !   albdif(ib) = asdif(iplon)
+         !enddo
+         !JPT: Spectral Albedo test:
+         albdir(1)  = alb_nir_dir(iplon,5)
+         albdir(2)  = alb_nir_dir(iplon,5)
+         albdir(3)  = alb_nir_dir(iplon,5)
+         albdir(4)  = alb_nir_dir(iplon,5)
+         albdir(5)  = alb_nir_dir(iplon,5)
+         albdir(6)  = alb_nir_dir(iplon,4)
+         albdir(7)  = alb_nir_dir(iplon,3)
+         albdir(8)  = alb_nir_dir(iplon,2) 
+         albdir(9)  = 0.5 * (asdir(iplon)+alb_nir_dir(iplon,1))
+         albdir(10) = asdir(iplon)
+         albdir(11) = asdir(iplon)
+         albdir(12) = asdir(iplon)
+         albdir(13) = asdir(iplon)
+         albdir(14) = alb_nir_dir(iplon,5)
 
+         albdif(1)  = alb_nir_dif(iplon,5)
+         albdif(2)  = alb_nir_dif(iplon,5)
+         albdif(3)  = alb_nir_dif(iplon,5)
+         albdif(4)  = alb_nir_dif(iplon,5)
+         albdif(5)  = alb_nir_dif(iplon,5)
+         albdif(6)  = alb_nir_dif(iplon,4)
+         albdif(7)  = alb_nir_dif(iplon,3)
+         albdif(8)  = alb_nir_dif(iplon,2)
+         albdif(9)  = 0.5 * (asdif(iplon)+alb_nir_dif(iplon,1))
+         albdif(10) = asdif(iplon)
+         albdif(11) = asdif(iplon)
+         albdif(12) = asdif(iplon)
+         albdif(13) = asdif(iplon)
+         albdif(14) = alb_nir_dif(iplon,5)
+         
 
 ! Clouds
          if (icld.eq.0) then
