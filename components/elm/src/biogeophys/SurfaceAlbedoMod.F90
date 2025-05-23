@@ -2024,19 +2024,19 @@ contains
                  ! over most land surfaces
                  ! Including them makes SPC_ALB-NIR(Snow)== 0.0 
                  if (ib == 1) then !JPT
-                    spc_albd(p,ib) = albd(p,ib)
-                    spc_albi(p,ib) = albi(p,ib)
+                    spc_albd(p,ib) = spc_albd(p,ib)*fd_prime
+                    spc_albi(p,ib) = spc_albi(p,ib)*fi_prime
                  else
-                    spc_albd(p,2) = albd(p,2)
-                    spc_albi(p,2) = albi(p,2)
-                    spc_albd(p,3) = albd(p,2)
-                    spc_albi(p,3) = albi(p,2)
-                    spc_albd(p,4) = albd(p,2)
-                    spc_albi(p,4) = albi(p,2)
-                    spc_albd(p,5) = albd(p,2)
-                    spc_albi(p,5) = albi(p,2)
-                    spc_albd(p,6) = albd(p,2)
-                    spc_albi(p,6) = albi(p,2)
+                    spc_albd(p,2) = spc_albd(p,2)*fd_prime
+                    spc_albi(p,2) = spc_albi(p,2)*fi_prime
+                    spc_albd(p,3) = spc_albd(p,3)*fd_prime
+                    spc_albi(p,3) = spc_albi(p,3)*fi_prime
+                    spc_albd(p,4) = spc_albd(p,4)*fd_prime
+                    spc_albi(p,4) = spc_albi(p,4)*fi_prime
+                    spc_albd(p,5) = spc_albd(p,5)*fd_prime
+                    spc_albi(p,5) = spc_albi(p,5)*fi_prime
+                    spc_albd(p,6) = spc_albd(p,6)*fd_prime
+                    spc_albi(p,6) = spc_albi(p,6)*fi_prime
                  end if
                  
               enddo !do ib = 1, numrad
