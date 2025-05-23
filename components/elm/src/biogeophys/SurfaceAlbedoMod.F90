@@ -2022,23 +2022,24 @@ contains
                  !JPT:These line currently overwrite SPC ALB between 60N/S:
                  ! Commenting them out makes the SPC_ALB-NIR(NonSnow)!=0.0
                  ! over most land surfaces
-                 ! Including them makes SPC_ALB-NIR(Snow)== 0.0 
+                 ! Including them makes SPC_ALB-NIR(Snow)== 0.0
                  if (ib == 1) then !JPT
-                    spc_albd(p,ib) = spc_albd(p,ib)*fd_prime
-                    spc_albi(p,ib) = spc_albi(p,ib)*fi_prime
+                    !spc_albd(p,ib) = spc_albd(p,ib)*fd_prime
+                    !spc_albi(p,ib) = spc_albi(p,ib)*fi_prime
+                    spc_albd(p,ib) = fd_prime * spc_albd(p,ib) - (fd_prime-1._r8)
+                    spc_albi(p,ib) = fi_prime * spc_albi(p,ib) - (fi_prime-1._r8)
                  else
-                    spc_albd(p,2) = spc_albd(p,2)*fd_prime
-                    spc_albi(p,2) = spc_albi(p,2)*fi_prime
-                    spc_albd(p,3) = spc_albd(p,3)*fd_prime
-                    spc_albi(p,3) = spc_albi(p,3)*fi_prime
-                    spc_albd(p,4) = spc_albd(p,4)*fd_prime
-                    spc_albi(p,4) = spc_albi(p,4)*fi_prime
-                    spc_albd(p,5) = spc_albd(p,5)*fd_prime
-                    spc_albi(p,5) = spc_albi(p,5)*fi_prime
-                    spc_albd(p,6) = spc_albd(p,6)*fd_prime
-                    spc_albi(p,6) = spc_albi(p,6)*fi_prime
-                 end if
-                 
+                    spc_albd(p,2) = fd_prime * spc_albd(p,2) - (fd_prime-1._r8)
+                    spc_albi(p,2) = fi_prime * spc_albi(p,2) - (fi_prime-1._r8)
+                    spc_albd(p,3) = fd_prime * spc_albd(p,3) - (fd_prime-1._r8)
+                    spc_albi(p,3) = fi_prime * spc_albi(p,3) - (fi_prime-1._r8)
+                    spc_albd(p,4) = fd_prime * spc_albd(p,4) - (fd_prime-1._r8)
+                    spc_albi(p,4) = fi_prime * spc_albi(p,4) - (fi_prime-1._r8)
+                    spc_albd(p,5) = fd_prime * spc_albd(p,5) - (fd_prime-1._r8)
+                    spc_albi(p,5) = fi_prime * spc_albi(p,5) - (fi_prime-1._r8)
+                    spc_albd(p,6) = fd_prime * spc_albd(p,6) - (fd_prime-1._r8)
+                    spc_albi(p,6) = fi_prime * spc_albi(p,6) - (fi_prime-1._r8)
+                 end if !JPT
               enddo !do ib = 1, numrad
            endif !if(.not. is_veg) then            
         endif ! if (cosz > 0._r8 .and. abs(lat(g)) < 1.047_r8 .and. stdev_elev(g) > 0._r8) then
