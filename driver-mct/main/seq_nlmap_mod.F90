@@ -555,6 +555,7 @@ contains
              dof_masses(j,     1:natt) =    avp_o%rAttr(1:natt,j)*area
              dof_masses(j,natt+1:nfld) = nl_avp_o%rAttr(1:natt,j)*area
           end do
+          print*,"JPT CPL nfld = ", nfld
           call shr_reprosum_calc(dof_masses, glbl_masses, nsum, nsum, nfld, commid=mpicom)
           deallocate(dof_masses)
        else

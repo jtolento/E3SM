@@ -735,7 +735,7 @@ contains
           end if
        end do
     end do
-    
+
        
     ! ground albedos and snow-fraction weighting of snow absorption factors
     do ib = 1, nband
@@ -1784,6 +1784,7 @@ contains
              spc_albi(p,ib) = albi(p,2)
           end if
        end do
+       print*,"JPT ELM spc_albd(:,ib)", spc_albd(:,ib)
     end do !JPT loop through snow bands
 
      end associate
@@ -2039,6 +2040,10 @@ contains
                     spc_albi(p,5) = fi_prime * spc_albi(p,5) - (fi_prime-1._r8)
                     spc_albd(p,6) = fd_prime * spc_albd(p,6) - (fd_prime-1._r8)
                     spc_albi(p,6) = fi_prime * spc_albi(p,6) - (fi_prime-1._r8)
+                    spc_albd(p,7) = fd_prime * spc_albd(p,7) - (fd_prime-1._r8)
+                    spc_albi(p,7) = fi_prime * spc_albi(p,7) - (fi_prime-1._r8)
+                    spc_albd(p,8) = fd_prime * spc_albd(p,8) - (fd_prime-1._r8)
+                    spc_albi(p,8) = fi_prime * spc_albi(p,8) - (fi_prime-1._r8)
                  end if !JPT
               enddo !do ib = 1, numrad
            endif !if(.not. is_veg) then            

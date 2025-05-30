@@ -213,10 +213,10 @@ contains
                spc_albi(p,5) = albi(p,ib)
                spc_albd(p,6) = albd(p,ib)
                spc_albi(p,6) = albi(p,ib)
-               !spc_albd(p,7) = albd(p,ib)
-               !spc_albi(p,7) = albi(p,ib)
-               !spc_albd(p,8) = albd(p,ib)
-               !spc_albi(p,8) = albi(p,ib)
+               spc_albd(p,7) = albd(p,ib)
+               spc_albi(p,7) = albi(p,ib)
+               spc_albd(p,8) = albd(p,ib)
+               spc_albi(p,8) = albi(p,ib)
             end if
             
             fabd(p,ib)     = 0._r8
@@ -463,10 +463,10 @@ contains
                   spc_albi(p,5) = albgri(c,ib)
                   spc_albd(p,6) = albgrd(c,ib)
                   spc_albi(p,6) = albgri(c,ib)
-                  !spc_albd(p,7) = albgrd(c,ib)
-                  !spc_albi(p,7) = albgri(c,ib)
-                  !spc_albd(p,8) = albgrd(c,ib)
-                  !spc_albi(p,8) = albgri(c,ib)
+                  spc_albd(p,7) = albgrd(c,ib)
+                  spc_albi(p,7) = albgri(c,ib)
+                  spc_albd(p,8) = albgrd(c,ib)
+                  spc_albi(p,8) = albgri(c,ib)
                end if !JPT
             end do
          end do

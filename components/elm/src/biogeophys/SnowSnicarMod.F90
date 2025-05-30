@@ -2344,6 +2344,8 @@ contains
              ! The following weights are appropriate for surface-incident flux in a mid-latitude winter atmosphere
              !
              ! 3-band weights
+             print *, "JPT ELM: SNICAR Begin setting flx_wgt"
+             print *, "JPT ELM: SNICAR numrad_snw        = ", numrad_snw
              if (numrad_snw==3) then
                 ! Direct:
                 if (flg_slr_in == 1) then
@@ -2396,7 +2398,7 @@ contains
                 endif
                
                 !JPT 6-Band weights
-             elseif(numrad_snw==6) then
+             elseif(numrad_snw==8) then                
                 if (flg_slr_in == 1 .or. flg_slr_in == 2 ) then
                    if (atm_type_index == atm_type_default) then
                       flx_wgt(1) = 1._r8
@@ -2408,27 +2410,34 @@ contains
                       !print *, "JPT ELM SNICAR sum(nir_bands_flx(c_idx,:)) = ", sum(nir_bands_flx(c_idx,:))
                       !print *, "JPT ELM SNICAR bounds%begc:                = ", bounds%begc
                       !print *, "JPT ELM SNICAR bounds%endc:                = ", bounds%endc
-                      if (sum(nir_bands_flx(c_idx,:)) >= 0.0001) then 
+                      if (sum(nir_bands_flx(c_idx,:)) >= 0.0001) then
+                         print *, "JPT ELM: Using SPC ATM BANDS "
                          flx_wgt(2) = nir_bands_flx(c_idx,1) / sum(nir_bands_flx(c_idx,:))
                          flx_wgt(3) = nir_bands_flx(c_idx,2) / sum(nir_bands_flx(c_idx,:))
                          flx_wgt(4) = nir_bands_flx(c_idx,3) / sum(nir_bands_flx(c_idx,:))
                          flx_wgt(5) = nir_bands_flx(c_idx,4) / sum(nir_bands_flx(c_idx,:))
-                         flx_wgt(6) = 1._r8 - (flx_wgt(2) + flx_wgt(3) + flx_wgt(4) + flx_wgt(5))
+                         flx_wgt(6) = nir_bands_flx(c_idx,5) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(7) = nir_bands_flx(c_idx,6) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(8) = 1._r8 - (flx_wgt(2) + flx_wgt(3) + flx_wgt(4) + flx_wgt(5)+flx_wgt(6)+flx_wgt(7))
                       else
                          flx_wgt(2) = 0.58581507618433_r8
                          flx_wgt(3) = 0.20156903770812_r8
                          flx_wgt(4) = 0.10917889346386_r8
-                         flx_wgt(5) = 0.10343699264369_r8 / 2
-                         flx_wgt(6) = 0.10343699264369_r8 / 2
+                         flx_wgt(5) = 0.10343699264369_r8 / 4
+                         flx_wgt(6) = 0.10343699264369_r8 / 4
+                         flx_wgt(7) = 0.10343699264369_r8 / 4
+                         flx_wgt(8) = 0.10343699264369_r8 / 4
                       end if
                       != nir_bands_flx(c_idx,5) / sum(nir_bands_flx(c_idx,:))
                       !flx_wgt(7) = nir_bands_flx(c_idx,6) / sum(nir_bands_flx(c_idx,:))
                       !flx_wgt(8) = nir_bands_flx(c_idx,7) / sum(nir_bands_flx(c_idx,:))
                    endif
                 endif
-                
+                print *, "JPT ELM: Done Defining weights"
+                print *, "JPT ELM: flx_wgt        =",  flx_wgt(:)
+                print *, "JPT ELM: shape(flx_wgt) =",  shape(flx_wgt)
              endif ! end if numrad_snw
-
+             
              ! Loop over snow spectral bands
 
              exp_min = exp(-argmax)
@@ -2461,6 +2470,10 @@ contains
                    endif
 
                    if ( (numrad_snw == 3).and.(bnd_idx == 3) ) then
+                      mss_cnc_aer_lcl(:,:) = 0._r8
+                   endif
+
+                   if ( (numrad_snw == 8).and.(bnd_idx >= 3) ) then !JPT
                       mss_cnc_aer_lcl(:,:) = 0._r8
                    endif
 

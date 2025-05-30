@@ -1,4 +1,5 @@
 module shr_reprosum_mod
+  use, intrinsic :: ieee_arithmetic, only: ieee_is_nan !JPT   
 !------------------------------------------------------------------------
 !
 ! Purpose:
@@ -541,6 +542,7 @@ module shr_reprosum_mod
       integer :: nan_count, inf_count    ! local count of NaNs and INFs in
                                          !  input array
       integer :: omp_nthreads            ! number of OpenMP threads
+      integer :: i, j !JPT
       integer :: mpi_comm                ! MPI subcommunicator
       integer :: mypid                   ! MPI task ID (COMM_WORLD)
       integer :: tasks                   ! number of MPI tasks
@@ -628,6 +630,15 @@ module shr_reprosum_mod
 ! Check whether input contains NaNs or INFs, and abort if so
          nan_check = any(shr_infnan_isnan(arr))
          inf_check = any(shr_infnan_isinf(arr))
+         !print*,"JPT CPL: arr=",arr
+         !print*,"JPT CPL ifld = ", ifld
+         do j = 1, nflds
+            do i = 1, dsummands
+               if (ieee_is_nan(arr(i,j))) then
+                  print *, 'JPT SHR: NaN found at index (', i, ',', j, ')'
+               end if
+            end do
+         end do
 
          if (nan_check .or. inf_check) then
 

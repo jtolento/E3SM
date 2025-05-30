@@ -1489,10 +1489,10 @@ end function radiation_nextsw_cday
                   
                   !nir_wght_dir(:) = sd_dir(:,81,9) - denom(:)
                   !nir_wght_dir(:) = nir_wght_dir(:) * asym_splt
-                  !print *, "JPT EAM sd shape       = ", shape(sd)
-                  !print *, "JPT EAM sd_dir shape   = ", shape(sd_dir)
-                  !print *, "JPT EAM sd_slice shape = ", shape(sd_slice)
-                  !print *, "JPT EAM soll   shape   = ", shape(cam_out%soll)
+                  !print *, "JPT EAM nir_f_dir   = ", nir_f_dir
+                  !print *, "JPT EAM nir_g_dir   = ", nir_g_dir
+                  !print *, "JPT EAM nir_f_dif   = ", nir_f_dif
+                  !print *, "JPT EAM nir_g_dif   = ", nir_g_dif
                   cam_out%nir_wght_dir = nir_wght_dir
                   cam_out%nir_a_dir    = nir_a_dir
                   cam_out%nir_b_dir    = nir_b_dir

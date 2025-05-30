@@ -216,10 +216,10 @@ CONTAINS
        allocate (cam_in(c)%aldif(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error aldif')
 
-       allocate (cam_in(c)%alb_nir_dir(pcols,5), stat=ierror) !JPT
+       allocate (cam_in(c)%alb_nir_dir(pcols,7), stat=ierror) !JPT
        if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error alb_nir_dir')
 
-       allocate (cam_in(c)%alb_nir_dif(pcols,5), stat=ierror) !JPT
+       allocate (cam_in(c)%alb_nir_dif(pcols,7), stat=ierror) !JPT
        if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error alb_nir_dif')
 
        allocate (cam_in(c)%lwup(pcols), stat=ierror)

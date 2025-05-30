@@ -1471,38 +1471,38 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Direct Spectral albedo (Band F)
-    !call seq_flds_add(i2x_states,"Si_alb_nir_f_dir")
-    !call seq_flds_add(l2x_states,"Sl_alb_nir_f_dir")
-    !call seq_flds_add(xao_albedo,"So_alb_nir_f_dir")
-    !call seq_flds_add(x2a_states,"Sx_alb_nir_f_dir")
-    !longname = 'Direct Spectral albedo (Band F)'
-    !stdname  = 'direct_spectral_albedo_band_F'
-    !units    = '1'
-    !attname  = 'Si_alb_nir_f_dir'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'Sl_alb_nir_f_dir'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'So_alb_nir_f_dir'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'Sx_alb_nir_f_dir'
-    !call metadata_set(attname, longname, stdname, units)
+    call seq_flds_add(i2x_states,"Si_alb_nir_f_dir")
+    call seq_flds_add(l2x_states,"Sl_alb_nir_f_dir")
+    call seq_flds_add(xao_albedo,"So_alb_nir_f_dir")
+    call seq_flds_add(x2a_states,"Sx_alb_nir_f_dir")
+    longname = 'Direct Spectral albedo (Band F)'
+    stdname  = 'direct_spectral_albedo_band_F'
+    units    = '1'
+    attname  = 'Si_alb_nir_f_dir'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'Sl_alb_nir_f_dir'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'So_alb_nir_f_dir'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'Sx_alb_nir_f_dir'
+    call metadata_set(attname, longname, stdname, units)
 
     !Direct Spectral albedo (Band G)
-    !call seq_flds_add(i2x_states,"Si_alb_nir_g_dir")
-    !call seq_flds_add(l2x_states,"Sl_alb_nir_g_dir")
-    !call seq_flds_add(xao_albedo,"So_alb_nir_g_dir")
-    !call seq_flds_add(x2a_states,"Sx_alb_nir_g_dir")
-    !longname = 'Direct Spectral albedo (Band g)'
-    !stdname  = 'direct_spectral_albedo_band_g'
-    !units    = '1'
-    !attname  = 'Si_alb_nir_g_dir'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'Sl_alb_nir_g_dir'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'So_alb_nir_g_dir'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'Sx_alb_nir_g_dir'
-    !call metadata_set(attname, longname, stdname, units)
+    call seq_flds_add(i2x_states,"Si_alb_nir_g_dir")
+    call seq_flds_add(l2x_states,"Sl_alb_nir_g_dir")
+    call seq_flds_add(xao_albedo,"So_alb_nir_g_dir")
+    call seq_flds_add(x2a_states,"Sx_alb_nir_g_dir")
+    longname = 'Direct Spectral albedo (Band g)'
+    stdname  = 'direct_spectral_albedo_band_g'
+    units    = '1'
+    attname  = 'Si_alb_nir_g_dir'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'Sl_alb_nir_g_dir'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'So_alb_nir_g_dir'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'Sx_alb_nir_g_dir'
+    call metadata_set(attname, longname, stdname, units)
 
     !Diffuse Spectral albedo (Band A)
     call seq_flds_add(i2x_states,"Si_alb_nir_a_dif")
@@ -1590,38 +1590,38 @@ contains
     call metadata_set(attname, longname, stdname, units)
 
     !Diffuse Spectral albedo (Band F)
-    !call seq_flds_add(i2x_states,"Si_alb_nir_f_dif")
-    !call seq_flds_add(l2x_states,"Sl_alb_nir_f_dif")
-    !call seq_flds_add(xao_albedo,"So_alb_nir_f_dif")
-    !call seq_flds_add(x2a_states,"Sx_alb_nir_f_dif")
-    !longname = 'Diffuse Spectral albedo (Band F)'
-    !stdname  = 'diffuse_spectral_albedo_band_F'
-    !units    = '1'
-    !attname  = 'Si_alb_nir_f_dif'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'Sl_alb_nir_f_dif'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'So_alb_nir_f_dif'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'Sx_alb_nir_f_dif'
-    !call metadata_set(attname, longname, stdname, units)
+    call seq_flds_add(i2x_states,"Si_alb_nir_f_dif")
+    call seq_flds_add(l2x_states,"Sl_alb_nir_f_dif")
+    call seq_flds_add(xao_albedo,"So_alb_nir_f_dif")
+    call seq_flds_add(x2a_states,"Sx_alb_nir_f_dif")
+    longname = 'Diffuse Spectral albedo (Band F)'
+    stdname  = 'diffuse_spectral_albedo_band_F'
+    units    = '1'
+    attname  = 'Si_alb_nir_f_dif'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'Sl_alb_nir_f_dif'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'So_alb_nir_f_dif'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'Sx_alb_nir_f_dif'
+    call metadata_set(attname, longname, stdname, units)
 
     !Diffuse Spectral albedo (Band G)
-    !call seq_flds_add(i2x_states,"Si_alb_nir_g_dif")
-    !call seq_flds_add(l2x_states,"Sl_alb_nir_g_dif")
-    !call seq_flds_add(xao_albedo,"So_alb_nir_g_dif")
-    !call seq_flds_add(x2a_states,"Sx_alb_nir_g_dif")
-    !longname = 'Diffuse Spectral albedo (Band g)'
-    !stdname  = 'diffuse_spectral_albedo_band_g'
-    !units    = '1'
-    !attname  = 'Si_alb_nir_g_dif'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'Sl_alb_nir_g_dif'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'So_alb_nir_g_dif'
-    !call metadata_set(attname, longname, stdname, units)
-    !attname  = 'Sx_alb_nir_g_dif'
-    !call metadata_set(attname, longname, stdname, units)
+    call seq_flds_add(i2x_states,"Si_alb_nir_g_dif")
+    call seq_flds_add(l2x_states,"Sl_alb_nir_g_dif")
+    call seq_flds_add(xao_albedo,"So_alb_nir_g_dif")
+    call seq_flds_add(x2a_states,"Sx_alb_nir_g_dif")
+    longname = 'Diffuse Spectral albedo (Band g)'
+    stdname  = 'diffuse_spectral_albedo_band_g'
+    units    = '1'
+    attname  = 'Si_alb_nir_g_dif'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'Sl_alb_nir_g_dif'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'So_alb_nir_g_dif'
+    call metadata_set(attname, longname, stdname, units)
+    attname  = 'Sx_alb_nir_g_dif'
+    call metadata_set(attname, longname, stdname, units)
 
 
     ! Reference temperature at 2 meters
