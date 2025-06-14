@@ -156,6 +156,20 @@ module seq_flux_mct
   integer :: index_xao_So_avsdf
   integer :: index_xao_So_anidr
   integer :: index_xao_So_anidf
+  integer :: index_xao_So_alb_nir_a_dir
+  integer :: index_xao_So_alb_nir_b_dir
+  integer :: index_xao_So_alb_nir_c_dir
+  integer :: index_xao_So_alb_nir_d_dir
+  integer :: index_xao_So_alb_nir_e_dir
+  integer :: index_xao_So_alb_nir_f_dir
+  integer :: index_xao_So_alb_nir_g_dir
+  integer :: index_xao_So_alb_nir_a_dif
+  integer :: index_xao_So_alb_nir_b_dif
+  integer :: index_xao_So_alb_nir_c_dif
+  integer :: index_xao_So_alb_nir_d_dif
+  integer :: index_xao_So_alb_nir_e_dif
+  integer :: index_xao_So_alb_nir_f_dif
+  integer :: index_xao_So_alb_nir_g_dif
   integer :: index_xao_Faox_taux
   integer :: index_xao_Faox_tauy
   integer :: index_xao_Faox_lat
@@ -836,6 +850,20 @@ contains
        index_xao_So_anidf  = mct_aVect_indexRA(xao_o,'So_anidf')
        index_xao_So_avsdr  = mct_aVect_indexRA(xao_o,'So_avsdr')
        index_xao_So_avsdf  = mct_aVect_indexRA(xao_o,'So_avsdf')
+       index_xao_So_alb_nir_a_dir  = mct_aVect_indexRA(xao_o,'So_alb_nir_a_dir')
+       index_xao_So_alb_nir_b_dir  = mct_aVect_indexRA(xao_o,'So_alb_nir_b_dir')
+       index_xao_So_alb_nir_c_dir  = mct_aVect_indexRA(xao_o,'So_alb_nir_c_dir')
+       index_xao_So_alb_nir_d_dir  = mct_aVect_indexRA(xao_o,'So_alb_nir_d_dir')
+       index_xao_So_alb_nir_e_dir  = mct_aVect_indexRA(xao_o,'So_alb_nir_e_dir')
+       index_xao_So_alb_nir_f_dir  = mct_aVect_indexRA(xao_o,'So_alb_nir_f_dir')
+       index_xao_So_alb_nir_g_dir  = mct_aVect_indexRA(xao_o,'So_alb_nir_g_dir')
+       index_xao_So_alb_nir_a_dif  = mct_aVect_indexRA(xao_o,'So_alb_nir_a_dif')
+       index_xao_So_alb_nir_b_dif  = mct_aVect_indexRA(xao_o,'So_alb_nir_b_dif')
+       index_xao_So_alb_nir_c_dif  = mct_aVect_indexRA(xao_o,'So_alb_nir_c_dif')
+       index_xao_So_alb_nir_d_dif  = mct_aVect_indexRA(xao_o,'So_alb_nir_d_dif')
+       index_xao_So_alb_nir_e_dif  = mct_aVect_indexRA(xao_o,'So_alb_nir_e_dif')
+       index_xao_So_alb_nir_f_dif  = mct_aVect_indexRA(xao_o,'So_alb_nir_f_dif')
+       index_xao_So_alb_nir_g_dif  = mct_aVect_indexRA(xao_o,'So_alb_nir_g_dif')
        index_xao_Faox_swdn = mct_aVect_indexRA(xao_o,'Faox_swdn')
        index_xao_Faox_swup = mct_aVect_indexRA(xao_o,'Faox_swup')
 
@@ -877,6 +905,20 @@ contains
           xao_o%rAttr(index_xao_So_anidr,n) = anidr
           xao_o%rAttr(index_xao_So_avsdf,n) = avsdf
           xao_o%rAttr(index_xao_So_anidf,n) = anidf
+          xao_o%rAttr(index_xao_So_alb_nir_a_dir,n) = anidr
+          xao_o%rAttr(index_xao_So_alb_nir_b_dir,n) = anidr
+          xao_o%rAttr(index_xao_So_alb_nir_c_dir,n) = anidr
+          xao_o%rAttr(index_xao_So_alb_nir_d_dir,n) = anidr
+          xao_o%rAttr(index_xao_So_alb_nir_e_dir,n) = anidr
+          xao_o%rAttr(index_xao_So_alb_nir_f_dir,n) = anidr
+          xao_o%rAttr(index_xao_So_alb_nir_g_dir,n) = anidr
+          xao_o%rAttr(index_xao_So_alb_nir_a_dif,n) = anidf
+          xao_o%rAttr(index_xao_So_alb_nir_b_dif,n) = anidf
+          xao_o%rAttr(index_xao_So_alb_nir_c_dif,n) = anidf
+          xao_o%rAttr(index_xao_So_alb_nir_d_dif,n) = anidf
+          xao_o%rAttr(index_xao_So_alb_nir_e_dif,n) = anidf
+          xao_o%rAttr(index_xao_So_alb_nir_f_dif,n) = anidf
+          xao_o%rAttr(index_xao_So_alb_nir_g_dif,n) = anidf
        end do
        update_alb = .true.
 
@@ -937,6 +979,20 @@ contains
              xao_o%rAttr(index_xao_So_anidr,n) = anidr
              xao_o%rAttr(index_xao_So_avsdf,n) = avsdf
              xao_o%rAttr(index_xao_So_anidf,n) = anidf
+             xao_o%rAttr(index_xao_So_alb_nir_a_dir,n) = anidr
+             xao_o%rAttr(index_xao_So_alb_nir_b_dir,n) = anidr
+             xao_o%rAttr(index_xao_So_alb_nir_c_dir,n) = anidr
+             xao_o%rAttr(index_xao_So_alb_nir_d_dir,n) = anidr
+             xao_o%rAttr(index_xao_So_alb_nir_e_dir,n) = anidr
+             xao_o%rAttr(index_xao_So_alb_nir_f_dir,n) = anidr
+             xao_o%rAttr(index_xao_So_alb_nir_g_dir,n) = anidr
+             xao_o%rAttr(index_xao_So_alb_nir_a_dif,n) = anidf
+             xao_o%rAttr(index_xao_So_alb_nir_b_dif,n) = anidf
+             xao_o%rAttr(index_xao_So_alb_nir_c_dif,n) = anidf
+             xao_o%rAttr(index_xao_So_alb_nir_d_dif,n) = anidf
+             xao_o%rAttr(index_xao_So_alb_nir_e_dif,n) = anidf
+             xao_o%rAttr(index_xao_So_alb_nir_f_dif,n) = anidf
+             xao_o%rAttr(index_xao_So_alb_nir_g_dif,n) = anidf
 
           end do   ! nloc_o
           update_alb = .true.

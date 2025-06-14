@@ -581,6 +581,20 @@ contains
     integer, save :: index_xao_So_anidr
     integer, save :: index_xao_So_avsdf
     integer, save :: index_xao_So_anidf
+    integer, save :: index_xao_So_alb_nir_a_dir !JPT
+    integer, save :: index_xao_So_alb_nir_b_dir
+    integer, save :: index_xao_So_alb_nir_c_dir
+    integer, save :: index_xao_So_alb_nir_d_dir
+    integer, save :: index_xao_So_alb_nir_e_dir
+    integer, save :: index_xao_So_alb_nir_f_dir
+    integer, save :: index_xao_So_alb_nir_g_dir
+    integer, save :: index_xao_So_alb_nir_a_dif
+    integer, save :: index_xao_So_alb_nir_b_dif
+    integer, save :: index_xao_So_alb_nir_c_dif
+    integer, save :: index_xao_So_alb_nir_d_dif
+    integer, save :: index_xao_So_alb_nir_e_dif
+    integer, save :: index_xao_So_alb_nir_f_dif
+    integer, save :: index_xao_So_alb_nir_g_dif 
     integer, save :: index_a2x_Faxa_snowc
     integer, save :: index_a2x_Faxa_snowl
     integer, save :: index_a2x_Faxa_rainc
@@ -688,6 +702,20 @@ contains
        index_xao_So_anidr       = mct_aVect_indexRA(xao_o,'So_anidr')
        index_xao_So_avsdf       = mct_aVect_indexRA(xao_o,'So_avsdf')
        index_xao_So_anidf       = mct_aVect_indexRA(xao_o,'So_anidf')
+       index_xao_So_alb_nir_a_dir       = mct_aVect_indexRA(xao_o,'So_alb_nir_a_dir') 
+       index_xao_So_alb_nir_b_dir       = mct_aVect_indexRA(xao_o,'So_alb_nir_b_dir')
+       index_xao_So_alb_nir_c_dir       = mct_aVect_indexRA(xao_o,'So_alb_nir_c_dir')
+       index_xao_So_alb_nir_d_dir       = mct_aVect_indexRA(xao_o,'So_alb_nir_d_dir')
+       index_xao_So_alb_nir_e_dir       = mct_aVect_indexRA(xao_o,'So_alb_nir_e_dir')
+       index_xao_So_alb_nir_a_dir       = mct_aVect_indexRA(xao_o,'So_alb_nir_f_dir')
+       index_xao_So_alb_nir_a_dir       = mct_aVect_indexRA(xao_o,'So_alb_nir_g_dir')
+       index_xao_So_alb_nir_a_dif       = mct_aVect_indexRA(xao_o,'So_alb_nir_a_dir')
+       index_xao_So_alb_nir_b_dif       = mct_aVect_indexRA(xao_o,'So_alb_nir_b_dif')
+       index_xao_So_alb_nir_c_dif       = mct_aVect_indexRA(xao_o,'So_alb_nir_c_dif')
+       index_xao_So_alb_nir_d_dif       = mct_aVect_indexRA(xao_o,'So_alb_nir_d_dif')
+       index_xao_So_alb_nir_e_dif       = mct_aVect_indexRA(xao_o,'So_alb_nir_e_dif')
+       index_xao_So_alb_nir_f_dif       = mct_aVect_indexRA(xao_o,'So_alb_nir_f_dif')
+       index_xao_So_alb_nir_g_dif       = mct_aVect_indexRA(xao_o,'So_alb_nir_g_dif') 
        index_x2o_Foxx_swnet     = mct_aVect_indexRA(x2o_o,'Foxx_swnet')
 
        index_a2x_Faxa_snowc     = mct_aVect_indexRA(a2x_o,'Faxa_snowc')
