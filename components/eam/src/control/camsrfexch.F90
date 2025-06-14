@@ -60,6 +60,8 @@ module camsrfexch
      real(r8), allocatable :: sols(:)     ! 
      real(r8), allocatable :: solld(:)    !
      real(r8), allocatable :: solsd(:)    !
+     real(r8), allocatable :: flx_nir_dir(:,:)    !
+     real(r8), allocatable :: flx_nir_dif(:,:)    !
      real(r8), allocatable :: thbot(:)    ! 
      real(r8), allocatable :: co2prog(:)  ! prognostic co2
      real(r8), allocatable :: co2diag(:)  ! diagnostic co2
@@ -95,6 +97,8 @@ module camsrfexch
      real(r8), allocatable :: asdif(:)      ! albedo: shortwave, diffuse
      real(r8), allocatable :: aldir(:)      ! albedo: longwave, direct
      real(r8), allocatable :: aldif(:)      ! albedo: longwave, diffuse
+     real(r8), allocatable :: alb_nir_dir(:,:)
+     real(r8), allocatable :: alb_nir_dif(:,:)
      real(r8), allocatable :: lwup(:)       ! longwave up radiative flux
      real(r8), allocatable :: lhf(:)        ! latent heat flux
      real(r8), allocatable :: shf(:)        ! sensible heat flux
@@ -192,6 +196,12 @@ CONTAINS
 
        allocate (cam_in(c)%aldif(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error aldif')
+
+       allocate (cam_in(c)%alb_nir_dir(pcols,7), stat=ierror)
+       if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error alb_nir_dir')
+
+       allocate (cam_in(c)%alb_nir_dif(pcols,7), stat=ierror)
+       if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error alb_nir_dif')       
 
        allocate (cam_in(c)%lwup(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error lwup')
@@ -303,6 +313,8 @@ CONTAINS
        cam_in(c)%asdif    (:) = 0._r8
        cam_in(c)%aldir    (:) = 0._r8
        cam_in(c)%aldif    (:) = 0._r8
+       cam_in(c)%alb_nir_dir (:,:) = 0._r8
+       cam_in(c)%alb_nir_dif (:,:) = 0._r8
        cam_in(c)%lwup     (:) = 0._r8
        cam_in(c)%lhf      (:) = 0._r8
        cam_in(c)%shf      (:) = 0._r8
@@ -439,6 +451,12 @@ CONTAINS
        allocate (cam_out(c)%solsd(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error solsd')
 
+       allocate (cam_out(c)%flx_nir_dir(pcols,7), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error flx_nir_dir')
+
+       allocate (cam_out(c)%flx_nir_dif(pcols,7), stat=ierror)
+       if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error flx_nir_dif')
+
        allocate (cam_out(c)%thbot(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('ATM2HUB_ALLOC error: allocation error thbot')
 
@@ -526,6 +544,8 @@ CONTAINS
        cam_out(c)%sols(:)     = 0._r8
        cam_out(c)%solld(:)    = 0._r8
        cam_out(c)%solsd(:)    = 0._r8
+       cam_out(c)%flx_nir_dir(:,:)  = 0._r8
+       cam_out(c)%flx_nir_dif(:,:)  = 0._r8
        cam_out(c)%thbot(:)    = 0._r8
        cam_out(c)%co2prog(:)  = 0._r8
        cam_out(c)%co2diag(:)  = 0._r8
@@ -575,6 +595,8 @@ CONTAINS
           deallocate(cam_out(c)%sols)
           deallocate(cam_out(c)%solld)
           deallocate(cam_out(c)%solsd)
+          deallocate(cam_out(c)%flx_nir_dir)
+          deallocate(cam_out(c)%flx_nir_dif)
           deallocate(cam_out(c)%thbot)
           deallocate(cam_out(c)%co2prog)
           deallocate(cam_out(c)%co2diag)
@@ -613,6 +635,8 @@ CONTAINS
           deallocate(cam_in(c)%asdif)
           deallocate(cam_in(c)%aldir)
           deallocate(cam_in(c)%aldif)
+          deallocate(cam_in(c)%alb_nir_dir)
+          deallocate(cam_in(c)%alb_nir_dif)
           deallocate(cam_in(c)%lwup)
           deallocate(cam_in(c)%lhf)
           deallocate(cam_in(c)%shf)
