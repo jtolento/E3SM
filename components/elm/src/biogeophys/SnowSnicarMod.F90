@@ -1783,7 +1783,7 @@ contains
    !-----------------------------------------------------------------------
    subroutine SNICAR_AD_RT (flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,  &
                          coszen, flg_slr_in, h2osno_liq, h2osno_ice, snw_rds,   &
-                         mss_cnc_aer_in, albsfc, albout, flx_abs)
+                         mss_cnc_aer_in, albsfc, nir_bands_flx, albout, flx_abs, spc_albout)
      !
      ! !DESCRIPTION:
      ! Determine reflectance of, and vertically-resolved solar absorption in,
@@ -1826,7 +1826,9 @@ contains
      integer           , intent(in)  :: snw_rds        ( bounds%begc: , -nlevsno+1: )      ! snow effective radius (col,lyr) [microns, m^-6]
      real(r8)          , intent(in)  :: mss_cnc_aer_in ( bounds%begc: , -nlevsno+1: , 1: ) ! mass concentration of all aerosol species (col,lyr,aer) [kg/kg]
      real(r8)          , intent(in)  :: albsfc         ( bounds%begc: , 1: )               ! albedo of surface underlying snow (col,bnd) [frc]
+     real(r8)          , intent(in)  :: nir_bands_flx  ( bounds%begc: , 1: )  
      real(r8)          , intent(out) :: albout         ( bounds%begc: , 1: )               ! snow albedo, averaged into 2 bands (=0 if no sun or no snow) (col,bnd) [frc]
+     real(r8)          , intent(out) :: spc_albout     ( bounds%begc: , 1: )  
      real(r8)          , intent(out) :: flx_abs        ( bounds%begc: , -nlevsno+1: , 1: ) ! absorbed flux in each layer per unit flux incident (col, lyr, bnd)
      !
      ! !LOCAL VARIABLES:

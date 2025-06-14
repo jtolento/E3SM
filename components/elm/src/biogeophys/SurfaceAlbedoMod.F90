@@ -13,7 +13,7 @@ module SurfaceAlbedoMod
   use decompMod         , only : bounds_type
   use landunit_varcon   , only : istsoil, istcrop, istdlak
   use elm_varcon        , only : grlnd, namep, namet
-  use elm_varpar        , only : numrad, nlevcan, nlevsno, nlevcan
+  use elm_varpar        , only : numrad, nlevcan, nlevsno, nlevcan, numrad_snw
   use elm_varctl        , only : fsurdat, iulog, subgridflag, use_snicar_frc, use_fates, use_snicar_ad, use_top_solar_rad
   use VegetationPropertiesType    , only : veg_vp
   use SnowSnicarMod     , only : sno_nbr_aer, SNICAR_RT, SNICAR_AD_RT, DO_SNO_AER, DO_SNO_OC
@@ -21,6 +21,7 @@ module SurfaceAlbedoMod
   use CanopyStateType   , only : canopystate_type
   use LakeStateType     , only : lakestate_type
   use SurfaceAlbedoType , only : surfalb_type
+  use atm2lndType     , only : atm2lnd_type
   use GridcellType      , only : grc_pp
   use LandunitType      , only : lun_pp
   use ColumnType        , only : col_pp
@@ -63,8 +64,8 @@ contains
         num_urbanp   , filter_urbanp,  &
         nextsw_cday  , declinp1,       &
         aerosol_vars, canopystate_vars, &
-        lakestate_vars, surfalb_vars &
-        )
+        lakestate_vars, surfalb_vars, &
+        atm2lnd_vars)
     ! !DESCRIPTION:
     ! Surface albedo and two-stream fluxes
     ! Surface albedos. Also fluxes (per unit incoming direct and diffuse
@@ -139,6 +140,18 @@ contains
     real(r8) :: rho(bounds%begp:bounds%endp,numrad)        ! leaf/stem refl weighted by fraction LAI and SAI
     real(r8) :: tau(bounds%begp:bounds%endp,numrad)        ! leaf/stem tran weighted by fraction LAI and SAI
     real(r8) :: albsfc          (bounds%begc:bounds%endc,numrad)                          ! albedo of surface underneath snow (col,bnd)
+    real(r8) :: nir_bands_dir   (bounds%begc:bounds%endc,7)                               !JPT NIR Spectral fluxes Direct
+    real(r8) :: nir_bands_dif   (bounds%begc:bounds%endc,7)                               !JPT NIR Spectral Fluxes Diffuse
+    real(r8) :: spc_albout_dif     (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_dir     (bounds%begc:bounds%endc,numrad_snw)                   !JPT
+    real(r8) :: spc_albout_bc_dif  (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_bc_dir  (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_oc_dif  (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_oc_dir  (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_pur_dif (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_pur_dir (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_dst_dif (bounds%begc:bounds%endc,numrad_snw)                   !JPT 
+    real(r8) :: spc_albout_dst_dir (bounds%begc:bounds%endc,numrad_snw)                   !JPT
     real(r8) :: albsnd(bounds%begc:bounds%endc,numrad)     ! snow albedo (direct)
     real(r8) :: albsni(bounds%begc:bounds%endc,numrad)     ! snow albedo (diffuse)
     real(r8) :: albsnd_pur      (bounds%begc:bounds%endc,numrad)                          ! direct pure snow albedo (radiative forcing)
@@ -214,6 +227,8 @@ contains
           albsni_hst    =>    surfalb_vars%albsni_hst_col         , & ! Output:  [real(r8) (:,:) ]  snow ground albedo, diffuse, for history files (col,bnd) [frc]
           albd          =>    surfalb_vars%albd_patch             , & ! Output:  [real(r8) (:,:) ]  surface albedo (direct)
           albi          =>    surfalb_vars%albi_patch             , & ! Output:  [real(r8) (:,:) ]  surface albedo (diffuse)
+          spc_albd      =>    surfalb_vars%spc_albd_patch         , & !JPT Output:  [real(r8) (:,numrad_snw) ]  surface albedo (direct)   
+          spc_albi      =>    surfalb_vars%spc_albi_patch         , & !JPT Output:  [real(r8) (:,numrad_snw) ]  surface albedo (diffuse)          
           fabd          =>    surfalb_vars%fabd_patch             , & ! Output:  [real(r8) (:,:) ]  flux absorbed by canopy per unit direct flux
           fabd_sun      =>    surfalb_vars%fabd_sun_patch         , & ! Output:  [real(r8) (:,:) ]  flux absorbed by sunlit canopy per unit direct flux
           fabd_sha      =>    surfalb_vars%fabd_sha_patch         , & ! Output:  [real(r8) (:,:) ]  flux absorbed by shaded canopy per unit direct flux
@@ -231,6 +246,10 @@ contains
           fabd_sha_z    =>    surfalb_vars%fabd_sha_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf direct  PAR (per unit lai+sai) for each canopy layer
           fabi_sun_z    =>    surfalb_vars%fabi_sun_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed sunlit leaf diffuse PAR (per unit lai+sai) for each canopy layer
           fabi_sha_z    =>    surfalb_vars%fabi_sha_z_patch         & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf diffuse PAR (per unit lai+sai) for each canopy layer
+          spc_albgrd   =>    surfalb_vars%spc_albgrd_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (direct)
+          spc_albgri   =>    surfalb_vars%spc_albgri_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (diffuse)
+          nir_bands_dir  =>   atm2lnd_vars%forc_nir_bands_dir_downscaled      , & !JPT Input: NIR fluxes (col,numrad_snw-1)
+          nir_bands_dif  =>   atm2lnd_vars%forc_nir_bands_dif_downscaled        & !JPT Input: NIR fluxes (col,numrad_snw-1)  
           )
 
     ! Cosine solar zenith angle for next time step
@@ -290,6 +309,18 @@ contains
        end do
 
     end do  ! end of numrad loop
+    do ib = 1, numrad_snw          !JPT
+       do fc = 1,num_nourbanc
+          c = filter_nourbanc(fc)
+          spc_albgrd(c,ib) = 0._r8
+          spc_albgri(c,ib) = 0._r8
+       end do
+       do fp = 1,num_nourbanp
+          p = filter_nourbanp(fp)
+          spc_albd(p,ib) = 1._r8
+          spc_albi(p,ib) = 1._r8
+       end do
+    end do !end of rad loop 
 
     ! SoilAlbedo called before SNICAR_RT/SNICAR_AD_RT
     ! so that reflectance of soil beneath snow column is known
@@ -380,8 +411,10 @@ contains
                                 snw_rds_in(bounds%begc:bounds%endc, :), &
                                 mss_cnc_aer_in_frc_bc(bounds%begc:bounds%endc, :, :), &
                                 albsfc(bounds%begc:bounds%endc, :), &
+                                nir_bands_dir(bounds%begc:bounds%endc, :), &
                                 albsnd_bc(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :), &
+                                spc_albout_bc_dir(bounds%begc:bounds%endc, :) )
           else
                 call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -406,8 +439,10 @@ contains
                                 snw_rds_in(bounds%begc:bounds%endc, :), &
                                 mss_cnc_aer_in_frc_bc(bounds%begc:bounds%endc, :, :), &
                                 albsfc(bounds%begc:bounds%endc, :), &
+                                nir_bands_dif(bounds%begc:bounds%endc, :), & 
                                 albsni_bc(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :),&
+                                spc_albout_bc_dif(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -442,8 +477,10 @@ contains
                                 snw_rds_in(bounds%begc:bounds%endc, :), &
                                 mss_cnc_aer_in_frc_oc(bounds%begc:bounds%endc, :, :), &
                                 albsfc(bounds%begc:bounds%endc, :), &
+                                nir_bands_dir(bounds%begc:bounds%endc, :), &
                                 albsnd_oc(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :),&
+                                spc_albout_oc_dir(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -467,8 +504,10 @@ contains
                                 snw_rds_in(bounds%begc:bounds%endc, :), &
                                 mss_cnc_aer_in_frc_oc(bounds%begc:bounds%endc, :, :), &
                                 albsfc(bounds%begc:bounds%endc, :), &
+                                nir_bands_dif(bounds%begc:bounds%endc, :), & 
                                 albsni_oc(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :),&
+                                spc_albout_oc_dif(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -503,8 +542,10 @@ contains
                                 snw_rds_in(bounds%begc:bounds%endc, :), &
                                 mss_cnc_aer_in_frc_dst(bounds%begc:bounds%endc, :, :), &
                                 albsfc(bounds%begc:bounds%endc, :), &
+                                nir_bands_dir(bounds%begc:bounds%endc, :), &
                                 albsnd_dst(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :),&
+                                spc_albout_dst_dir(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -528,8 +569,10 @@ contains
                                 snw_rds_in(bounds%begc:bounds%endc, :), &
                                 mss_cnc_aer_in_frc_dst(bounds%begc:bounds%endc, :, :), &
                                 albsfc(bounds%begc:bounds%endc, :), &
+                                nir_bands_dif(bounds%begc:bounds%endc, :), & 
                                 albsni_dst(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :),&
+                                spc_albout_dst_dif(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -555,8 +598,10 @@ contains
                                 snw_rds_in(bounds%begc:bounds%endc, :), &
                                 mss_cnc_aer_in_frc_pur(bounds%begc:bounds%endc, :, :), &
                                 albsfc(bounds%begc:bounds%endc, :), &
+                                nir_bands_dir(bounds%begc:bounds%endc, :), &
                                 albsnd_pur(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :),&
+                                spc_albout_pur_dir(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -580,8 +625,10 @@ contains
                                 snw_rds_in(bounds%begc:bounds%endc, :), &
                                 mss_cnc_aer_in_frc_pur(bounds%begc:bounds%endc, :, :), &
                                 albsfc(bounds%begc:bounds%endc, :), &
+                                nir_bands_dif(bounds%begc:bounds%endc, :), & 
                                 albsni_pur(bounds%begc:bounds%endc, :), &
-                                foo_snw(bounds%begc:bounds%endc, :, :) )
+                                foo_snw(bounds%begc:bounds%endc, :, :),&
+                                spc_albout_pur_dif(bounds%begc:bounds%endc, :) )
           else
               call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                              coszen_col(bounds%begc:bounds%endc), &
@@ -608,8 +655,10 @@ contains
                              snw_rds_in(bounds%begc:bounds%endc, :), &
                              mss_cnc_aer_in_fdb(bounds%begc:bounds%endc, :, :), &
                              albsfc(bounds%begc:bounds%endc, :), &
+                             nir_bands_dir(bounds%begc:bounds%endc, :), &
                              albsnd(bounds%begc:bounds%endc, :), &
-                             flx_absd_snw(bounds%begc:bounds%endc, :, :) )
+                             flx_absd_snw(bounds%begc:bounds%endc, :, :),&
+                             spc_albout_dir(bounds%begc:bounds%endc, :) )
        else
             call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                            coszen_col(bounds%begc:bounds%endc), &
@@ -633,8 +682,10 @@ contains
                              snw_rds_in(bounds%begc:bounds%endc, :), &
                              mss_cnc_aer_in_fdb(bounds%begc:bounds%endc, :, :), &
                              albsfc(bounds%begc:bounds%endc, :), &
+                             nir_bands_dif(bounds%begc:bounds%endc, :), & 
                              albsni(bounds%begc:bounds%endc, :), &
-                             flx_absi_snw(bounds%begc:bounds%endc, :, :) )
+                             flx_absi_snw(bounds%begc:bounds%endc, :, :),&
+                             spc_albout_dif(bounds%begc:bounds%endc, :) ) )
        else
             call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                            coszen_col(bounds%begc:bounds%endc), &
@@ -646,7 +697,25 @@ contains
                            albsfc(bounds%begc:bounds%endc, :), &
                            albsni(bounds%begc:bounds%endc, :), &
                            flx_absi_snw(bounds%begc:bounds%endc, :, :) )
-       endif ! end if use_snicar_ad
+         endif ! end if use_snicar_ad
+
+    do ib = 1, numrad_snw
+       do fc = 1,num_nourbanc
+          c = filter_nourbanc(fc)
+          if (coszen_col(c) > 0._r8) then
+             ! ground albedo was originally computed in SoilAlbedo, but is now computed here                   
+             ! because the order of SoilAlbedo and SNICAR_RT/SNICAR_AD_RT was switched for SNICAR/SNICAR_AD_RT.
+             if (ib == 1) then
+                !print*,"JPT ELM spc_albout3(c_idx,:) = ", spc_albout_dir(c,:)
+                spc_albgrd(c,ib) = albsod(c,1)*(1._r8-frac_sno(c)) + spc_albout_dir(c,ib)*frac_sno(c)
+                spc_albgri(c,ib) = albsoi(c,1)*(1._r8-frac_sno(c)) + spc_albout_dif(c,ib)*frac_sno(c)
+             else
+                spc_albgrd(c,ib) = albsod(c,2)*(1._r8-frac_sno(c)) + spc_albout_dir(c,ib)*frac_sno(c)
+                spc_albgri(c,ib) = albsoi(c,2)*(1._r8-frac_sno(c)) + spc_albout_dif(c,ib)*frac_sno(c)
+             end if
+          end if
+       end do
+    end do
 
     ! ground albedos and snow-fraction weighting of snow absorption factors
     do ib = 1, nband
@@ -977,6 +1046,15 @@ contains
        end do
     end do
 
+    do ib = 1,numrad_snw
+       do fp = 1,num_novegsol
+	  p = filter_novegsol(fp)
+          c = veg_pp%column(p)
+          spc_albd(p,ib) = spc_albgrd(c,ib)
+          spc_albi(p,ib) = spc_albgri(c,ib)
+       end do
+    end do
+
     if (use_top_solar_rad) then
        call Albedo_TOP_Adjustment(bounds, num_novegsol, filter_novegsol, nextsw_cday, &
                                   coszen_patch(bounds%begp:bounds%endp), declinp1, surfalb_vars, .false.)
@@ -1225,6 +1303,8 @@ contains
           fabi_sha_z    =>    surfalb_vars%fabi_sha_z_patch       , & ! Output: [real(r8) (:,:) ]  absorbed shaded leaf diffuse PAR (per unit lai+sai) for each canopy layer
           albd          =>    surfalb_vars%albd_patch             , & ! Output: [real(r8) (:,:) ]  surface albedo (direct)
           albi          =>    surfalb_vars%albi_patch             , & ! Output: [real(r8) (:,:) ]  surface albedo (diffuse)
+          spc_albd      =>    surfalb_vars%spc_albd_patch         , & !JPT Output: [real(r8) (:,:) ]  surface albedo (direct)
+          spc_albi      =>    surfalb_vars%spc_albi_patch         , & !JPT Output: [real(r8) (:,:) ]  surface albedo (diffuse)
           fabd          =>    surfalb_vars%fabd_patch             , & ! Output: [real(r8) (:,:) ]  flux absorbed by canopy per unit direct flux
           fabd_sun      =>    surfalb_vars%fabd_sun_patch         , & ! Output: [real(r8) (:,:) ]  flux absorbed by sunlit canopy per unit direct flux
           fabd_sha      =>    surfalb_vars%fabd_sha_patch         , & ! Output: [real(r8) (:,:) ]  flux absorbed by shaded canopy per unit direct flux
@@ -1670,7 +1750,20 @@ contains
 
        end do   ! end of pft loop
      end do   ! end of radiation band loop
-
+    do ib = 1, numrad_snw !JPT  loop through snow bands
+       do fp = 1,num_vegsol
+          p = filter_vegsol(fp)
+          c = veg_pp%column(p)
+          if (ib == 1) then
+             spc_albd(p,ib) = albd(p,ib)
+             spc_albi(p,ib) = albi(p,ib)
+          else
+             spc_albd(p,ib) = albd(p,2)
+             spc_albi(p,ib) = albi(p,2)
+          end if
+       end do
+       print*,"JPT ELM spc_albd(:,ib)", spc_albd(:,ib)
+    end do !JPT loop through snow bands
      end associate
 
     end subroutine TwoStream
@@ -1776,7 +1869,9 @@ contains
 	  sinsl_cosas    =>    grc_pp%sinsl_cosas                 , & ! Input:   sin(slope) * cos(aspect)
           sinsl_sinas    =>    grc_pp%sinsl_sinas                 , & ! Input:   sin(slope) * sin(aspect)
           albd           =>    surfalb_vars%albd_patch            , & ! Output:  surface albedo (direct)               
-          albi           =>    surfalb_vars%albi_patch            , & ! Output:  surface albedo (diffuse)              
+          albi           =>    surfalb_vars%albi_patch            , & ! Output:  surface albedo (diffuse)
+          spc_albd       =>    surfalb_vars%spc_albd_patch        , & !JPT Output:  surface albedo (direct)
+          spc_albi       =>    surfalb_vars%spc_albi_patch        , & !JPT Output:  surface albedo (diffuse) 
           fabd           =>    surfalb_vars%fabd_patch            , & ! Output:  flux absorbed by canopy per unit direct flux
           fabi           =>    surfalb_vars%fabi_patch            , & ! Output:  flux absorbed by canopy per unit diffuse flux
           ftdd           =>    surfalb_vars%ftdd_patch            , & ! Output:  down direct flux below canopy per unit direct flux
@@ -1902,6 +1997,25 @@ contains
                  fabi(p,ib) = fabi(p,ib) * fi_prime
                  ftii(p,ib) = ftii(p,ib) * fi_prime
                  fi_top_adjust(p,ib) = fi_prime
+                 if (ib == 1) then !JPT
+                    spc_albd(p,ib) = fd_prime * spc_albd(p,ib) - (fd_prime-1._r8)
+                    spc_albi(p,ib) = fi_prime * spc_albi(p,ib) - (fi_prime-1._r8)
+                 else
+                    spc_albd(p,2) = fd_prime * spc_albd(p,2) - (fd_prime-1._r8)
+                    spc_albi(p,2) = fi_prime * spc_albi(p,2) - (fi_prime-1._r8)
+                    spc_albd(p,3) = fd_prime * spc_albd(p,3) - (fd_prime-1._r8)
+                    spc_albi(p,3) = fi_prime * spc_albi(p,3) - (fi_prime-1._r8)
+                    spc_albd(p,4) = fd_prime * spc_albd(p,4) - (fd_prime-1._r8)
+                    spc_albi(p,4) = fi_prime * spc_albi(p,4) - (fi_prime-1._r8)
+                    spc_albd(p,5) = fd_prime * spc_albd(p,5) - (fd_prime-1._r8)
+                    spc_albi(p,5) = fi_prime * spc_albi(p,5) - (fi_prime-1._r8)
+                    spc_albd(p,6) = fd_prime * spc_albd(p,6) - (fd_prime-1._r8)
+                    spc_albi(p,6) = fi_prime * spc_albi(p,6) - (fi_prime-1._r8)
+                    spc_albd(p,7) = fd_prime * spc_albd(p,7) - (fd_prime-1._r8)
+                    spc_albi(p,7) = fi_prime * spc_albi(p,7) - (fi_prime-1._r8)
+                    spc_albd(p,8) = fd_prime * spc_albd(p,8) - (fd_prime-1._r8)
+                    spc_albi(p,8) = fi_prime * spc_albi(p,8) - (fi_prime-1._r8)
+                 end if !JPT
                enddo
             endif
             
