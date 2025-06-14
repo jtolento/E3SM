@@ -12,6 +12,7 @@ module SnowSnicarMod
   use shr_sys_mod     , only : shr_sys_flush
   use shr_log_mod     , only : errMsg => shr_log_errMsg
   use elm_varctl      , only : iulog, use_firn_percolation_and_compaction
+  use elm_varpar      , only : numrad_snw
   use elm_varcon      , only : namec 
   use shr_const_mod   , only : SHR_CONST_RHOICE
   use abortutils      , only : endrun
@@ -41,9 +42,9 @@ module SnowSnicarMod
   logical,  public, parameter :: DO_SNO_AER =   .true.    ! parameter to include aerosols in snowpack radiative calculations
   !$acc declare copyin(sno_nbr_aer,DO_SNO_OC,DO_SNO_AER)
   ! !PRIVATE DATA MEMBERS:
-  integer,  parameter :: numrad_snw  =   5               ! number of spectral bands used in snow model [nbr]
+  !integer,  parameter :: numrad_snw  =   5               ! number of spectral bands used in snow model [nbr]
   integer,  parameter :: nir_bnd_bgn =   2               ! first band index in near-IR spectrum [idx]
-  integer,  parameter :: nir_bnd_end =   5               ! ending near-IR band index [idx]
+  integer,  parameter :: nir_bnd_end =   numrad_snw      ! ending near-IR band index [idx]
   !$acc declare copyin(numrad_snw )
   !$acc declare copyin(nir_bnd_bgn)
   !$acc declare copyin(nir_bnd_end)
@@ -1809,7 +1810,7 @@ contains
      !
      ! !USES:
       !$acc routine seq
-     use elm_varpar       , only : nlevsno, numrad
+     use elm_varpar       , only : nlevsno, numrad, numrad_snw
      use elm_time_manager , only : get_nstep
      use shr_const_mod    , only : SHR_CONST_PI
      use elm_varctl       , only : snow_shape, snicar_atm_type, use_dust_snow_internal_mixing
@@ -2316,6 +2317,25 @@ contains
              !  Band 4: 1.2-1.5um (NIR)
              !  Band 5: 1.5-5.0um (NIR)
              !
+             !
+             ! JPT (03072025): Introduce 8-band case, where spectral
+             ! grid matches RRTM grid partitions. Note band V (0.2-0.7um)
+             ! will still come from the paraterized split of RRTMG_SW band 9
+             ! in EAM, All other bands (A-G) will have fluxes and albedos 
+             ! passed directly to and from EAM and ELM.
+             ! This should reduce surface and lower tropospheric net flux
+             ! bias (Tolento et al. 2024) 
+             !  Spectral Bands (6-Band case)
+             !  Band V:  0.2   - 0.7   um (VIS)
+             !  Band A:  0.7   - 0.778 um (NIR) 
+             !  Band B:  0.778 - 1.242 um (NIR)
+             !  Band C:  1.242 - 1.262 um (NIR)
+             !  Band D:  1.626 - 1.941 um (NIR)
+             !  Band E:  1.941 - 2.150 um (NIR)
+             !  Band F:  2.150 - 2.500 um (NIR)
+             !  Band G:  2.500 - 5.0   um (NIR)
+             !
+             !
              ! The following weights are appropriate for surface-incident flux in a mid-latitude winter atmosphere
              !
              ! 3-band weights
@@ -2369,8 +2389,25 @@ contains
                      flx_wgt(4) = flx_wgt_dif(atm_type_index, 4)
                      flx_wgt(5) = flx_wgt_dif(atm_type_index, 5)
                   endif
+               endif
+
+               elseif(numrad_snw==8) then                
+                if (flg_slr_in == 1 .or. flg_slr_in == 2 ) then
+                   if (atm_type_index == atm_type_default) then
+                      flx_wgt(1) = 1._r8
+                      if (sum(nir_bands_flx(c_idx,:)) >= 0.0001) then
+                         flx_wgt(2) = nir_bands_flx(c_idx,1) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(3) = nir_bands_flx(c_idx,2) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(4) = nir_bands_flx(c_idx,3) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(5) = nir_bands_flx(c_idx,4) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(6) = nir_bands_flx(c_idx,5) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(7) = nir_bands_flx(c_idx,6) / sum(nir_bands_flx(c_idx,:))
+                         flx_wgt(8) = 1._r8 - (flx_wgt(2) + flx_wgt(3) + flx_wgt(4) + flx_wgt(5)+flx_wgt(6)+flx_wgt(7))
+                      endif
+                   endif
                 endif
              endif ! end if numrad_snw
+
 
              ! Loop over snow spectral bands
 
@@ -2404,6 +2441,10 @@ contains
                    endif
 
                    if ( (numrad_snw == 3).and.(bnd_idx == 3) ) then
+                      mss_cnc_aer_lcl(:,:) = 0._r8
+                   endif
+
+                   if ( (numrad_snw == 8).and.(bnd_idx > 3) ) then !JPT
                       mss_cnc_aer_lcl(:,:) = 0._r8
                    endif
 
@@ -3024,6 +3065,7 @@ contains
 
              ! Weight output NIR albedo appropriately
              albout(c_idx,1) = albout_lcl(1)
+             spc_albout(c_idx,:) = albout_lcl(:)
              flx_sum         = 0._r8
              do bnd_idx= nir_bnd_bgn,nir_bnd_end
                 flx_sum = flx_sum + flx_wgt(bnd_idx)*albout_lcl(bnd_idx)
@@ -3049,6 +3091,7 @@ contains
                 sza_factor = sza_c1 * (log10(snw_rds_lcl(snl_top) * c1) - c6) + sza_c0
                 flx_sza_adjust  = albout(c_idx,2) * (sza_factor-c1) * sum(flx_wgt(nir_bnd_bgn:nir_bnd_end))
                 albout(c_idx,2) = albout(c_idx,2) * sza_factor
+                spc_albout(c_idx, nir_bnd_bgn:nir_bnd_end) = spc_albout(c_idx,nir_bnd_bgn:nir_bnd_end) * sza_factor
                 flx_abs(c_idx,snl_top,2) = flx_abs(c_idx,snl_top,2) - flx_sza_adjust
              endif
 
@@ -3056,11 +3099,14 @@ contains
           elseif ( (coszen(c_idx) > 0._r8) .and. (h2osno_lcl < min_snw) .and. (h2osno_lcl > 0._r8) ) then
              albout(c_idx,1) = albsfc(c_idx,1)
              albout(c_idx,2) = albsfc(c_idx,2)
+             spc_albout(c_idx,:) = albsfc(c_idx,2)
+             spc_albout(c_idx,1) = albsfc(c_idx,1)
 
              ! There is either zero snow, or no sun
           else
              albout(c_idx,1) = 0._r8
              albout(c_idx,2) = 0._r8
+             spc_albout(c_idx,:) = 0._r8
           endif    ! if column has snow and coszen > 0
 
        enddo    ! loop over all columns

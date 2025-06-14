@@ -1763,7 +1763,6 @@ contains
              spc_albi(p,ib) = albi(p,2)
           end if
        end do
-       print*,"JPT ELM spc_albd(:,ib)", spc_albd(:,ib)
     end do !JPT loop through snow bands
      end associate
 
