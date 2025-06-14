@@ -32,6 +32,20 @@ module cam_cpl_indices
   integer :: index_a2x_Faxa_swvdr      ! sw: vis direct  downward
   integer :: index_a2x_Faxa_swndf      ! sw: nir diffuse downward
   integer :: index_a2x_Faxa_swvdf      ! sw: vis diffuse downward
+  integer :: index_a2x_Faxa_nir_a_dir
+  integer :: index_a2x_Faxa_nir_b_dir
+  integer :: index_a2x_Faxa_nir_c_dir
+  integer :: index_a2x_Faxa_nir_d_dir
+  integer :: index_a2x_Faxa_nir_e_dir
+  integer :: index_a2x_Faxa_nir_f_dir
+  integer :: index_a2x_Faxa_nir_g_dir
+  integer :: index_a2x_Faxa_nir_a_dif
+  integer :: index_a2x_Faxa_nir_b_dif
+  integer :: index_a2x_Faxa_nir_c_dif
+  integer :: index_a2x_Faxa_nir_d_dif
+  integer :: index_a2x_Faxa_nir_e_dif
+  integer :: index_a2x_Faxa_nir_f_dif
+  integer :: index_a2x_Faxa_nir_g_dif
   integer :: index_a2x_Faxa_swnet      ! sw: net
   integer :: index_a2x_Faxa_bcphidry   ! flux: Black Carbon hydrophilic dry deposition
   integer :: index_a2x_Faxa_bcphodry   ! flux: Black Carbon hydrophobic dry deposition
@@ -60,7 +74,21 @@ module cam_cpl_indices
   integer :: index_x2a_Sx_avsdr        ! albedo, visible, direct         
   integer :: index_x2a_Sx_anidr        ! albedo, near-ir, direct         
   integer :: index_x2a_Sx_avsdf        ! albedo, visible, diffuse        
-  integer :: index_x2a_Sx_anidf        ! albedo, near-ir, diffuse        
+  integer :: index_x2a_Sx_anidf        ! albedo, near-ir, diffuse
+  integer :: index_x2a_Sx_alb_nir_a_dir
+  integer :: index_x2a_Sx_alb_nir_b_dir
+  integer :: index_x2a_Sx_alb_nir_c_dir
+  integer :: index_x2a_Sx_alb_nir_d_dir
+  integer :: index_x2a_Sx_alb_nir_e_dir
+  integer :: index_x2a_Sx_alb_nir_f_dir
+  integer :: index_x2a_Sx_alb_nir_g_dir
+  integer :: index_x2a_Sx_alb_nir_a_dif
+  integer :: index_x2a_Sx_alb_nir_b_dif
+  integer :: index_x2a_Sx_alb_nir_c_dif
+  integer :: index_x2a_Sx_alb_nir_d_dif
+  integer :: index_x2a_Sx_alb_nir_e_dif
+  integer :: index_x2a_Sx_alb_nir_f_dif
+  integer :: index_x2a_Sx_alb_nir_g_dif
   integer :: index_x2a_Sl_snowh        ! surface snow depth over land
   integer :: index_x2a_Si_snowh        ! surface snow depth over ice
   integer :: index_x2a_Sl_fv           ! friction velocity
@@ -106,6 +134,20 @@ contains
     index_x2a_Sx_anidr      = mct_avect_indexra(x2a,'Sx_anidr')
     index_x2a_Sx_avsdf      = mct_avect_indexra(x2a,'Sx_avsdf')
     index_x2a_Sx_anidf      = mct_avect_indexra(x2a,'Sx_anidf')
+    index_x2a_Sx_alb_nir_a_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_a_dir')
+    index_x2a_Sx_alb_nir_b_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_b_dir')
+    index_x2a_Sx_alb_nir_c_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_c_dir')
+    index_x2a_Sx_alb_nir_d_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_d_dir')
+    index_x2a_Sx_alb_nir_e_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_e_dir')
+    index_x2a_Sx_alb_nir_f_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_f_dir')
+    index_x2a_Sx_alb_nir_g_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_g_dir')
+    index_x2a_Sx_alb_nir_a_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_a_dif')
+    index_x2a_Sx_alb_nir_b_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_b_dif')
+    index_x2a_Sx_alb_nir_c_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_c_dif')
+    index_x2a_Sx_alb_nir_d_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_d_dif')
+    index_x2a_Sx_alb_nir_e_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_e_dif')
+    index_x2a_Sx_alb_nir_f_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_f_dif')
+    index_x2a_Sx_alb_nir_g_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_g_dif')
     index_x2a_Sx_t          = mct_avect_indexra(x2a,'Sx_t')
     index_x2a_So_t          = mct_avect_indexra(x2a,'So_t')
     index_x2a_Sl_snowh      = mct_avect_indexra(x2a,'Sl_snowh')
@@ -179,6 +221,20 @@ contains
     index_a2x_Faxa_swvdr    = mct_avect_indexra(a2x,'Faxa_swvdr')
     index_a2x_Faxa_swndf    = mct_avect_indexra(a2x,'Faxa_swndf')
     index_a2x_Faxa_swvdf    = mct_avect_indexra(a2x,'Faxa_swvdf')
+    index_a2x_Faxa_nir_a_dir = mct_avect_indexra(a2x,'Faxa_nir_a_dir')
+    index_a2x_Faxa_nir_b_dir = mct_avect_indexra(a2x,'Faxa_nir_b_dir')
+    index_a2x_Faxa_nir_c_dir = mct_avect_indexra(a2x,'Faxa_nir_c_dir')
+    index_a2x_Faxa_nir_d_dir = mct_avect_indexra(a2x,'Faxa_nir_d_dir')
+    index_a2x_Faxa_nir_e_dir = mct_avect_indexra(a2x,'Faxa_nir_e_dir')
+    index_a2x_Faxa_nir_f_dir = mct_avect_indexra(a2x,'Faxa_nir_f_dir')
+    index_a2x_Faxa_nir_g_dir = mct_avect_indexra(a2x,'Faxa_nir_g_dir')    
+    index_a2x_Faxa_nir_a_dif = mct_avect_indexra(a2x,'Faxa_nir_a_dif')
+    index_a2x_Faxa_nir_b_dif = mct_avect_indexra(a2x,'Faxa_nir_b_dif')
+    index_a2x_Faxa_nir_c_dif = mct_avect_indexra(a2x,'Faxa_nir_c_dif')
+    index_a2x_Faxa_nir_d_dif = mct_avect_indexra(a2x,'Faxa_nir_d_dif')
+    index_a2x_Faxa_nir_e_dif = mct_avect_indexra(a2x,'Faxa_nir_e_dif')
+    index_a2x_Faxa_nir_f_dif = mct_avect_indexra(a2x,'Faxa_nir_f_dif')
+    index_a2x_Faxa_nir_g_dif = mct_avect_indexra(a2x,'Faxa_nir_g_dif')
     index_a2x_Faxa_bcphidry = mct_avect_indexra(a2x,'Faxa_bcphidry')
     index_a2x_Faxa_bcphodry = mct_avect_indexra(a2x,'Faxa_bcphodry')
     index_a2x_Faxa_bcphiwet = mct_avect_indexra(a2x,'Faxa_bcphiwet')
