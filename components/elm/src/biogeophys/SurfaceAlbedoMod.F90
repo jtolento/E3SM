@@ -112,6 +112,7 @@ contains
     type(canopystate_type) , intent(in)    :: canopystate_vars
     type(lakestate_type)   , intent(in)    :: lakestate_vars
     type(surfalb_type)     , intent(inout) :: surfalb_vars
+    type(atm2lnd_type)     , intent(inout) :: atm2lnd_vars
     !
     ! !LOCAL VARIABLES:
     integer  :: i                                                                         ! index for layers [idx]
@@ -245,7 +246,7 @@ contains
           fabd_sun_z    =>    surfalb_vars%fabd_sun_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed sunlit leaf direct  PAR (per unit lai+sai) for each canopy layer
           fabd_sha_z    =>    surfalb_vars%fabd_sha_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf direct  PAR (per unit lai+sai) for each canopy layer
           fabi_sun_z    =>    surfalb_vars%fabi_sun_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed sunlit leaf diffuse PAR (per unit lai+sai) for each canopy layer
-          fabi_sha_z    =>    surfalb_vars%fabi_sha_z_patch         & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf diffuse PAR (per unit lai+sai) for each canopy layer
+          fabi_sha_z    =>    surfalb_vars%fabi_sha_z_patch       ,  & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf diffuse PAR (per unit lai+sai) for each canopy layer
           spc_albgrd   =>    surfalb_vars%spc_albgrd_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (direct)
           spc_albgri   =>    surfalb_vars%spc_albgri_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (diffuse)
           nir_bands_dir  =>   atm2lnd_vars%forc_nir_bands_dir_downscaled      , & !JPT Input: NIR fluxes (col,numrad_snw-1)
@@ -685,7 +686,7 @@ contains
                              nir_bands_dif(bounds%begc:bounds%endc, :), & 
                              albsni(bounds%begc:bounds%endc, :), &
                              flx_absi_snw(bounds%begc:bounds%endc, :, :),&
-                             spc_albout_dif(bounds%begc:bounds%endc, :) ) )
+                             spc_albout_dif(bounds%begc:bounds%endc, :)  )
        else
             call SNICAR_RT(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
                            coszen_col(bounds%begc:bounds%endc), &
