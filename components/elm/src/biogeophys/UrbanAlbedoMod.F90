@@ -149,7 +149,9 @@ contains
          albgrd             => surfalb_vars%albgrd_col              , & ! Output: [real(r8) (:,:) ]  urban col ground albedo (direct) 
          albgri             => surfalb_vars%albgri_col              , & ! Output: [real(r8) (:,:) ]  urban col ground albedo (diffuse)
          albd               => surfalb_vars%albd_patch              , & ! Output  [real(r8) (:,:) ]  urban pft surface albedo (direct)                         
-         albi               => surfalb_vars%albi_patch              , & ! Output: [real(r8) (:,:) ]  urban pft surface albedo (diffuse)                        
+         albi               => surfalb_vars%albi_patch              , & ! Output: [real(r8) (:,:) ]  urban pft surface albedo (diffuse)
+         spc_albd           => surfalb_vars%spc_albd_patch          , & 
+         spc_albi           => surfalb_vars%spc_albi_patch          , & 
          
          begl               => bounds%begl                          , &
          endl               => bounds%endl                            &
@@ -196,6 +198,26 @@ contains
                albd(p,ib) = 1._r8
                albi(p,ib) = 1._r8
             endif
+
+            if (ib == 1) then
+               spc_albd(p,ib) = albd(p,ib)
+               spc_albi(p,ib) = albi(p,ib)
+            else 
+               spc_albd(p,2) = albd(p,ib)
+               spc_albi(p,2) = albi(p,ib)
+               spc_albd(p,3) = albd(p,ib)
+               spc_albi(p,3) = albi(p,ib)
+               spc_albd(p,4) = albd(p,ib)
+               spc_albi(p,4) = albi(p,ib)
+               spc_albd(p,5) = albd(p,ib)
+               spc_albi(p,5) = albi(p,ib)
+               spc_albd(p,6) = albd(p,ib)
+               spc_albi(p,6) = albi(p,ib)
+               spc_albd(p,7) = albd(p,ib)
+               spc_albi(p,7) = albi(p,ib)
+               spc_albd(p,8) = albd(p,ib)
+               spc_albi(p,8) = albi(p,ib)
+            end if
 
             fabd(p,ib)     = 0._r8
             fabd_sun(p,ib) = 0._r8
@@ -427,6 +449,25 @@ contains
                c = veg_pp%column(p)
                albd(p,ib) = albgrd(c,ib)
                albi(p,ib) = albgri(c,ib)
+               if (ib == 1) then 
+                  spc_albd(p,ib) = albgrd(c,ib)
+                  spc_albi(p,ib) = albgri(c,ib)
+               else
+                  spc_albd(p,2) = albgrd(c,ib)
+                  spc_albi(p,2) = albgri(c,ib)
+                  spc_albd(p,3) = albgrd(c,ib)
+                  spc_albi(p,3) = albgri(c,ib)
+                  spc_albd(p,4) = albgrd(c,ib)
+                  spc_albi(p,4) = albgri(c,ib)
+                  spc_albd(p,5) = albgrd(c,ib)
+                  spc_albi(p,5) = albgri(c,ib)
+                  spc_albd(p,6) = albgrd(c,ib)
+                  spc_albi(p,6) = albgri(c,ib)
+                  spc_albd(p,7) = albgrd(c,ib)
+                  spc_albi(p,7) = albgri(c,ib)
+                  spc_albd(p,8) = albgrd(c,ib)
+                  spc_albi(p,8) = albgri(c,ib)
+               end if 
             end do
          end do
       end if
