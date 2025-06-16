@@ -88,6 +88,7 @@
              play    ,plev    ,tlay    ,tlev    ,tsfc    , &
              h2ovmr  ,o3vmr   ,co2vmr  ,ch4vmr  ,o2vmr   ,n2ovmr  , &
              asdir   ,asdif   ,aldir   ,aldif   , &
+             alb_nir_dir, alb_nir_dif,            & 
              coszen  ,adjes   ,dyofyr  ,solvar, &
              inflgsw ,iceflgsw,liqflgsw, &
              cldfmcl ,taucmcl ,ssacmcl ,asmcmcl ,fsfcmcl, &
@@ -95,7 +96,7 @@
              tauaer  ,ssaaer  ,asmaer  , &
              swuflx  ,swdflx  ,swhr    ,swuflxc ,swdflxc ,swhrc, &
              dirdnuv, dirdnir, difdnuv, difdnir, ninflx, ninflxc, &
-             swuflxs, swdflxs)
+             swuflxs, swdflxs, swdflxs_dir)
 
 
 ! ------- Description -------
@@ -238,6 +239,8 @@
                                                         !    Dimensions: (ncol)
       real(kind=r8), intent(in) :: aldif(:)             ! Near-IR surface albedo: diffuse rad
                                                         !    Dimensions: (ncol)
+      real(kind=r8), intent(in) :: alb_nir_dir(:,:)     !JPT
+      real(kind=r8), intent(in) :: alb_nir_dif(:,:)     !JPT 
 
       integer, intent(in) :: dyofyr                     ! Day of the year (used to get Earth/Sun
                                                         !  distance if adjflx not provided)
@@ -306,6 +309,7 @@
 
       real(kind=r8), intent(out)  :: swuflxs(:,:,:)     ! shortwave spectral flux up
       real(kind=r8), intent(out)  :: swdflxs(:,:,:)     ! shortwave spectral flux down
+      real(kind=r8), intent(out)  :: swdflxs_dir(:,:,:)  
 
 ! ----- Local -----
 
@@ -457,6 +461,7 @@
       real(kind=r8) :: nidflx(nlay+2)         ! Total sky downward shortwave flux, near-IR  
       real(kind=r8) :: zbbfsu(nbndsw,nlay+2)  ! temporary upward shortwave flux spectral (w/m2)
       real(kind=r8) :: zbbfsd(nbndsw,nlay+2)  ! temporary downward shortwave flux spectral (w/m2)
+      real(kind=r8) :: sd_dir(nbndsw,nlay+2)  
 
 ! Output - inactive
 !      real(kind=r8) :: zuvfu(nlay+2)         ! temporary upward UV shortwave flux (w/m2)
@@ -577,22 +582,52 @@
 ! Surface albedo
 !  Near-IR bands 16-24 and 29 (1-9 and 14), 820-16000 cm-1, 0.625-12.195 microns
 !         do ib=1,9
-         do ib=1,8
-            albdir(ib) = aldir(iplon)
-            albdif(ib) = aldif(iplon)
-         enddo
-         albdir(nbndsw) = aldir(iplon)
-         albdif(nbndsw) = aldif(iplon)
+         !do ib=1,8
+         !   albdir(ib) = aldir(iplon)
+         !   albdif(ib) = aldif(iplon)
+         !enddo
+         !albdir(nbndsw) = aldir(iplon)
+         !albdif(nbndsw) = aldif(iplon)
 !  Set band 24 (or, band 9 counting from 1) to use linear average of UV/visible
 !  and near-IR values, since this band straddles 0.7 microns: 
-         albdir(9) = 0.5*(aldir(iplon) + asdir(iplon))
-         albdif(9) = 0.5*(aldif(iplon) + asdif(iplon))
+         !albdir(9) = 0.5*(aldir(iplon) + asdir(iplon))
+         !albdif(9) = 0.5*(aldif(iplon) + asdif(iplon))
 !  UV/visible bands 25-28 (10-13), 16000-50000 cm-1, 0.200-0.625 micron
-         do ib=10,13
-            albdir(ib) = asdir(iplon)
-            albdif(ib) = asdif(iplon)
-         enddo
+         !do ib=10,13
+         !   albdir(ib) = asdir(iplon)
+         !   albdif(ib) = asdif(iplon)
+         !enddo
+         
+         !JPT: Spectral Albedo test:
+         albdir(1)  = alb_nir_dir(iplon,7)
+         albdir(2)  = alb_nir_dir(iplon,7)
+         albdir(3)  = alb_nir_dir(iplon,7)
+         albdir(4)  = alb_nir_dir(iplon,6)
+         albdir(5)  = alb_nir_dir(iplon,5)
+         albdir(6)  = alb_nir_dir(iplon,4)
+         albdir(7)  = alb_nir_dir(iplon,3)
+         albdir(8)  = alb_nir_dir(iplon,2) 
+         albdir(9)  = 0.5 * (asdir(iplon)+alb_nir_dir(iplon,1))
+         albdir(10) = asdir(iplon)
+         albdir(11) = asdir(iplon)
+         albdir(12) = asdir(iplon)
+         albdir(13) = asdir(iplon)
+         albdir(14) = alb_nir_dir(iplon,7)
 
+         albdif(1)  = alb_nir_dif(iplon,7)
+         albdif(2)  = alb_nir_dif(iplon,7)
+         albdif(3)  = alb_nir_dif(iplon,7)
+         albdif(4)  = alb_nir_dif(iplon,6)
+         albdif(5)  = alb_nir_dif(iplon,5)
+         albdif(6)  = alb_nir_dif(iplon,4)
+         albdif(7)  = alb_nir_dif(iplon,3)
+         albdif(8)  = alb_nir_dif(iplon,2)
+         albdif(9)  = 0.5 * (asdif(iplon)+alb_nir_dif(iplon,1))
+         albdif(10) = asdif(iplon)
+         albdif(11) = asdif(iplon)
+         albdif(12) = asdif(iplon)
+         albdif(13) = asdif(iplon)
+         albdif(14) = alb_nir_dif(iplon,7)
 
 ! Clouds
          if (icld.eq.0) then
@@ -691,6 +726,7 @@
             znifu(i) = 0._r8
             zbbfsu(:,i) = 0._r8
             zbbfsd(:,i) = 0._r8
+            sd_dir(:,i) = 0._r8
          enddo
 
          call spcvmc_sw &
@@ -703,7 +739,7 @@
               fac00, fac01, fac10, fac11, &
               selffac, selffrac, indself, forfac, forfrac, indfor, &
               zbbfd, zbbfu, zbbcd, zbbcu, zuvfd, zuvcd, znifd, znicd, znifu, znicu, &
-              zbbfddir, zbbcddir, zuvfddir, zuvcddir, znifddir, znicddir, zbbfsu, zbbfsd)
+              zbbfddir, zbbcddir, zuvfddir, zuvcddir, znifddir, znicddir, zbbfsu, zbbfsd, sd_dir)
 
 ! Transfer up and down, clear and total sky fluxes to output arrays.
 ! Vertical indexing goes from bottom to top
@@ -715,6 +751,7 @@
             swdflx(iplon,i) = zbbfd(i)
             swuflxs(:,iplon,i) = zbbfsu(:,i)
             swdflxs(:,iplon,i) = zbbfsd(:,i)
+            swdflxs_dir(:,iplon,i) = sd_dir(:,i)
             uvdflx(i) = zuvfd(i)
             nidflx(i) = znifd(i)
 !  Direct/diffuse fluxes
