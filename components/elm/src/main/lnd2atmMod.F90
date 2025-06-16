@@ -81,6 +81,8 @@ contains
       h2osno_grc => lnd2atm_vars%h2osno_grc , &
       h2osoi_vol => col_ws%h2osoi_vol , &
       h2osoi_vol_grc => lnd2atm_vars%h2osoi_vol_grc , &
+      snowfrac    => col_ws%frac_sno  , &
+      snowfrac_grc => lnd2atm_vars%snowfrac_grc, & 
       albd_patch => surfalb_vars%albd_patch , &
       albd_grc   => lnd2atm_vars%albd_grc   , &
       albi_patch => surfalb_vars%albi_patch , &
@@ -105,6 +107,11 @@ contains
     call c2g(bounds, nlevgrnd, &
          h2osoi_vol    (bounds%begc:bounds%endc,:), &
          h2osoi_vol_grc(bounds%begg:bounds%endg,:)    , &
+         c2l_scale_type= urbanf, l2g_scale_type=unity)
+
+    call c2g(bounds, & 
+         snowfrac    (bounds%begc:bounds%endc) , &
+         snowfrac_grc(bounds%begg:bounds%endg)    , &
          c2l_scale_type= urbanf, l2g_scale_type=unity)
 
     call p2g(bounds, numrad, &

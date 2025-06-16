@@ -90,7 +90,9 @@ module cam_cpl_indices
   integer :: index_x2a_Sx_alb_nir_f_dif
   integer :: index_x2a_Sx_alb_nir_g_dif
   integer :: index_x2a_Sl_snowh        ! surface snow depth over land
+  integer :: index_x2a_Sl_snowfrac
   integer :: index_x2a_Si_snowh        ! surface snow depth over ice
+  integer :: index_x2a_Sl_snowfrac     ! 
   integer :: index_x2a_Sl_fv           ! friction velocity
   integer :: index_x2a_Sl_ram1         ! aerodynamical resistance
   integer :: index_x2a_Sl_soilw        ! volumetric soil water
@@ -134,23 +136,24 @@ contains
     index_x2a_Sx_anidr      = mct_avect_indexra(x2a,'Sx_anidr')
     index_x2a_Sx_avsdf      = mct_avect_indexra(x2a,'Sx_avsdf')
     index_x2a_Sx_anidf      = mct_avect_indexra(x2a,'Sx_anidf')
-    index_x2a_Sx_alb_nir_a_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_a_dir')
-    index_x2a_Sx_alb_nir_b_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_b_dir')
-    index_x2a_Sx_alb_nir_c_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_c_dir')
-    index_x2a_Sx_alb_nir_d_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_d_dir')
-    index_x2a_Sx_alb_nir_e_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_e_dir')
-    index_x2a_Sx_alb_nir_f_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_f_dir')
-    index_x2a_Sx_alb_nir_g_dir      = mct_avect_indexra(x2a,'Sx_alb_nir_g_dir')
-    index_x2a_Sx_alb_nir_a_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_a_dif')
-    index_x2a_Sx_alb_nir_b_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_b_dif')
-    index_x2a_Sx_alb_nir_c_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_c_dif')
-    index_x2a_Sx_alb_nir_d_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_d_dif')
-    index_x2a_Sx_alb_nir_e_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_e_dif')
-    index_x2a_Sx_alb_nir_f_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_f_dif')
-    index_x2a_Sx_alb_nir_g_dif      = mct_avect_indexra(x2a,'Sx_alb_nir_g_dif')
+    index_x2a_Sx_alb_nir_a_dir = mct_avect_indexra(x2a,'Sx_alb_nir_a_dir')
+    index_x2a_Sx_alb_nir_b_dir = mct_avect_indexra(x2a,'Sx_alb_nir_b_dir')
+    index_x2a_Sx_alb_nir_c_dir = mct_avect_indexra(x2a,'Sx_alb_nir_c_dir')
+    index_x2a_Sx_alb_nir_d_dir = mct_avect_indexra(x2a,'Sx_alb_nir_d_dir')
+    index_x2a_Sx_alb_nir_e_dir = mct_avect_indexra(x2a,'Sx_alb_nir_e_dir')
+    index_x2a_Sx_alb_nir_f_dir = mct_avect_indexra(x2a,'Sx_alb_nir_f_dir')
+    index_x2a_Sx_alb_nir_g_dir = mct_avect_indexra(x2a,'Sx_alb_nir_g_dir')
+    index_x2a_Sx_alb_nir_a_dif = mct_avect_indexra(x2a,'Sx_alb_nir_a_dif')
+    index_x2a_Sx_alb_nir_b_dif = mct_avect_indexra(x2a,'Sx_alb_nir_b_dif')
+    index_x2a_Sx_alb_nir_c_dif = mct_avect_indexra(x2a,'Sx_alb_nir_c_dif')
+    index_x2a_Sx_alb_nir_d_dif = mct_avect_indexra(x2a,'Sx_alb_nir_d_dif')
+    index_x2a_Sx_alb_nir_e_dif = mct_avect_indexra(x2a,'Sx_alb_nir_e_dif')
+    index_x2a_Sx_alb_nir_f_dif = mct_avect_indexra(x2a,'Sx_alb_nir_f_dif')
+    index_x2a_Sx_alb_nir_g_dif = mct_avect_indexra(x2a,'Sx_alb_nir_g_dif')
     index_x2a_Sx_t          = mct_avect_indexra(x2a,'Sx_t')
     index_x2a_So_t          = mct_avect_indexra(x2a,'So_t')
     index_x2a_Sl_snowh      = mct_avect_indexra(x2a,'Sl_snowh')
+    index_x2a_Sl_snowfrac   = mct_avect_indexra(x2a,'Sl_snowfrac')
     index_x2a_Si_snowh      = mct_avect_indexra(x2a,'Si_snowh')
     
     index_x2a_Sl_fv         = mct_avect_indexra(x2a,'Sl_fv')

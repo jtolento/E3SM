@@ -56,6 +56,7 @@ module elm_cpl_indices
   integer, public ::index_l2x_Sl_alb_nir_f_dif        
   integer, public ::index_l2x_Sl_alb_nir_g_dif
   integer, public ::index_l2x_Sl_snowh        ! snow height
+  integer, public ::index_l2x_Sl_snowfrac     
   integer, public ::index_l2x_Sl_u10          ! 10m wind
   integer, public ::index_l2x_Sl_u10withgusts ! 10m wind with gustiness included
   integer, public ::index_l2x_Sl_ddvel        ! dry deposition velocities (optional)
@@ -225,6 +226,7 @@ contains
     endif
     index_l2x_Sl_t          = mct_avect_indexra(l2x,'Sl_t')
     index_l2x_Sl_snowh      = mct_avect_indexra(l2x,'Sl_snowh')
+    index_l2x_Sl_snowfrac      = mct_avect_indexra(l2x,'Sl_snowfrac')
     index_l2x_Sl_avsdr      = mct_avect_indexra(l2x,'Sl_avsdr')
     index_l2x_Sl_anidr      = mct_avect_indexra(l2x,'Sl_anidr')
     index_l2x_Sl_avsdf      = mct_avect_indexra(l2x,'Sl_avsdf')

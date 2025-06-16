@@ -113,6 +113,7 @@ module camsrfexch
      real(r8), allocatable :: sst(:)        ! sea surface temp
      real(r8), allocatable :: snowhland(:)  ! snow depth (liquid water equivalent) over land
      real(r8), allocatable :: snowhice(:)   ! snow depth over ice
+     real(r8), allocatable :: snowhfrac(:) 
      real(r8), allocatable :: fco2_lnd(:)   ! co2 flux from lnd
      real(r8), allocatable :: fco2_ocn(:)   ! co2 flux from ocn
      real(r8), allocatable :: fdms(:)       ! dms flux
@@ -242,6 +243,9 @@ CONTAINS
        allocate (cam_in(c)%snowhland(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error snowhland')
 
+       allocate (cam_in(c)%snowhfrac(pcols), stat=ierror)
+       if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error snowfrac')
+
        allocate (cam_in(c)%snowhice(pcols), stat=ierror)
        if ( ierror /= 0 ) call endrun('HUB2ATM_ALLOC error: allocation error snowhice')
 
@@ -328,6 +332,7 @@ CONTAINS
        cam_in(c)%ts       (:) = 0._r8
        cam_in(c)%sst      (:) = 0._r8
        cam_in(c)%snowhland(:) = 0._r8
+       cam_in(c)%snowhfrac(:) = 0._r8
        cam_in(c)%snowhice (:) = 0._r8
        cam_in(c)%fco2_lnd (:) = 0._r8
        cam_in(c)%fco2_ocn (:) = 0._r8
@@ -650,6 +655,7 @@ CONTAINS
           deallocate(cam_in(c)%ts)
           deallocate(cam_in(c)%sst)
           deallocate(cam_in(c)%snowhland)
+          deallocate(cam_in(c)%snowhfrac)
           deallocate(cam_in(c)%snowhice)
           deallocate(cam_in(c)%fco2_lnd)
           deallocate(cam_in(c)%fco2_ocn)

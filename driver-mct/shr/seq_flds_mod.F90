@@ -1671,6 +1671,14 @@ contains
     attname  = 'Sl_snowh'
     call metadata_set(attname, longname, stdname, units)
 
+    call seq_flds_add(l2x_states,"Sl_snowfrac")
+    call seq_flds_add(x2a_states,"Sl_snowfrac")
+    longname = 'Surface snow area fraction'
+    stdname  = 'surface_snow_area_faction'
+    units    = '1'
+    attname  = 'Sl_snowfrac'
+    call metadata_set(attname, longname, stdname, units)
+
     ! Surface snow depth (ice/atm only)
     call seq_flds_add(i2x_states,"Si_snowh")
     call seq_flds_add(x2a_states,"Si_snowh")
