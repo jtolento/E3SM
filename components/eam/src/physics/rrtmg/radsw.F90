@@ -42,12 +42,13 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
                     E_aer_tau,E_aer_tau_w,E_aer_tau_w_g,E_aer_tau_w_f, &
                     eccf     ,E_coszrs   ,solin        ,sfac         , &
                     E_asdir  ,E_asdif    ,E_aldir      ,E_aldif      , &
+                    E_alb_nir_dir  ,E_alb_nir_dif,                     & 
                     qrs      ,qrsc       ,fsnt         ,fsntc        ,fsntoa,fsutoa, &
                     fsntoac  ,fsnirtoa   ,fsnrtoac     ,fsnrtoaq     ,fsns    , &
                     fsnsc    ,fsdsc      ,fsds         ,sols         ,soll    , &
                     solsd    ,solld      ,fns          ,fcns         , &
                     Nday     ,Nnite      ,IdxDay       ,IdxNite      ,clm_rand_seed, &
-                    su       ,sd         ,                             &
+                    su       ,sd         ,sd_dir       ,                   &
                     E_cld_tau, E_cld_tau_w, E_cld_tau_w_g, E_cld_tau_w_f,  &
                     old_convert)
 
@@ -122,6 +123,8 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
    real(r8), intent(in) :: E_aldir(pcols)     ! 0.7-5.0 micro-meter srfc alb: direct rad
    real(r8), intent(in) :: E_asdif(pcols)     ! 0.2-0.7 micro-meter srfc alb: diffuse rad
    real(r8), intent(in) :: E_aldif(pcols)     ! 0.7-5.0 micro-meter srfc alb: diffuse rad
+   real(r8), intent(in) :: E_alb_nir_dir(pcols,7) !JPT
+   real(r8), intent(in) :: E_alb_nir_dif(pcols,7) !JPT
    real(r8), intent(in) :: sfac(nbndsw)            ! factor to account for solar variability in each band 
    integer,  intent(inout) :: clm_rand_seed(pcols,4)            ! rand # seeds for sw
 
@@ -159,6 +162,7 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
 
    real(r8), pointer, dimension(:,:,:) :: su ! shortwave spectral flux up
    real(r8), pointer, dimension(:,:,:) :: sd ! shortwave spectral flux down
+   real(r8), pointer, dimension(:,:,:) :: sd_dir
 
    !---------------------------Local variables-----------------------------
 
@@ -230,6 +234,7 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
    real(r8) :: swhrc(pcols,rrtmg_levs)          ! Clear sky shortwave radiative heating rate (K/d)
    real(r8) :: swuflxs(nbndsw,pcols,rrtmg_levs+1)  ! Shortwave spectral flux up
    real(r8) :: swdflxs(nbndsw,pcols,rrtmg_levs+1)  ! Shortwave spectral flux down
+   real(r8) :: swdflxs_dir(nbndsw,pcols,rrtmg_levs+1)  ! JPT 
 
    real(r8) :: dirdnuv(pcols,rrtmg_levs+1)       ! Direct downward shortwave flux, UV/vis
    real(r8) :: difdnuv(pcols,rrtmg_levs+1)       ! Diffuse downward shortwave flux, UV/vis
@@ -332,6 +337,8 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
    call CmpDayNite(E_aldir,  aldir,     Nday, IdxDay, Nnite, IdxNite, 1, pcols)
    call CmpDayNite(E_asdif,  asdif,     Nday, IdxDay, Nnite, IdxNite, 1, pcols)
    call CmpDayNite(E_aldif,  aldif,     Nday, IdxDay, Nnite, IdxNite, 1, pcols)
+   call CmpDayNite(E_alb_nir_dir,  alb_nir_dir,     Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, 7)
+   call CmpDayNite(E_alb_nir_dif,  alb_nir_dif,     Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, 7)
 
    call CmpDayNite(r_state%tlay,   tlay,   Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, rrtmg_levs)
    call CmpDayNite(r_state%tlev,   tlev,   Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, rrtmg_levs+1)
@@ -523,13 +530,14 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
                  pmidmb, pintmb, tlay, tlev, tsfc, &
                  h2ovmr, o3vmr, co2vmr, ch4vmr, o2vmr, n2ovmr, &
                  asdir, asdif, aldir, aldif, &
+                 alb_nir_dir, alb_nir_dif,   & 
                  coszrs, eccf, dyofyr, solvar, &
                  inflgsw, iceflgsw, liqflgsw, &
                  cld_stosw, tauc_stosw, ssac_stosw, asmc_stosw, fsfc_stosw, &
                  cicewp_stosw, cliqwp_stosw, rei, rel, &
                  tau_aer_sw, ssa_aer_sw, asm_aer_sw, &
                  swuflx, swdflx, swhr, swuflxc, swdflxc, swhrc, &
-                 dirdnuv, dirdnir, difdnuv, difdnir, ninflx, ninflxc, swuflxs, swdflxs)
+                 dirdnuv, dirdnir, difdnuv, difdnir, ninflx, ninflxc, swuflxs, swdflxs, swdflxs_dir)
 
    ! Flux units are in W/m2 on output from rrtmg_sw and contain output for
    ! extra layer above model top with vertical indexing from bottom to top.

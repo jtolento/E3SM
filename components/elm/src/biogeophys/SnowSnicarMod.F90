@@ -2391,22 +2391,30 @@ contains
                   endif
                endif
 
-               elseif(numrad_snw==8) then                
-                if (flg_slr_in == 1 .or. flg_slr_in == 2 ) then
-                   if (atm_type_index == atm_type_default) then
-                      flx_wgt(1) = 1._r8
-                      if (sum(nir_bands_flx(c_idx,:)) >= 0.0001) then
-                         flx_wgt(2) = nir_bands_flx(c_idx,1) / sum(nir_bands_flx(c_idx,:))
-                         flx_wgt(3) = nir_bands_flx(c_idx,2) / sum(nir_bands_flx(c_idx,:))
-                         flx_wgt(4) = nir_bands_flx(c_idx,3) / sum(nir_bands_flx(c_idx,:))
-                         flx_wgt(5) = nir_bands_flx(c_idx,4) / sum(nir_bands_flx(c_idx,:))
-                         flx_wgt(6) = nir_bands_flx(c_idx,5) / sum(nir_bands_flx(c_idx,:))
-                         flx_wgt(7) = nir_bands_flx(c_idx,6) / sum(nir_bands_flx(c_idx,:))
-                         flx_wgt(8) = 1._r8 - (flx_wgt(2) + flx_wgt(3) + flx_wgt(4) + flx_wgt(5)+flx_wgt(6)+flx_wgt(7))
-                      endif
-                   endif
-                endif
-             endif ! end if numrad_snw
+            elseif(numrad_snw==8) then                
+               if (flg_slr_in == 1 .or. flg_slr_in == 2 ) then
+                  if (atm_type_index == atm_type_default) then
+                     flx_wgt(1) = 1._r8
+                     if (sum(nir_bands_flx(c_idx,:)) >= 0.0001) then
+                        flx_wgt(2) = nir_bands_flx(c_idx,1) / sum(nir_bands_flx(c_idx,:))
+                        flx_wgt(3) = nir_bands_flx(c_idx,2) / sum(nir_bands_flx(c_idx,:))
+                        flx_wgt(4) = nir_bands_flx(c_idx,3) / sum(nir_bands_flx(c_idx,:))
+                        flx_wgt(5) = nir_bands_flx(c_idx,4) / sum(nir_bands_flx(c_idx,:))
+                        flx_wgt(6) = nir_bands_flx(c_idx,5) / sum(nir_bands_flx(c_idx,:))
+                        flx_wgt(7) = nir_bands_flx(c_idx,6) / sum(nir_bands_flx(c_idx,:))
+                        flx_wgt(8) = 1._r8 - (flx_wgt(2) + flx_wgt(3) + flx_wgt(4) + flx_wgt(5)+flx_wgt(6)+flx_wgt(7))
+                     else
+                        flx_wgt(2) = 0.58581507618433_r8
+                        flx_wgt(3) = 0.20156903770812_r8
+                        flx_wgt(4) = 0.10917889346386_r8
+                        flx_wgt(5) = 0.10343699264369_r8 / 4
+                        flx_wgt(6) = 0.10343699264369_r8 / 4
+                        flx_wgt(7) = 0.10343699264369_r8 / 4
+                        flx_wgt(8) = 0.10343699264369_r8 / 4
+                     endif
+                  endif
+               endif
+            endif ! end if numrad_snw
 
 
              ! Loop over snow spectral bands
