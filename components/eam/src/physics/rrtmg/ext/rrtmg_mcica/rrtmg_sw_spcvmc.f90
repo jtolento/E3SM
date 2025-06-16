@@ -214,7 +214,7 @@
 
       real(kind=r8), intent(out)  :: pbbfsu(:,:)                 ! shortwave spectral flux up (nswbands,nlayers+1)
       real(kind=r8), intent(out)  :: pbbfsd(:,:)                 ! shortwave spectral flux down (nswbands,nlayers+1)
-      real(kind=r8), intent(out)  :: sd_dir(:,:)  
+      real(kind=r8), intent(out)  :: sd_dir(:,:)
 
 
 ! ------- Local -------
@@ -299,7 +299,7 @@
       enddo
       pbbfsu(:,:) = 0.0_r8 !BSINGH(10/15/2014): uninitialized variable, setting it to zero
       pbbfsd(:,:) = 0.0_r8 !BSINGH(10/15/2014): uninitialized variable, setting it to zero
-      sd_dir(:,:) = 0.0_r8 
+      sd_dir(:,:) = 0.0_r8
 
 ! Calculate the optical depths for gaseous absorption and Rayleigh scattering
 
@@ -601,7 +601,7 @@
                pbbfsu(ibm,ikl) = pbbfsu(ibm,ikl) + zincflx(iw)*zfu(jk,iw)
                pbbfsd(ibm,ikl) = pbbfsd(ibm,ikl) + zincflx(iw)*zfd(jk,iw)
 
-               !JPT: Caluulate the direct beam  spectral fluxes
+               !JPT: Calculate the direct beam spectral fluxes
                if (idelm .eq. 0) then
                   sd_dir(ibm,ikl) = sd_dir(ibm,ikl) + zincflx(iw)*ztdbt_nodel(jk)
                elseif (idelm .eq. 1) then

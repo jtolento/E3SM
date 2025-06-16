@@ -181,6 +181,8 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
    real(r8) :: aldir(pcols)     ! 0.7-5.0 micro-meter srfc alb: direct rad
    real(r8) :: asdif(pcols)     ! 0.2-0.7 micro-meter srfc alb: diffuse rad
    real(r8) :: aldif(pcols)     ! 0.7-5.0 micro-meter srfc alb: diffuse rad
+   real(r8) :: alb_nir_dir(pcols,7)
+   real(r8) :: alb_nir_dif(pcols,7)
 
    real(r8) :: h2ovmr(pcols,rrtmg_levs)   ! h2o volume mixing ratio
    real(r8) :: o3vmr(pcols,rrtmg_levs)    ! o3 volume mixing ratio
@@ -314,6 +316,7 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
 
    if (associated(su)) su(1:ncol,:,:) = 0.0_r8
    if (associated(sd)) sd(1:ncol,:,:) = 0.0_r8
+   if (associated(sd_dir)) sd_dir(1:ncol,:,:) = 0.0_r8
 
    ! If night everywhere, return:
    if ( Nday == 0 ) then
@@ -601,6 +604,11 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
            (/Nday,rrtmg_levs,nbndsw/), order=(/3,1,2/))
    end if
 
+   if (associated(sd_dir)) then
+      sd_dir(1:Nday,pverp-rrtmg_levs+1:pverp,:) = reshape(swdflxs_dir(:,1:Nday,rrtmg_levs:1:-1), &
+           (/Nday,rrtmg_levs,nbndsw/), order=(/3,1,2/))
+   end if
+
    call t_stopf('rrtmg_sw')
 
    ! Rearrange output arrays.
@@ -638,6 +646,10 @@ subroutine rad_rrtmg_sw(lchnk,ncol       ,rrtmg_levs   ,r_state      , &
 
    if (associated(sd)) then
       call ExpDayNite(sd,	Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, pverp, 1, nbndsw)
+   end if
+
+   if (associated(sd_dir)) then
+      call ExpDayNite(sd_dir,   Nday, IdxDay, Nnite, IdxNite, 1, pcols, 1, pverp, 1, nbndsw)
    end if
 
 end subroutine rad_rrtmg_sw

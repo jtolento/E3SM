@@ -1149,6 +1149,8 @@ end function radiation_nextsw_cday
     if (spectralflux) then
       call pbuf_get_field(pbuf, su_idx, su)
       call pbuf_get_field(pbuf, sd_idx, sd)
+      call pbuf_get_field(pbuf, sd_dir_idx, sd_dir)
+      call pbuf_get_field(pbuf, sd_dif_idx, sd_dif)
       call pbuf_get_field(pbuf, lu_idx, lu)
       call pbuf_get_field(pbuf, ld_idx, ld)
     end if
@@ -1364,22 +1366,22 @@ end function radiation_nextsw_cday
                        old_convert = .false.)
                   call t_stopf ('rad_rrtmg_sw')
 
-                  cam_out%nir_a_dir    = sd_dir(:,pver+1,9)
-                  cam_out%nir_b_dir    = sd_dir(:,pver+1,8)
-                  cam_out%nir_c_dir    = sd_dir(:,pver+1,7)
-                  cam_out%nir_d_dir    = sd_dir(:,pver+1,6)
-                  cam_out%nir_e_dir    = sd_dir(:,pver+1,5)
-                  cam_out%nir_f_dir    = sd_dir(:,pver+1,4)
-                  cam_out%nir_g_dir    = sd_dir(:,pver+1,1) + sd_dir(:,pver+1,2) + sd_dir(:,pver+1,3) &
+                  cam_out%flx_nir_dir(:,1) = sd_dir(:,pver+1,9) * 0.5_r8
+                  cam_out%flx_nir_dir(:,2) = sd_dir(:,pver+1,8)
+                  cam_out%flx_nir_dir(:,3) = sd_dir(:,pver+1,7)
+                  cam_out%flx_nir_dir(:,4) = sd_dir(:,pver+1,6)
+                  cam_out%flx_nir_dir(:,5) = sd_dir(:,pver+1,5)
+                  cam_out%flx_nir_dir(:,6) = sd_dir(:,pver+1,4)
+                  cam_out%flx_nir_dir(:,7) = sd_dir(:,pver+1,1) + sd_dir(:,pver+1,2) + sd_dir(:,pver+1,3) &
                        + sd_dir(:,pver+1,14)
                   sd_dif(:,:,:) = sd(:,:,:) - sd_dir(:,:,:)
-                  cam_out%nir_a_dif    = sd_dif(:,pver+1,9)
-                  cam_out%nir_b_dif    = sd_dif(:,pver+1,8)
-                  cam_out%nir_c_dif    = sd_dif(:,pver+1,7)
-                  cam_out%nir_d_dif    = sd_dif(:,pver+1,6)
-                  cam_out%nir_e_dif    = sd_dif(:,pver+1,5)
-                  cam_out%nir_f_dif    = sd_dif(:,pver+1,4)
-                  cam_out%nir_g_dif    = sd_dif(:,pver+1,1) + sd_dif(:,pver+1,2) + sd_dif(:,pver+1,3) &
+                  cam_out%flx_nir_dif(:,1) = sd_dif(:,pver+1,9) * 0.5_r8
+                  cam_out%flx_nir_dif(:,2) = sd_dif(:,pver+1,8)
+                  cam_out%flx_nir_dif(:,3) = sd_dif(:,pver+1,7)
+                  cam_out%flx_nir_dif(:,4) = sd_dif(:,pver+1,6)
+                  cam_out%flx_nir_dif(:,5) = sd_dif(:,pver+1,5)
+                  cam_out%flx_nir_dif(:,6) = sd_dif(:,pver+1,4)
+                  cam_out%flx_nir_dif(:,7) = sd_dif(:,pver+1,1) + sd_dif(:,pver+1,2) + sd_dif(:,pver+1,3) &
                        + sd_dif(:,pver+1,14)
 
                   !  Output net fluxes at 200 mb
@@ -1452,21 +1454,21 @@ end function radiation_nextsw_cday
                   call outfld('FSN200C'//diag(icall),fsn200c,pcols,lchnk)
                   call outfld('SWCF'//diag(icall),swcf  ,pcols,lchnk)
 
-                  call outfld('NIR_A_DIR'//diag(icall),cam_out%nir_a_dir  ,pcols,lchnk)
-                  call outfld('NIR_B_DIR'//diag(icall),cam_out%nir_b_dir  ,pcols,lchnk)
-                  call outfld('NIR_C_DIR'//diag(icall),cam_out%nir_c_dir  ,pcols,lchnk)
-                  call outfld('NIR_D_DIR'//diag(icall),cam_out%nir_d_dir  ,pcols,lchnk)
-                  call outfld('NIR_E_DIR'//diag(icall),cam_out%nir_e_dir  ,pcols,lchnk)
-                  call outfld('NIR_F_DIR'//diag(icall),cam_out%nir_f_dir  ,pcols,lchnk)
-                  call outfld('NIR_G_DIR'//diag(icall),cam_out%nir_g_dir  ,pcols,lchnk)
+                  call outfld('NIR_A_DIR'//diag(icall),cam_out%flx_nir_dir(:,1)  ,pcols,lchnk)
+                  call outfld('NIR_B_DIR'//diag(icall),cam_out%flx_nir_dir(:,2) ,pcols,lchnk)
+                  call outfld('NIR_C_DIR'//diag(icall),cam_out%flx_nir_dir(:,3) ,pcols,lchnk)
+                  call outfld('NIR_D_DIR'//diag(icall),cam_out%flx_nir_dir(:,4) ,pcols,lchnk)
+                  call outfld('NIR_E_DIR'//diag(icall),cam_out%flx_nir_dir(:,5) ,pcols,lchnk)
+                  call outfld('NIR_F_DIR'//diag(icall),cam_out%flx_nir_dir(:,6) ,pcols,lchnk)
+                  call outfld('NIR_G_DIR'//diag(icall),cam_out%flx_nir_dir(:,7) ,pcols,lchnk)
 
-                  call outfld('NIR_A_DIF'//diag(icall),cam_out%nir_a_dif  ,pcols,lchnk)
-                  call outfld('NIR_B_DIF'//diag(icall),cam_out%nir_b_dif  ,pcols,lchnk)
-                  call outfld('NIR_C_DIF'//diag(icall),cam_out%nir_c_dif  ,pcols,lchnk)
-                  call outfld('NIR_D_DIF'//diag(icall),cam_out%nir_d_dif  ,pcols,lchnk)
-                  call outfld('NIR_E_DIF'//diag(icall),cam_out%nir_e_dif  ,pcols,lchnk)
-                  call outfld('NIR_F_DIF'//diag(icall),cam_out%nir_f_dif  ,pcols,lchnk)
-                  call outfld('NIR_G_DIF'//diag(icall),cam_out%nir_g_dif  ,pcols,lchnk)
+                  call outfld('NIR_A_DIF'//diag(icall),cam_out%flx_nir_dif(:,1) ,pcols,lchnk)
+                  call outfld('NIR_B_DIF'//diag(icall),cam_out%flx_nir_dif(:,2) ,pcols,lchnk)
+                  call outfld('NIR_C_DIF'//diag(icall),cam_out%flx_nir_dif(:,3) ,pcols,lchnk)
+                  call outfld('NIR_D_DIF'//diag(icall),cam_out%flx_nir_dif(:,4) ,pcols,lchnk)
+                  call outfld('NIR_E_DIF'//diag(icall),cam_out%flx_nir_dif(:,5) ,pcols,lchnk)
+                  call outfld('NIR_F_DIF'//diag(icall),cam_out%flx_nir_dif(:,6) ,pcols,lchnk)
+                  call outfld('NIR_G_DIF'//diag(icall),cam_out%flx_nir_dif(:,7) ,pcols,lchnk)
 
               end if ! (active_calls(icall))
           end do ! icall
