@@ -719,6 +719,18 @@ end function radiation_nextsw_cday
           call addfld ('NIR_G_DIF'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band G (2.150-5.0)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_g_dif')
+          call addfld('SD_BOA', (/'swband'/), 'A', 'W/m2', &
+                       'Downwelling Spectral Radiation at Surface', &
+                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
+          call addfld('SD_TOA', (/'swband'/), 'A', 'W/m2', &
+                      'Downwelling Spectral Radiation at TOA', &
+                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
+          call addfld('SU_BOA', (/'swband'/), 'A', 'W/m2', &
+                      'Upwelling Spectral Radiation at Surface', &
+                       sampling_seq='rad_lwsw', flag_xyfill=.true.)
+          call addfld('SU_TOA', (/'swband'/), 'A', 'W/m2', &
+                      'Upwelling Spectral Radiation at TOA', &
+                      sampling_seq='rad_lwsw', flag_xyfill=.true.)
 
           if (history_amwg) then
              call add_default('SOLIN'//diag(icall),   1, ' ')
@@ -1469,6 +1481,10 @@ end function radiation_nextsw_cday
                   call outfld('NIR_E_DIF'//diag(icall),cam_out%flx_nir_dif(:,5) ,pcols,lchnk)
                   call outfld('NIR_F_DIF'//diag(icall),cam_out%flx_nir_dif(:,6) ,pcols,lchnk)
                   call outfld('NIR_G_DIF'//diag(icall),cam_out%flx_nir_dif(:,7) ,pcols,lchnk)
+                  call outfld('SD_BOA'//diag(icall), sd(:,pver+1,:), pcols, lchnk)
+                  call outfld('SD_TOA'//diag(icall), sd(:,1,:), pcols, lchnk)
+                  call outfld('SU_BOA'//diag(icall), su(:,pver+1,:), pcols, lchnk)
+                  call outfld('SU_TOA'//diag(icall), su(:,1,:), pcols, lchnk)
 
               end if ! (active_calls(icall))
           end do ! icall
