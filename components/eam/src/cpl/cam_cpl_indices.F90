@@ -92,7 +92,6 @@ module cam_cpl_indices
   integer :: index_x2a_Sl_snowh        ! surface snow depth over land
   integer :: index_x2a_Sl_snowfrac
   integer :: index_x2a_Si_snowh        ! surface snow depth over ice
-  integer :: index_x2a_Sl_snowfrac     ! 
   integer :: index_x2a_Sl_fv           ! friction velocity
   integer :: index_x2a_Sl_ram1         ! aerodynamical resistance
   integer :: index_x2a_Sl_soilw        ! volumetric soil water
