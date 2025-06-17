@@ -17,7 +17,8 @@ use spmd_utils,        only: masterproc
 use phys_control,      only: cam_chempkg_is
 use ref_pres,          only: top_lev => clim_modal_aero_top_lev
 use physconst,         only: rhoh2o, rga, rair
-use radconstants,      only: nswbands, nlwbands, idx_sw_diag, idx_uv_diag, idx_nir_diag
+use radconstants,      only: nswbands, nlwbands, idx_sw_diag, idx_uv_diag, idx_nir_diag, &
+                             get_sw_spectral_midpoints, get_lw_spectral_midpoints
 use rad_constituents,  only: n_diag, rad_cnst_get_call_list, rad_cnst_get_info, rad_cnst_get_aer_mmr, &
                              rad_cnst_get_aer_props, rad_cnst_get_mode_props
 use physics_types,     only: physics_state
@@ -27,7 +28,7 @@ use pio,               only: file_desc_t, var_desc_t, pio_inq_dimlen, pio_inq_di
                              pio_get_var, pio_nowrite, pio_closefile
 use cam_pio_utils,     only: cam_pio_openfile
 use cam_history,       only:  addfld, horiz_only, add_default, outfld
-use cam_history_support, only: fillvalue
+use cam_history_support, only: fillvalue, add_hist_coord
 use cam_logfile,       only: iulog
 use perf_mod,          only: t_startf, t_stopf
 use cam_abortutils,        only: endrun
@@ -73,6 +74,7 @@ real(r8), allocatable :: dgnumdry_m(:,:,:) ! number mode dry diameter for all mo
 real(r8), allocatable, target :: dgnumwet_m(:,:,:) ! number mode wet diameter for all modes
 real(r8), allocatable, target :: qaerwat_m(:,:,:)  ! aerosol water (g/g) for all modes
 !$OMP THREADPRIVATE(dgnumdry_m, dgnumwet_m, qaerwat_m)
+real(r8), target :: sw_band_midpoints(nswbands), lw_band_midpoints(nlwbands) !JPT
 
 logical :: clim_modal_aero ! true when radiatively constituents present (nmodes>0)
 logical :: prog_modal_aero ! Prognostic modal aerosols present
@@ -123,14 +125,7 @@ subroutine modal_aer_opt_coords
    integer :: i_nswband
    call get_sw_spectral_midpoints(sw_band_midpoints, 'nm')
    call get_lw_spectral_midpoints(lw_band_midpoints, 'nm')
-   do i_nswband = 1, nswbands
-      sw_band_midpoints_p(i_nswband) = sw_band_midpoints(rrtmg_to_rrtmgp_swbands(i_nswband))
-   end do
-   if (output_aer_props_rrtmgp == 1) then
-      call add_hist_coord('swband', nswbands, 'Shortwave wavelength', 'nm', sw_band_midpoints_p)
-   else
-      call add_hist_coord('swband', nswbands, 'Shortwave wavelength', 'nm', sw_band_midpoints)
-   end if
+   call add_hist_coord('swband', nswbands, 'Shortwave wavelength', 'nm', sw_band_midpoints)
    call add_hist_coord('lwband', nlwbands, 'Longwave wavelength', 'nm', lw_band_midpoints)
 end subroutine modal_aer_opt_coords
 

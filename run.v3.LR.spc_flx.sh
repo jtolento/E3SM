@@ -26,7 +26,7 @@ readonly COMPSET="WCYCL1850"
 readonly RESOLUTION="ne30pg2_r05_IcoswISC30E3r5"
 #readonly RESOLUTION="ne4pg2_oQU480"
 # BEFORE RUNNING : CHANGE the following CASE_NAME to desired value
-readonly CASE_NAME="btf_spc_alb_dbg"
+readonly CASE_NAME="WCYCL1850_spc_alb"
 #readonly NL_MAPS=false
 # If this is part of a simulation campaign, ask your group lead about using a case_group label
 # readonly CASE_GROUP=""
@@ -89,15 +89,15 @@ else
   readonly PELAYOUT="custom-22"
   readonly WALLTIME="24:00:00"
   readonly STOP_OPTION="nyears"
-  readonly STOP_N="11"
+  readonly STOP_N="5"
   readonly REST_OPTION="nyears"
-  readonly REST_N="11"
-  readonly RESUBMIT="2"
+  readonly REST_N="1"
+  readonly RESUBMIT="0"
   readonly DO_SHORT_TERM_ARCHIVING=false
 fi
 
 # Coupler history
-readonly HIST_OPTION="nsteps"
+readonly HIST_OPTION="nyears"
 readonly HIST_N="1"
 
 # Leave empty (unless you understand what it does)
@@ -122,7 +122,7 @@ fetch_code
 create_newcase
 
 # Custom PE layout
-custom_pelayout
+#custom_pelayout
 
 # Setup
 case_setup
@@ -152,25 +152,36 @@ user_nl() {
 
 cat << EOF >> user_nl_eam
  spectralflux  = .true.
- nhtfrq =   -24,-24
- mfilt  = 1,1
- avgflag_pertape = 'A','I'
- fincl2 = 'ALB_NIR_A_DIR','ALB_NIR_B_DIR','ALB_NIR_C_DIR','ALB_NIR_D_DIR','ALB_NIR_E_DIR','ALB_NIR_F_DIR','ALB_NIR_G_DIR','ALB_NIR_A_DIF','ALB_NIR_B_DIF','ALB_NIR_C_DIF','ALB_NIR_D_DIF','ALB_NIR_E_DIF','ALB_NIR_F_DIF','ALB_NIR_G_DIF','NIR_A_DIR','NIR_B_DIR','NIR_C_DIR','NIR_D_DIR','NIR_E_DIR','NIR_F_DIR','NIR_G_DIR','NIR_A_DIF','NIR_B_DIF','NIR_C_DIF','NIR_D_DIF','NIR_E_DIF','NIR_F_DIF','NIR_G_DIF','SNOWFRAC','SD_BOA','SD_TOA','SU_TOA','SU_BOA'
+ nhtfrq =   0,0,0,0,0,0
+ mfilt  = 12,12,12,12,12,12 
+ avgflag_pertape = 'A','A','A','A','A','A' 
+ fexcl1 = 'LINOZ_DO3', 'LINOZ_DO3_PSC', 'LINOZ_O3CLIM', 'LINOZ_O3COL', 'LINOZ_SSO3', 'hstobie_linoz'
+ fincl1 = 'extinct_sw_inp','extinct_lw_bnd7','extinct_lw_inp','TREFMNAV','TREFMXAV' 
+ fincl2 = 'FLUT','PRECT','TREFHT','TREFHTMN:M','TREFHTMX:X','QREFHT','TS','PS','TMQ','TUQ','TVQ','TOZ', 'FLDS', 'FLNS', 'FSDS', 'FSNS', 'SHFLX', 'LHFLX', 'TGCLDCWP', 'TGCLDIWP', 'TGCLDLWP', 'CLDTOT', 'FSNT', 'FLNT'
+ fincl3 = 'FLNS','FLDS','FSNS','FSNT','FSNTOA','FSUTOA','FSDS','SOLIN','SOLL','SOLLD','SOLS','SOLSD','FUS','FDS'
+ fincl4 = 'TS','T925','T850','QRS','TAP','UAP','VAP','QAP','T8501000','T9251000','TREFHT','TREFHTMN:M','TREFHTMX:X','T'
+ fincl5= 'OMEGA1000','OMEGA975','OMEGA950','OMEGA925','OMEGA900','OMEGA850','U1000','U975','U950','U925','U900','U850','V1000','V975','V950','V925','V900','V850'
+ fincl6 = 'ASDIR','ALDIR','ASDIF','ALDIF','FLNS','FLDS','FSNS','FSNT','FSNTOA','FSUTOA','FSDS','SOLIN','SOLL','SOLLD','SOLS','SOLSD','ALB_NIR_A_DIR','ALB_NIR_B_DIR','ALB_NIR_C_DIR','ALB_NIR_D_DIR','ALB_NIR_E_DIR','ALB_NIR_F_DIR','ALB_NIR_G_DIR','ALB_NIR_A_DIF','ALB_NIR_B_DIF','ALB_NIR_C_DIF','ALB_NIR_D_DIF','ALB_NIR_E_DIF','ALB_NIR_F_DIF','ALB_NIR_G_DIF','NIR_A_DIR','NIR_B_DIR','NIR_C_DIR','NIR_D_DIR','NIR_E_DIR','NIR_F_DIR','NIR_G_DIR','NIR_A_DIF','NIR_B_DIF','NIR_C_DIF','NIR_D_DIF','NIR_E_DIF','NIR_F_DIF','NIR_G_DIF','SNOWFRAC','SD_BOA','SD_TOA','SU_TOA','SU_BOA'
 
 EOF
 
 cat << EOF >> user_nl_elm
  use_snicar_ad = true
- hist_dov2xy = .true. 
- hist_nhtfrq= -24
- hist_mfilt= 1
- hist_avgflag_pertape= 'A'
+ hist_dov2xy = .true.,.true.
+ hist_fincl2 = 'H2OSNO', 'ALBD', 'ALBGRD', 'ALBGRI', 'ALBI', 'SNO_EXISTENCE', 'SNORDSL', 'QFLX_SUB_SNOW', 'QFLX_RAIN_GRND', 'QFLX_SNOW_GRND', 'LWdown', 'Tair', 'PSurf', 'COSZEN', 'QICE'
+ hist_fincl3='H2OSNO', 'FSNO', 'FSNO_EFF', 'H2OSFC', 'FH2OSFC', 'SNORDSL', 'SNO_BW', 'SNO_GS', 'SNO_Z', 'SNO_LIQH2O', 'SNO_ICE', 'SOILICE_ICE', 'SOILLIQ_ICE', 'SNO_T', 'TSOI_ICE', 'TH2OSFC', 'SNO_TK', 'SNO_ABS', 'SNO_EXISTENCE'
+ hist_fincl4='SNOW_DEPTH', 'H2OSNO', 'SNO_T'
+ hist_fincl5 = 'FSDSVD','FSDSVI','FSRVD','FSRVI','FSDSVDLN','FSDSVILN','FSRVDLN','SNOFSDSVD','SNOFSDSND','SNOFSDSVI','SNOFSDSNI','SNOFSRVD','SNOFSRND','SNOFSRVI','SNOFSRNI','FSDS','FSDSNI','FSDSND','FSRND','FSRNI'
+ hist_nhtfrq= 0,0,0,0,0
+ hist_mfilt= 1,1, 1, 1,1
+ hist_avgflag_pertape= 'A', 'A','A','A','A'
+
 EOF
 
 cat << EOF >> user_nl_mpassi
- config_am_timeseriesstatsdaily_compute_on_startup = true
- config_am_timeseriesstatsdaily_enable = true
- config_am_timeseriesstatsdaily_write_on_startup = true
+ config_am_timeseriesstatsmonthly_compute_on_startup = true
+ config_am_timeseriesstatsmonthly_enable = true
+ config_am_timeseriesstatsmonthly_write_on_startup = true
 EOF
 
 }
@@ -298,11 +309,38 @@ case_setup() {
     # Short term archiving
     ./xmlchange DOUT_S=${DO_SHORT_TERM_ARCHIVING^^}
     ./xmlchange DOUT_S_ROOT=${CASE_ARCHIVE_DIR}
-    #./xmlchange ATM2LND_FMAPNAME_NONLINEAR="idmap"
-    #./xmlchange ATM2ROF_FMAPNAME_NONLINEAR="idmap"
-    #./xmlchange ATM2OCN_FMAPNAME_NONLINEAR="idmap"
-    #./xmlchange ATM2ICE_FMAPNAME_NONLINEAR="idmap"
+
+    # PE Layout
+    # 21 nodes - ~10 sy/wd  
+    export NPROCS_ATM=1800
+    export NPROCS_LND=768
+    export NPROCS_ROF=768
+    export NPROCS_ICE=1152
+    export NPROCS_OCN=768
+    export NPROCS_CPL=1920
+    export NPROCS_WAV=1
+    export NPROCS_GLC=1
+    export NPROCS_ESP=1
+    export NPROCS_IAC=1
+
+    ./xmlchange  --file env_mach_pes.xml  --id PSTRID_CPL  --val 1
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_CPL  --val $NPROCS_CPL
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_ATM  --val $NPROCS_ATM
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_LND  --val $NPROCS_LND
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_ROF  --val $NPROCS_ROF
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_ICE  --val $NPROCS_ICE
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_OCN  --val $NPROCS_OCN
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_GLC  --val $NPROCS_GLC
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_WAV  --val $NPROCS_WAV
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_ESP  --val $NPROCS_ESP
+    ./xmlchange --file env_mach_pes.xml  --id NTASKS_IAC  --val $NPROCS_IAC
+
+    ./xmlchange LND_ROOTPE=1152
+    ./xmlchange ROF_ROOTPE=1152
+    ./xmlchange OCN_ROOTPE=1920
+    
     ./xmlchange ATM2LND_FMAPNAME_NONLINEAR="idmap_ignore" 
+
     #./xmlchange --append CAM_CONFIG_OPTS='-rad rrtmgp' # JPT - Use RRTMGP INSTEAD 
     # Build with COSP, except for a data atmosphere (datm)
     if [ `./xmlquery --value COMP_ATM` == "datm"  ]; then

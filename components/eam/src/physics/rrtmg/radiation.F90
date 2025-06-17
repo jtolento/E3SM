@@ -673,10 +673,10 @@ end function radiation_nextsw_cday
                        sampling_seq='rad_lwsw', flag_xyfill=.true., &
                        standard_name='toa_shortwave_cloud_radiative_effect')
 
-          call get_sw_spectral_midpoints(sw_band_midpoints, 'cm-1')
-          call get_lw_spectral_midpoints(lw_band_midpoints, 'cm-1')
-          call add_hist_coord('swband', nswbands, 'Shortwave wavenumber', 'cm-1', sw_band_midpoints)
-          call add_hist_coord('lwband', nlwbands, 'Longwave wavenumber', 'cm-1', lw_band_midpoints)
+          !call get_sw_spectral_midpoints(sw_band_midpoints, 'cm-1')
+          !call get_lw_spectral_midpoints(lw_band_midpoints, 'cm-1')
+          !call add_hist_coord('swband', nswbands, 'Shortwave wavenumber', 'cm-1', sw_band_midpoints)
+          !call add_hist_coord('lwband', nlwbands, 'Longwave wavenumber', 'cm-1', lw_band_midpoints)
           call addfld ('NIR_A_DIR'//diag(icall),  horiz_only,     'A',    'W/m2', 'NIR Flux in Band A (0.7-0.778)', &
                       sampling_seq='rad_lwsw', flag_xyfill=.true., &
                       standard_name='nir_a_dir')
