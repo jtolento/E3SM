@@ -36,7 +36,7 @@ readonly CASE_NAME="WCYCL1850_spc_alb"
 readonly CHECKOUT="20240305"
 readonly BRANCH="v3.0.0"
 readonly CHERRY=( )
-readonly DEBUG_COMPILE=True
+readonly DEBUG_COMPILE=False
 
 # Run options
 readonly MODEL_START_TYPE="hybrid"  # 'initial', 'continue', 'branch', 'hybrid'
@@ -59,7 +59,7 @@ readonly CASE_ARCHIVE_DIR=${CASE_ROOT}/archive
 #  short tests: 'XS_2x5_ndays', 'XS_1x10_ndays', 'S_1x10_ndays',
 #               'M_1x10_ndays', 'M2_1x10_ndays', 'M80_1x10_ndays', 'L_1x10_ndays'
 #  or 'production' for full simulation
-readonly run="XS_2x5_ndays"
+readonly run="production"
 
 if [ "${run}" != "production" ]; then
   echo "setting up Short test simulations: ${run}"
@@ -87,17 +87,17 @@ else
   readonly CASE_SCRIPTS_DIR=${CASE_ROOT}/case_scripts
   readonly CASE_RUN_DIR=${CASE_ROOT}/run
   readonly PELAYOUT="custom-22"
-  readonly WALLTIME="24:00:00"
-  readonly STOP_OPTION="nyears"
-  readonly STOP_N="5"
-  readonly REST_OPTION="nyears"
+  readonly WALLTIME="03:00:00"
+  readonly STOP_OPTION="nmonths"
+  readonly STOP_N="1"
+  readonly REST_OPTION="nmonths"
   readonly REST_N="1"
   readonly RESUBMIT="0"
   readonly DO_SHORT_TERM_ARCHIVING=false
 fi
 
 # Coupler history
-readonly HIST_OPTION="nyears"
+readonly HIST_OPTION="nmonths"
 readonly HIST_N="1"
 
 # Leave empty (unless you understand what it does)
@@ -153,7 +153,7 @@ user_nl() {
 cat << EOF >> user_nl_eam
  spectralflux  = .true.
  nhtfrq =   0,0,0,0,0,0
- mfilt  = 12,12,12,12,12,12 
+ mfilt  = 1,1,1,1,1,1
  avgflag_pertape = 'A','A','A','A','A','A' 
  fexcl1 = 'LINOZ_DO3', 'LINOZ_DO3_PSC', 'LINOZ_O3CLIM', 'LINOZ_O3COL', 'LINOZ_SSO3', 'hstobie_linoz'
  fincl1 = 'extinct_sw_inp','extinct_lw_bnd7','extinct_lw_inp','TREFMNAV','TREFMXAV' 
@@ -180,7 +180,7 @@ EOF
 
 cat << EOF >> user_nl_mpassi
  config_am_timeseriesstatsmonthly_compute_on_startup = true
- config_am_timeseriesstatsmonthly_enable = true
+ config_am_timeseriesstatsmonthly_enable = true           
  config_am_timeseriesstatsmonthly_write_on_startup = true
 EOF
 
@@ -486,7 +486,7 @@ case_submit() {
     pushd ${CASE_SCRIPTS_DIR}
 
     # Run CIME case.submit
-    ./xmlchange --file env_workflow.xml --id JOB_QUEUE --val debug
+    #./xmlchange --file env_workflow.xml --id JOB_QUEUE --val debug
     ./case.submit -a="--mail-type=ALL --mail-user=$USER@nersc.gov --requeue"
 
     popd
