@@ -1056,6 +1056,8 @@ contains
        end do
     end do
 
+    
+
     if (use_top_solar_rad) then
        call Albedo_TOP_Adjustment(bounds, num_novegsol, filter_novegsol, nextsw_cday, &
                                   coszen_patch(bounds%begp:bounds%endp), declinp1, surfalb_vars, .false.)
@@ -1763,8 +1765,12 @@ contains
              spc_albi(p,ib) = albi(p,2)
           end if
        end do
+
     end do !JPT loop through snow bands
-     end associate
+
+    
+  end associate
+  
 
     end subroutine TwoStream
     
@@ -1804,6 +1810,7 @@ contains
     integer  :: ib                                        ! band index
     integer  :: ic                                        ! 0=unit incoming direct; 1=unit incoming diffuse
     integer  :: izen
+    integer  :: i
     real(r8) :: lon_180                                   ! lon starting from -180
     real(r8) :: cosz                                      ! cosine solar zenith angle for next time step
     real(r8) :: sinz                                      ! sine of solar zenith angle
@@ -2000,22 +2007,26 @@ contains
                  if (ib == 1) then !JPT
                     spc_albd(p,ib) = fd_prime * spc_albd(p,ib) - (fd_prime-1._r8)
                     spc_albi(p,ib) = fi_prime * spc_albi(p,ib) - (fi_prime-1._r8)
-                 else
-                    spc_albd(p,2) = fd_prime * spc_albd(p,2) - (fd_prime-1._r8)
-                    spc_albi(p,2) = fi_prime * spc_albi(p,2) - (fi_prime-1._r8)
-                    spc_albd(p,3) = fd_prime * spc_albd(p,3) - (fd_prime-1._r8)
-                    spc_albi(p,3) = fi_prime * spc_albi(p,3) - (fi_prime-1._r8)
-                    spc_albd(p,4) = fd_prime * spc_albd(p,4) - (fd_prime-1._r8)
-                    spc_albi(p,4) = fi_prime * spc_albi(p,4) - (fi_prime-1._r8)
-                    spc_albd(p,5) = fd_prime * spc_albd(p,5) - (fd_prime-1._r8)
-                    spc_albi(p,5) = fi_prime * spc_albi(p,5) - (fi_prime-1._r8)
-                    spc_albd(p,6) = fd_prime * spc_albd(p,6) - (fd_prime-1._r8)
-                    spc_albi(p,6) = fi_prime * spc_albi(p,6) - (fi_prime-1._r8)
-                    spc_albd(p,7) = fd_prime * spc_albd(p,7) - (fd_prime-1._r8)
-                    spc_albi(p,7) = fi_prime * spc_albi(p,7) - (fi_prime-1._r8)
-                    spc_albd(p,8) = fd_prime * spc_albd(p,8) - (fd_prime-1._r8)
-                    spc_albi(p,8) = fi_prime * spc_albi(p,8) - (fi_prime-1._r8)
+                    if (spc_albd(p,ib)  <= 0._r8 ) then
+                       spc_albd(p,ib) = 0._r8
+                    end if
+                    if (spc_albi(p,ib)  <= 0._r8 ) then
+                       spc_albi(p,ib) = 0._r8
+                    end if
+                 elseif  (ib == 2) then
+                    do i = 2, 8
+                       spc_albd(p,i) = fd_prime * spc_albd(p,i) - (fd_prime-1._r8)
+                       spc_albi(p,i) = fi_prime * spc_albi(p,i) - (fi_prime-1._r8)
+                       
+                       if (spc_albd(p,i)  <= 0._r8 ) then
+                          spc_albd(p,i) = 0._r8
+                       end if
+                       if (spc_albi(p,i)  <= 0._r8 ) then
+                          spc_albi(p,i) = 0._r8
+                       end if
+                    end do
                  end if !JPT
+                       
                enddo
             endif
             

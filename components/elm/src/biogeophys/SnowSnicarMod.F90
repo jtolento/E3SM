@@ -2540,6 +2540,7 @@ contains
 
                      ! Linear interpolation for calculating the asymetry factor at band_idx.
                      if(snw_shp_lcl(i) > 1) then
+                        print*,"JPT ELM: snw_shp_lcl(i) > 1"
                        if(bnd_idx == 1) then
                          g_Cg_intp = (g_ice_Cg_tmp(2)-g_ice_Cg_tmp(1))/(1.055_r8-0.475_r8)*(0.5_r8-0.475_r8)+g_ice_Cg_tmp(1)
                          gg_F07_intp = (gg_ice_F07_tmp(2)-gg_ice_F07_tmp(1))/(1.055_r8-0.475_r8)*(0.5_r8-0.475_r8)+gg_ice_F07_tmp(1)
@@ -3129,7 +3130,6 @@ contains
              albout(c_idx,2) = 0._r8
              spc_albout(c_idx,:) = 0._r8
           endif    ! if column has snow and coszen > 0
-
        enddo    ! loop over all columns
 
      end associate
