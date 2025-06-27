@@ -87,17 +87,17 @@ else
   readonly CASE_SCRIPTS_DIR=${CASE_ROOT}/case_scripts
   readonly CASE_RUN_DIR=${CASE_ROOT}/run
   readonly PELAYOUT="custom-22"
-  readonly WALLTIME="03:00:00"
-  readonly STOP_OPTION="nmonths"
-  readonly STOP_N="1"
+  readonly WALLTIME="12:00:00"
+  readonly STOP_OPTION="nyears"
+  readonly STOP_N="5"
   readonly REST_OPTION="nmonths"
-  readonly REST_N="1"
-  readonly RESUBMIT="0"
+  readonly REST_N="6"
+  readonly RESUBMIT="6"
   readonly DO_SHORT_TERM_ARCHIVING=false
 fi
 
 # Coupler history
-readonly HIST_OPTION="nmonths"
+readonly HIST_OPTION="nyears"
 readonly HIST_N="1"
 
 # Leave empty (unless you understand what it does)
@@ -323,7 +323,7 @@ case_setup() {
     export NPROCS_ESP=1
     export NPROCS_IAC=1
 
-    ./xmlchange  --file env_mach_pes.xml  --id PSTRID_CPL  --val 1
+    ./xmlchange --file env_mach_pes.xml  --id PSTRID_CPL  --val 1
     ./xmlchange --file env_mach_pes.xml  --id NTASKS_CPL  --val $NPROCS_CPL
     ./xmlchange --file env_mach_pes.xml  --id NTASKS_ATM  --val $NPROCS_ATM
     ./xmlchange --file env_mach_pes.xml  --id NTASKS_LND  --val $NPROCS_LND
