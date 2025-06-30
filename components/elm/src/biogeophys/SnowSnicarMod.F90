@@ -1853,6 +1853,7 @@ contains
      real(r8):: asm_prm_aer_lcl(sno_nbr_aer)       ! asymmetry parameter of aerosol species (aer_nbr) [frc]
      real(r8):: ext_cff_mss_aer_lcl(sno_nbr_aer)   ! mass extinction coefficient of aerosol species (aer_nbr) [m2/kg]
 
+
 #ifdef MODAL_AER
      !mgf++
      real(r8) :: rds_bcint_lcl(-nlevsno+1:0)       ! effective radius of within-ice BC [nm]
@@ -1866,6 +1867,7 @@ contains
                                                    ! (1= use, 0= don't use)
      real(r8):: flx_wgt(1:numrad_snw)              ! weights applied to spectral bands,
                                                    ! specific to direct and diffuse cases (bnd) [frc]
+     real(r8):: tot_nir_flx
      integer :: flg_nosnl                          ! flag: =1 if there is snow, but zero snow layers,
                                                    ! =0 if at least 1 snow layer [flg]
      !integer :: trip                               ! flag: =1 to redo RT calculation if result is unrealistic
@@ -2391,19 +2393,23 @@ contains
                   endif
                endif
 
-            elseif(numrad_snw==8) then                
+            elseif(numrad_snw==8) then
+               tot_nir_flx = sum(nir_bands_flx(c_idx,:))
                if (flg_slr_in == 1 .or. flg_slr_in == 2 ) then
                   if (atm_type_index == atm_type_default) then
                      flx_wgt(1) = 1._r8
-                     if (sum(nir_bands_flx(c_idx,:)) > 0.001) then 
-                        flx_wgt(2) = nir_bands_flx(c_idx,1) / sum(nir_bands_flx(c_idx,:))
-                        flx_wgt(3) = nir_bands_flx(c_idx,2) / sum(nir_bands_flx(c_idx,:))
-                        flx_wgt(4) = nir_bands_flx(c_idx,3) / sum(nir_bands_flx(c_idx,:))
-                        flx_wgt(5) = nir_bands_flx(c_idx,4) / sum(nir_bands_flx(c_idx,:))
-                        flx_wgt(6) = nir_bands_flx(c_idx,5) / sum(nir_bands_flx(c_idx,:))
-                        flx_wgt(7) = nir_bands_flx(c_idx,6) / sum(nir_bands_flx(c_idx,:))
-                        flx_wgt(8) = 1._r8 - (flx_wgt(2) + flx_wgt(3) + flx_wgt(4) &
-                             + flx_wgt(5)+flx_wgt(6)+flx_wgt(7))
+                     if (tot_nir_flx > 10.0) then 
+                        flx_wgt(2) = nir_bands_flx(c_idx,1) / tot_nir_flx
+                        flx_wgt(3) = nir_bands_flx(c_idx,2) / tot_nir_flx
+                        flx_wgt(4) = nir_bands_flx(c_idx,3) / tot_nir_flx
+                        flx_wgt(5) = nir_bands_flx(c_idx,4) / tot_nir_flx
+                        flx_wgt(6) = nir_bands_flx(c_idx,5) / tot_nir_flx
+                        flx_wgt(7) = nir_bands_flx(c_idx,6) / tot_nir_flx
+                        flx_wgt(8) = nir_bands_flx(c_idx,7) / tot_nir_flx
+                        if ( abs(sum(flx_wgt(:)) - 2.0_r8) > 1e-5 ) then
+                           print*,"JPT ELM: SNICAR ERROR, sum(flx_wgt) = ", sum(flx_wgt(:))
+                           call endrun(decomp_index=c_idx, elmlevel=namec, msg=errmsg(__FILE__, __LINE__))
+                        endif 
                      else
                         if (flg_slr_in == 1) then
                            flx_wgt(2) = 0.163497

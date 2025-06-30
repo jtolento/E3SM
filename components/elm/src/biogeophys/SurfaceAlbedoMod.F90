@@ -250,7 +250,8 @@ contains
           spc_albgrd   =>    surfalb_vars%spc_albgrd_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (direct)
           spc_albgri   =>    surfalb_vars%spc_albgri_col             , & !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (diffuse)
           nir_bands_dir  =>   atm2lnd_vars%forc_nir_bands_dir_downscaled      , & !JPT Input: NIR fluxes (col,numrad_snw-1)
-          nir_bands_dif  =>   atm2lnd_vars%forc_nir_bands_dif_downscaled        & !JPT Input: NIR fluxes (col,numrad_snw-1)  
+          nir_bands_dif  =>   atm2lnd_vars%forc_nir_bands_dif_downscaled        & !JPT Input: NIR fluxes (col,numrad_snw-1)
+          
           )
 
     ! Cosine solar zenith angle for next time step
