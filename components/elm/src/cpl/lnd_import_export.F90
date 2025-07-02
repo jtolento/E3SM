@@ -1415,9 +1415,6 @@ contains
     ! cesm sign convention is that fluxes are positive downward
 
     l2x(:,:) = 0.0_r8
-    print*, "JPT ELM lnd_import_export shape lnd2atm_vars%spc_albd_grc(:,:) ", shape(lnd2atm_vars%spc_albd_grc)
-    print*, "JPT ELM lnd_import_export shape lnd2atm_vars%spc_albi_grc(:,:) ", shape(lnd2atm_vars%spc_albi_grc)
-    print*, "JPT ELM lnd_import_export shape albd_grc(:,:) ",                  shape(lnd2atm_vars%albd_grc)
     do g = bounds%begg,bounds%endg
        i = 1 + (g-bounds%begg)
        l2x(index_l2x_Sl_t,i)        =  lnd2atm_vars%t_rad_grc(g)

@@ -2344,8 +2344,8 @@ contains
              ! The following weights are appropriate for surface-incident flux in a mid-latitude winter atmosphere
              !
              ! 3-band weights
-             print *, "JPT ELM: SNICAR Begin setting flx_wgt"
-             print *, "JPT ELM: SNICAR numrad_snw        = ", numrad_snw
+             !print *, "JPT ELM: SNICAR Begin setting flx_wgt"
+             !print *, "JPT ELM: SNICAR numrad_snw        = ", numrad_snw
              if (numrad_snw==3) then
                 ! Direct:
                 if (flg_slr_in == 1) then
@@ -2411,7 +2411,6 @@ contains
                       !print *, "JPT ELM SNICAR bounds%begc:                = ", bounds%begc
                       !print *, "JPT ELM SNICAR bounds%endc:                = ", bounds%endc
                       if (sum(nir_bands_flx(c_idx,:)) >= 0.0001) then
-                         print *, "JPT ELM: Using SPC ATM BANDS "
                          flx_wgt(2) = nir_bands_flx(c_idx,1) / sum(nir_bands_flx(c_idx,:))
                          flx_wgt(3) = nir_bands_flx(c_idx,2) / sum(nir_bands_flx(c_idx,:))
                          flx_wgt(4) = nir_bands_flx(c_idx,3) / sum(nir_bands_flx(c_idx,:))
@@ -2433,9 +2432,9 @@ contains
                       !flx_wgt(8) = nir_bands_flx(c_idx,7) / sum(nir_bands_flx(c_idx,:))
                    endif
                 endif
-                print *, "JPT ELM: Done Defining weights"
-                print *, "JPT ELM: flx_wgt        =",  flx_wgt(:)
-                print *, "JPT ELM: shape(flx_wgt) =",  shape(flx_wgt)
+                !print *, "JPT ELM: Done Defining weights"
+                !print *, "JPT ELM: flx_wgt        =",  flx_wgt(:)
+                !print *, "JPT ELM: shape(flx_wgt) =",  shape(flx_wgt)
              endif ! end if numrad_snw
              
              ! Loop over snow spectral bands

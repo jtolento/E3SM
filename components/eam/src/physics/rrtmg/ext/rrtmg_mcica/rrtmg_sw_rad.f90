@@ -599,10 +599,10 @@
          !   albdif(ib) = asdif(iplon)
          !enddo
          !JPT: Spectral Albedo test:
-         albdir(1)  = alb_nir_dir(iplon,5)
-         albdir(2)  = alb_nir_dir(iplon,5)
-         albdir(3)  = alb_nir_dir(iplon,5)
-         albdir(4)  = alb_nir_dir(iplon,5)
+         albdir(1)  = alb_nir_dir(iplon,7)
+         albdir(2)  = alb_nir_dir(iplon,7)
+         albdir(3)  = alb_nir_dir(iplon,7)
+         albdir(4)  = alb_nir_dir(iplon,6)
          albdir(5)  = alb_nir_dir(iplon,5)
          albdir(6)  = alb_nir_dir(iplon,4)
          albdir(7)  = alb_nir_dir(iplon,3)
@@ -612,12 +612,12 @@
          albdir(11) = asdir(iplon)
          albdir(12) = asdir(iplon)
          albdir(13) = asdir(iplon)
-         albdir(14) = alb_nir_dir(iplon,5)
+         albdir(14) = alb_nir_dir(iplon,7)
 
-         albdif(1)  = alb_nir_dif(iplon,5)
-         albdif(2)  = alb_nir_dif(iplon,5)
-         albdif(3)  = alb_nir_dif(iplon,5)
-         albdif(4)  = alb_nir_dif(iplon,5)
+         albdif(1)  = alb_nir_dif(iplon,7)
+         albdif(2)  = alb_nir_dif(iplon,7)
+         albdif(3)  = alb_nir_dif(iplon,7)
+         albdif(4)  = alb_nir_dif(iplon,6)
          albdif(5)  = alb_nir_dif(iplon,5)
          albdif(6)  = alb_nir_dif(iplon,4)
          albdif(7)  = alb_nir_dif(iplon,3)
@@ -627,7 +627,7 @@
          albdif(11) = asdif(iplon)
          albdif(12) = asdif(iplon)
          albdif(13) = asdif(iplon)
-         albdif(14) = alb_nir_dif(iplon,5)
+         albdif(14) = alb_nir_dif(iplon,7)
          
 
 ! Clouds

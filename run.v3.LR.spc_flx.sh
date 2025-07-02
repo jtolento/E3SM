@@ -26,7 +26,7 @@ readonly COMPSET="WCYCL1850"
 readonly RESOLUTION="ne30pg2_r05_IcoswISC30E3r5"
 #readonly RESOLUTION="ne4pg2_oQU480"
 # BEFORE RUNNING : CHANGE the following CASE_NAME to desired value
-readonly CASE_NAME="btf_mpassi"
+readonly CASE_NAME="btf_cpl_mods"
 #readonly NL_MAPS=false
 # If this is part of a simulation campaign, ask your group lead about using a case_group label
 # readonly CASE_GROUP=""
@@ -39,14 +39,14 @@ readonly CHERRY=( )
 readonly DEBUG_COMPILE=False
 
 # Run options
-readonly MODEL_START_TYPE="initial"  # 'initial', 'continue', 'branch', 'hybrid'
+readonly MODEL_START_TYPE="hybrid"  # 'initial', 'continue', 'branch', 'hybrid'
 readonly START_DATE="0001-01-01"
 
 # Additional options for 'branch' and 'hybrid'
-readonly GET_REFCASE=FALSE
-#readonly RUN_REFDIR=""
-#readonly RUN_REFCASE=""
-#readonly RUN_REFDATE=""   # same as MODEL_START_DATE for 'branch', can be different for 'hybrid'
+readonly GET_REFCASE=TRUE
+readonly RUN_REFDIR="/pscratch/sd/j/jtolento/LANL/chrysalis_rst/"
+readonly RUN_REFCASE="20231209.v3.LR.piControl-spinup.chrysalis"
+readonly RUN_REFDATE="2001-01-01"
 
 # Set paths
 readonly CASE_ROOT="${SCRATCH}/LANL/${CASE_NAME}"
@@ -74,12 +74,12 @@ if [ "${run}" != "production" ]; then
   readonly CASE_RUN_DIR=${CASE_ROOT}/tests/${run}/run
   readonly PELAYOUT=${layout}
   readonly WALLTIME="0:30:00"
-  readonly STOP_OPTION=${units}
-  readonly STOP_N=${length}
-  #readonly STOP_OPTION=ndays
-  #readonly STOP_N=5
+  #readonly STOP_OPTION=${units}
+  #readonly STOP_N=${length}
+  readonly STOP_OPTION=ndays
+  readonly STOP_N=2
   readonly REST_OPTION=${STOP_OPTION}
-  readonly REST_N=${STOP_N}
+  readonly REST_N=2
   readonly RESUBMIT=${resubmit}
   readonly DO_SHORT_TERM_ARCHIVING=false
 else
@@ -156,12 +156,13 @@ cat << EOF >> user_nl_eam
  mfilt  = 1
  avgflag_pertape = 'A'
  fincl2 = 'NIR_WGHT_DIR','SOLS','SOLL','SOLSD','SOLLD','FSDS','SNOWFRAC','NIR_A_DIR','NIR_A_DIR','NIR_B_DIR','NIR_C_DIR','NIR_D_DIR','NIR_E_DIR', 'ALB_NIR_A_DIR', 'ALB_NIR_B_DIR', 'ALB_NIR_C_DIR', 'ALB_NIR_D_DIR', 'ALB_NIR_E_DIR','FSNS','ASDIR','ASDIF','ALDIR','ALDIF'
+ 
+
 EOF
 
 cat << EOF >> user_nl_elm
  use_snicar_ad = true
  hist_dov2xy = .true. 
- hist_fincl2 = 'FSDSVI','FSNO','SNORDSL'
  hist_nhtfrq= -24
  hist_mfilt= 1
  hist_avgflag_pertape= 'A'
@@ -172,6 +173,7 @@ cat << EOF >> user_nl_mpassi
  config_am_timeseriesstatsdaily_enable = true
  config_am_timeseriesstatsdaily_write_on_startup = true
 EOF
+
 }
 
 patch_mpas_streams() {
@@ -297,6 +299,11 @@ case_setup() {
     # Short term archiving
     ./xmlchange DOUT_S=${DO_SHORT_TERM_ARCHIVING^^}
     ./xmlchange DOUT_S_ROOT=${CASE_ARCHIVE_DIR}
+    #./xmlchange ATM2LND_FMAPNAME_NONLINEAR="idmap"
+    #./xmlchange ATM2ROF_FMAPNAME_NONLINEAR="idmap"
+    #./xmlchange ATM2OCN_FMAPNAME_NONLINEAR="idmap"
+    #./xmlchange ATM2ICE_FMAPNAME_NONLINEAR="idmap"
+    ./xmlchange ATM2LND_FMAPNAME_NONLINEAR="idmap_ignore" 
     #./xmlchange --append CAM_CONFIG_OPTS='-rad rrtmgp' # JPT - Use RRTMGP INSTEAD 
     # Build with COSP, except for a data atmosphere (datm)
     if [ `./xmlquery --value COMP_ATM` == "datm"  ]; then
@@ -443,7 +450,7 @@ case_submit() {
 
     # Run CIME case.submit
     ./xmlchange --file env_workflow.xml --id JOB_QUEUE --val debug
-    ./case.submit -a="--mail-type=ALL --mail-user=$USER@nersc.gov --requeue"
+    ./case.submit 
 
     popd
 }
