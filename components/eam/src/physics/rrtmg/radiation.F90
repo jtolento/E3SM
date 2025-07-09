@@ -1128,7 +1128,6 @@ end function radiation_nextsw_cday
     real(r8) ::  aerindex(pcols)      ! Aerosol index
     integer aod400_idx, aod700_idx, cld_tau_idx
 
-
     character(*), parameter :: name = 'radiation_tend'
 !----------------------------------------------------------------------
 

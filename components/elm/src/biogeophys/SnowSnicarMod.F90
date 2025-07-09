@@ -2398,7 +2398,7 @@ contains
                if (flg_slr_in == 1 .or. flg_slr_in == 2 ) then
                   if (atm_type_index == atm_type_default) then
                      flx_wgt(1) = 1._r8
-                     if (tot_nir_flx > 10.0) then 
+                     if (tot_nir_flx > 1e-3) then 
                         flx_wgt(2) = nir_bands_flx(c_idx,1) / tot_nir_flx
                         flx_wgt(3) = nir_bands_flx(c_idx,2) / tot_nir_flx
                         flx_wgt(4) = nir_bands_flx(c_idx,3) / tot_nir_flx
@@ -2409,7 +2409,7 @@ contains
                         if ( abs(sum(flx_wgt(:)) - 2.0_r8) > 1e-5 ) then
                            print*,"JPT ELM: SNICAR ERROR, sum(flx_wgt) = ", sum(flx_wgt(:))
                            call endrun(decomp_index=c_idx, elmlevel=namec, msg=errmsg(__FILE__, __LINE__))
-                        endif 
+                        endif
                      else
                         if (flg_slr_in == 1) then
                            flx_wgt(2) = 0.163497
