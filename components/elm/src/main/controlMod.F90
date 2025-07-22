@@ -153,7 +153,7 @@ contains
 
     namelist /elm_inparm/  &
          fsurdat, fatmtopo, flndtopo, &
-         paramfile, fsnowoptics, fsnowaging,fsoilordercon
+         paramfile, fsnowoptics, fsnowoptics_8bnd, fsnowaging,fsoilordercon
 
 
     ! History, restart options
@@ -761,6 +761,7 @@ contains
     call mpi_bcast (paramfile, len(paramfile) , MPI_CHARACTER, 0, mpicom, ier)
     call mpi_bcast (fsoilordercon, len(fsoilordercon) , MPI_CHARACTER, 0, mpicom, ier)
     call mpi_bcast (fsnowoptics, len(fsnowoptics),  MPI_CHARACTER, 0, mpicom, ier)
+    call mpi_bcast (fsnowoptics_8bnd, len(fsnowoptics_8bnd),  MPI_CHARACTER, 0, mpicom, ier)
     call mpi_bcast (fsnowaging,  len(fsnowaging),   MPI_CHARACTER, 0, mpicom, ier)
 
     ! Irrigation
