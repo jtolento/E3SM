@@ -21,6 +21,7 @@ module SurfaceAlbedoMod
   use CanopyStateType   , only : canopystate_type
   use LakeStateType     , only : lakestate_type
   use SurfaceAlbedoType , only : surfalb_type
+  use atm2lndType     , only : atm2lnd_type
   use GridcellType      , only : grc_pp
   use LandunitType      , only : lun_pp
   use ColumnType        , only : col_pp
@@ -63,8 +64,8 @@ contains
         num_urbanp   , filter_urbanp,  &
         nextsw_cday  , declinp1,       &
         aerosol_vars, canopystate_vars, &
-        lakestate_vars, surfalb_vars &
-        )
+        lakestate_vars, surfalb_vars, &
+        atm2lnd_vars)
     ! !DESCRIPTION:
     ! Surface albedo and two-stream fluxes
     ! Surface albedos. Also fluxes (per unit incoming direct and diffuse
@@ -111,6 +112,7 @@ contains
     type(canopystate_type) , intent(in)    :: canopystate_vars
     type(lakestate_type)   , intent(in)    :: lakestate_vars
     type(surfalb_type)     , intent(inout) :: surfalb_vars
+    type(atm2lnd_type)     , intent(inout) :: atm2lnd_vars
     !
     ! !LOCAL VARIABLES:
     integer  :: i                                                                         ! index for layers [idx]
@@ -139,6 +141,8 @@ contains
     real(r8) :: rho(bounds%begp:bounds%endp,numrad)        ! leaf/stem refl weighted by fraction LAI and SAI
     real(r8) :: tau(bounds%begp:bounds%endp,numrad)        ! leaf/stem tran weighted by fraction LAI and SAI
     real(r8) :: albsfc          (bounds%begc:bounds%endc,numrad)                          ! albedo of surface underneath snow (col,bnd)
+    real(r8) :: nir_bands_dir   (bounds%begc:bounds%endc,7)                               !JPT NIR Spectral fluxes Direct
+    real(r8) :: nir_bands_dif   (bounds%begc:bounds%endc,7)
     real(r8) :: albsnd(bounds%begc:bounds%endc,numrad)     ! snow albedo (direct)
     real(r8) :: albsni(bounds%begc:bounds%endc,numrad)     ! snow albedo (diffuse)
     real(r8) :: albsnd_pur      (bounds%begc:bounds%endc,numrad)                          ! direct pure snow albedo (radiative forcing)
@@ -230,8 +234,11 @@ contains
           fabd_sun_z    =>    surfalb_vars%fabd_sun_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed sunlit leaf direct  PAR (per unit lai+sai) for each canopy layer
           fabd_sha_z    =>    surfalb_vars%fabd_sha_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf direct  PAR (per unit lai+sai) for each canopy layer
           fabi_sun_z    =>    surfalb_vars%fabi_sun_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed sunlit leaf diffuse PAR (per unit lai+sai) for each canopy layer
-          fabi_sha_z    =>    surfalb_vars%fabi_sha_z_patch         & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf diffuse PAR (per unit lai+sai) for each canopy layer
+          fabi_sha_z    =>    surfalb_vars%fabi_sha_z_patch       ,  & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf diffuse PAR (per unit lai+sai) for each canopy layer
+          nir_bands_dir  =>   atm2lnd_vars%forc_nir_bands_dir_downscaled      , & !JPT Input: NIR fluxes (col,numrad_snw-1)
+          nir_bands_dif  =>   atm2lnd_vars%forc_nir_bands_dif_downscaled        & !JPT Input: NIR fluxes (col,numrad_snw-1)          
           )
+
 
     ! Cosine solar zenith angle for next time step
 

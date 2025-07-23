@@ -10,7 +10,7 @@ module lnd2atmMod
   use abortutils             , only : endrun
   use shr_megan_mod        , only : shr_megan_mechcomps_n
   use shr_fan_mod          , only : shr_fan_to_atm
-  use elm_varpar           , only : numrad, ndst, nlevgrnd, nlevsno, nlevsoi !ndst = number of dust bins.
+  use elm_varpar           , only : numrad, ndst, nlevgrnd, nlevsno, nlevsoi, numrad_snw !ndst = number of dust bins.
   use elm_varcon           , only : rair, grav, cpair, hfus, tfrz, spval
   use elm_varctl           , only : iulog, use_c13, use_cn, use_lch4, use_voc, use_fates, use_atm_downscaling_to_topunit, use_fan
   use elm_varctl           , only : use_lnd_rof_two_way
@@ -81,10 +81,16 @@ contains
       h2osno_grc => lnd2atm_vars%h2osno_grc , &
       h2osoi_vol => col_ws%h2osoi_vol , &
       h2osoi_vol_grc => lnd2atm_vars%h2osoi_vol_grc , &
+      snowfrac    => col_ws%frac_sno  , &
+      snowfrac_grc => lnd2atm_vars%snowfrac_grc, & 
       albd_patch => surfalb_vars%albd_patch , &
       albd_grc   => lnd2atm_vars%albd_grc   , &
       albi_patch => surfalb_vars%albi_patch , &
       albi_grc   => lnd2atm_vars%albi_grc   , &
+      spc_albd_patch => surfalb_vars%spc_albd_patch , & 
+      spc_albd_grc   => lnd2atm_vars%spc_albd_grc   , & 
+      spc_albi_patch => surfalb_vars%spc_albi_patch , & 
+      spc_albi_grc   => lnd2atm_vars%spc_albi_grc   , & 
       eflx_lwrad_out => veg_ef%eflx_lwrad_out , &
       eflx_lwrad_out_grc => lnd2atm_vars%eflx_lwrad_out_grc   &
       )
@@ -103,6 +109,11 @@ contains
          h2osoi_vol_grc(bounds%begg:bounds%endg,:)    , &
          c2l_scale_type= urbanf, l2g_scale_type=unity)
 
+    call c2g(bounds, & 
+         snowfrac    (bounds%begc:bounds%endc) , &
+         snowfrac_grc(bounds%begg:bounds%endg)    , &
+         c2l_scale_type= urbanf, l2g_scale_type=unity)
+
     call p2g(bounds, numrad, &
          albd_patch(bounds%begp:bounds%endp,:) , &
          albd_grc  (bounds%begg:bounds%endg,:) , &
@@ -111,6 +122,16 @@ contains
     call p2g(bounds, numrad, &
          albi_patch(bounds%begp:bounds%endp,:) , &
          albi_grc  (bounds%begg:bounds%endg,:) , &
+         p2c_scale_type=unity, c2l_scale_type= urbanf, l2g_scale_type=unity)
+    
+    call p2g(bounds, numrad_snw, &
+         spc_albi_patch(bounds%begp:bounds%endp,:) , &
+         spc_albi_grc  (bounds%begg:bounds%endg,:) , &
+         p2c_scale_type=unity, c2l_scale_type= urbanf, l2g_scale_type=unity)
+
+    call p2g(bounds, numrad_snw, &
+         spc_albd_patch(bounds%begp:bounds%endp,:) , &
+         spc_albd_grc  (bounds%begg:bounds%endg,:) , &
          p2c_scale_type=unity, c2l_scale_type= urbanf, l2g_scale_type=unity)
 
     call p2g(bounds, &

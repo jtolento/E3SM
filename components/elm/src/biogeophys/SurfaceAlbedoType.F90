@@ -6,7 +6,7 @@ module SurfaceAlbedoType
   use shr_kind_mod   , only : r8 => shr_kind_r8
   use shr_log_mod    , only : errMsg => shr_log_errMsg
   use decompMod      , only : bounds_type
-  use elm_varpar     , only : numrad, nlevcan, nlevsno
+  use elm_varpar     , only : numrad, nlevcan, nlevsno, numrad_snw
   use abortutils     , only : endrun
   use elm_varctl     , only : fsurdat, iulog
   use elm_varcon     , only : grlnd
@@ -61,6 +61,8 @@ module SurfaceAlbedoType
      real(r8), pointer :: coszen_col           (:)   => null() ! col cosine of solar zenith angle
      real(r8), pointer :: albd_patch           (:,:) => null() ! patch surface albedo (direct)   (numrad)
      real(r8), pointer :: albi_patch           (:,:) => null() ! patch surface albedo (diffuse)  (numrad)
+     real(r8), pointer :: spc_albd_patch       (:,:) => null() !JPT patch surface albedo (direct)   (numrad_snw)                                   
+     real(r8), pointer :: spc_albi_patch       (:,:) => null() ! patch surface albedo (diffuse)  (numrad_snw)           
      real(r8), pointer :: albgrd_pur_col       (:,:) => null() ! col pure snow ground direct albedo     (numrad)
      real(r8), pointer :: albgri_pur_col       (:,:) => null() ! col pure snow ground diffuse albedo    (numrad)
      real(r8), pointer :: albgrd_bc_col        (:,:) => null() ! col ground direct  albedo without BC   (numrad)
@@ -75,6 +77,8 @@ module SurfaceAlbedoType
      real(r8), pointer :: albsoi_col           (:,:) => null() ! col soil albedo: diffuse (col,bnd) [frc]
      real(r8), pointer :: albsnd_hst_col       (:,:) => null() ! col snow albedo, direct , for history files (col,bnd) [frc]
      real(r8), pointer :: albsni_hst_col       (:,:) => null() ! col snow albedo, diffuse, for history files (col,bnd) [frc]
+     real(r8), pointer :: spc_albgrd_col       (:,:) => null() !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (direct)                 
+     real(r8), pointer :: spc_albgri_col       (:,:) => null() !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (diffuse)
 
      real(r8), pointer :: fd_top_adjust        (:,:) => null() !adjustment factor for direct flux (numrad)
      real(r8), pointer :: fi_top_adjust        (:,:) => null() !adjustment factor for diffuse flux (numrad)
@@ -272,6 +276,12 @@ contains
     allocate(this%albd_patch         (begp:endp,numrad))       ; this%albd_patch         (:,:) =spval
     allocate(this%albi_patch         (begp:endp,numrad))       ; this%albi_patch         (:,:) =spval
 
+    allocate(this%spc_albd_patch     (begp:endp,numrad_snw))   ; this%spc_albd_patch     (:,:) =spval 
+    allocate(this%spc_albi_patch     (begp:endp,numrad_snw))   ; this%spc_albi_patch     (:,:) =spval 
+    allocate(this%spc_albgrd_col     (begc:endc,numrad_snw))   ; this%spc_albgrd_col     (:,:) =spval 
+    allocate(this%spc_albgri_col     (begc:endc,numrad_snw))   ; this%spc_albgri_col     (:,:) =spval 
+    
+
     allocate(this%fd_top_adjust      (begp:endp,numrad))       ; this%fd_top_adjust      (:,:) =1._r8
     allocate(this%fi_top_adjust      (begp:endp,numrad))       ; this%fi_top_adjust      (:,:) =1._r8
     allocate(this%f_dir              (begp:endp,numrad))       ; this%f_dir              (:,:) =0._r8
@@ -381,6 +391,11 @@ contains
     this%albsni_hst_col (begc:endc, :) = 0.6_r8
     this%albd_patch     (begp:endp, :) = 0.2_r8
     this%albi_patch     (begp:endp, :) = 0.2_r8
+
+    this%spc_albd_patch     (begp:endp, :) = 0.2_r8
+    this%spc_albi_patch     (begp:endp, :) = 0.2_r8
+    this%spc_albgrd_col     (begc:endc, :) = 0.2_r8
+    this%spc_albgri_col     (begc:endc, :) = 0.2_r8
 
     this%albgrd_pur_col (begc:endc, :) = 0.2_r8
     this%albgri_pur_col (begc:endc, :) = 0.2_r8

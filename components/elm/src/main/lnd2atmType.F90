@@ -11,7 +11,7 @@ module lnd2atmType
   use shr_megan_mod , only : shr_megan_mechcomps_n
   use shr_fan_mod   , only : shr_fan_to_atm
   use abortutils    , only : endrun
-  use elm_varpar    , only : numrad, ndst, nlevsno, nlevgrnd !ndst = number of dust bins.
+  use elm_varpar    , only : numrad, ndst, nlevsno, nlevgrnd, numrad_snw !ndst = number of dust bins.
   use elm_varcon    , only : rair, grav, cpair, hfus, tfrz, spval
   use elm_varctl    , only : iulog, use_c13, use_cn, use_lch4, use_fan
   use seq_drydep_mod, only : n_drydep, drydep_method, DD_XLND
@@ -34,9 +34,12 @@ module lnd2atmType
      real(r8), pointer :: u_ref10m_grc       (:)   => null() ! 10m surface wind speed (m/sec)
      real(r8), pointer :: u_ref10m_with_gusts_grc(:)=> null()! 10m surface wind speed with gusts included (m/sec)
      real(r8), pointer :: h2osno_grc         (:)   => null() ! snow water (mm H2O)
+     real(r8), pointer :: snowfrac_grc         (:)   => null()
      real(r8), pointer :: h2osoi_vol_grc     (:,:) => null() ! volumetric soil water (0~watsat, m3/m3, nlevgrnd) (for dust model)
      real(r8), pointer :: albd_grc           (:,:) => null() ! (numrad) surface albedo (direct)
      real(r8), pointer :: albi_grc           (:,:) => null() ! (numrad) surface albedo (diffuse)
+     real(r8), pointer :: spc_albd_grc       (:,:) => null() ! (numrad_snw) surface albedo (direct)                                             
+     real(r8), pointer :: spc_albi_grc       (:,:) => null() ! (numrad_snw) surface albedo (diffuse)    
      real(r8), pointer :: taux_grc           (:)   => null() ! wind stress: e-w (kg/m/s**2)
      real(r8), pointer :: tauy_grc           (:)   => null() ! wind stress: n-s (kg/m/s**2)
      real(r8), pointer :: eflx_lh_tot_grc    (:)   => null() ! total latent HF (W/m**2)  [+ to atm]
@@ -124,9 +127,12 @@ contains
     allocate(this%u_ref10m_grc         (begg:endg))            ; this%u_ref10m_grc         (:) =ival
     allocate(this%u_ref10m_with_gusts_grc(begg:endg))          ; this%u_ref10m_with_gusts_grc(:)=ival
     allocate(this%h2osno_grc           (begg:endg))            ; this%h2osno_grc           (:) =ival
+    allocate(this%snowfrac_grc           (begg:endg))          ; this%snowfrac_grc         (:) =ival
     allocate(this%h2osoi_vol_grc       (begg:endg,1:nlevgrnd)) ; this%h2osoi_vol_grc     (:,:) =ival
     allocate(this%albd_grc             (begg:endg,1:numrad))   ; this%albd_grc           (:,:) =ival
     allocate(this%albi_grc             (begg:endg,1:numrad))   ; this%albi_grc           (:,:) =ival
+    allocate(this%spc_albd_grc         (begg:endg,1:numrad_snw))   ; this%spc_albd_grc   (:,:) =ival 
+    allocate(this%spc_albi_grc         (begg:endg,1:numrad_snw))   ; this%spc_albi_grc   (:,:) =ival 
     allocate(this%taux_grc             (begg:endg))            ; this%taux_grc             (:) =ival
     allocate(this%tauy_grc             (begg:endg))            ; this%tauy_grc             (:) =ival
     allocate(this%eflx_lwrad_out_grc   (begg:endg))            ; this%eflx_lwrad_out_grc   (:) =ival

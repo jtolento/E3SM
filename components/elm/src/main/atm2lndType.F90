@@ -80,6 +80,8 @@ module atm2lndType
      real(r8), pointer :: forc_pco2_grc                 (:)   => null() ! CO2 partial pressure (Pa)
      real(r8), pointer :: forc_solad_grc                (:,:) => null() ! direct beam radiation (numrad) (vis=forc_sols , nir=forc_soll )
      real(r8), pointer :: forc_solai_grc                (:,:) => null() ! diffuse radiation (numrad) (vis=forc_solsd, nir=forc_solld)
+     real(r8), pointer :: forc_nir_bands_dir_not_downscaled   (:,:) => null() ! JPT all the direct NIR band fluxes
+     real(r8), pointer :: forc_nir_bands_dif_not_downscaled   (:,:) => null() ! JPT all the diffuse NIR band fluxes   
      real(r8), pointer :: forc_solar_grc                (:)   => null() ! incident solar radiation
      real(r8), pointer :: forc_ndep_grc                 (:)   => null() ! nitrogen deposition rate (gN/m2/s)
      real(r8), pointer :: forc_pdep_grc                 (:)   => null() ! phosphorus deposition rate (gP/m2/s)
@@ -111,6 +113,8 @@ module atm2lndType
      real(r8), pointer :: forc_rain_downscaled_col      (:)   => null() ! downscaled atm rain rate [mm/s]
      real(r8), pointer :: forc_snow_downscaled_col      (:)   => null() ! downscaled atm snow rate [mm/s]
      real(r8), pointer :: forc_lwrad_downscaled_col     (:)   => null() ! downscaled atm downwrd IR longwave radiation (W/m**2)
+     real(r8), pointer :: forc_nir_bands_dir_downscaled (:,:) => null() ! JPT all the direct NIR band fluxes
+     real(r8), pointer :: forc_nir_bands_dif_downscaled (:,:) => null() ! JPT all the diffuse NIR band fluxes
 
      !  rof->lnd
      real(r8), pointer :: forc_flood_grc                (:)   => null() ! rof flood (mm/s)
@@ -245,6 +249,8 @@ contains
     allocate(this%forc_pco2_grc                 (begg:endg))        ; this%forc_pco2_grc                 (:)   = ival
     allocate(this%forc_solad_grc                (begg:endg,numrad)) ; this%forc_solad_grc                (:,:) = ival
     allocate(this%forc_solai_grc                (begg:endg,numrad)) ; this%forc_solai_grc                (:,:) = ival
+    allocate(this%forc_nir_bands_dir_not_downscaled (begg:endg,7))  ; this%forc_nir_bands_dir_not_downscaled (:,:) = ival
+    allocate(this%forc_nir_bands_dif_not_downscaled (begg:endg,7))  ; this%forc_nir_bands_dif_not_downscaled (:,:) = ival
     allocate(this%forc_solar_grc                (begg:endg))        ; this%forc_solar_grc                (:)   = ival
     allocate(this%forc_ndep_grc                 (begg:endg))        ; this%forc_ndep_grc                 (:)   = ival
     allocate(this%forc_pdep_grc                 (begg:endg))        ; this%forc_pdep_grc                 (:)   = ival
@@ -262,6 +268,8 @@ contains
     allocate(this%forc_lwrad_not_downscaled_grc (begg:endg))        ; this%forc_lwrad_not_downscaled_grc (:)   = ival
     allocate(this%forc_rain_not_downscaled_grc  (begg:endg))        ; this%forc_rain_not_downscaled_grc  (:)   = ival
     allocate(this%forc_snow_not_downscaled_grc  (begg:endg))        ; this%forc_snow_not_downscaled_grc  (:)   = ival
+    allocate(this%forc_nir_bands_dir_downscaled (begc:endc,7))      ; this%forc_nir_bands_dir_downscaled (:,:) = ival !JPT 
+    allocate(this%forc_nir_bands_dif_downscaled (begc:endc,7))      ; this%forc_nir_bands_dif_downscaled (:,:) = ival !JPT 
     
     ! atm->lnd downscaled
     allocate(this%forc_t_downscaled_col         (begc:endc))        ; this%forc_t_downscaled_col         (:)   = ival
