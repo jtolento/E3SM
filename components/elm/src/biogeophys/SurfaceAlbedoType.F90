@@ -61,6 +61,8 @@ module SurfaceAlbedoType
      real(r8), pointer :: coszen_col           (:)   => null() ! col cosine of solar zenith angle
      real(r8), pointer :: albd_patch           (:,:) => null() ! patch surface albedo (direct)   (numrad)
      real(r8), pointer :: albi_patch           (:,:) => null() ! patch surface albedo (diffuse)  (numrad)
+     real(r8), pointer :: albd_forc_patch           (:,:) => null() ! patch surface albedo (direct)   (numrad)
+     real(r8), pointer :: albi_forc_patch           (:,:) => null() ! patch surface albedo (diffuse)  (numrad)    
      real(r8), pointer :: spc_albd_patch       (:,:) => null() !JPT patch surface albedo (direct)   (numrad_snw)                                   
      real(r8), pointer :: spc_albi_patch       (:,:) => null() ! patch surface albedo (diffuse)  (numrad_snw)           
      real(r8), pointer :: albgrd_pur_col       (:,:) => null() ! col pure snow ground direct albedo     (numrad)
@@ -73,10 +75,14 @@ module SurfaceAlbedoType
      real(r8), pointer :: albgri_dst_col       (:,:) => null() ! col ground diffuse albedo without dust (numrad)
      real(r8), pointer :: albgrd_col           (:,:) => null() ! col ground albedo (direct)  (numrad)
      real(r8), pointer :: albgri_col           (:,:) => null() ! col ground albedo (diffuse) (numrad)
+     real(r8), pointer :: albgrd_forc_col           (:,:) => null() ! col ground albedo (direct)  (numrad)
+     real(r8), pointer :: albgri_forc_col           (:,:) => null() ! col ground albedo (diffuse) (numrad)
      real(r8), pointer :: albsod_col           (:,:) => null() ! col soil albedo: direct  (col,bnd) [frc]
      real(r8), pointer :: albsoi_col           (:,:) => null() ! col soil albedo: diffuse (col,bnd) [frc]
      real(r8), pointer :: albsnd_hst_col       (:,:) => null() ! col snow albedo, direct , for history files (col,bnd) [frc]
      real(r8), pointer :: albsni_hst_col       (:,:) => null() ! col snow albedo, diffuse, for history files (col,bnd) [frc]
+     real(r8), pointer :: albsnd_hst_forc_col       (:,:) => null()
+     real(r8), pointer :: albsni_hst_forc_col       (:,:) => null()
      real(r8), pointer :: spc_albgrd_col       (:,:) => null() !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (direct)                 
      real(r8), pointer :: spc_albgri_col       (:,:) => null() !JPT Output: [real(r8) (col,numrad_snw) ]  spectral albedo (diffuse)
 
@@ -104,7 +110,10 @@ module SurfaceAlbedoType
      real(r8), pointer :: flx_absdn_col        (:,:) => null() ! col absorbed flux per unit incident direct flux:  NIR (col,lyr) [frc]
      real(r8), pointer :: flx_absiv_col        (:,:) => null() ! col absorbed flux per unit incident diffuse flux: VIS (col,lyr) [frc]
      real(r8), pointer :: flx_absin_col        (:,:) => null() ! col absorbed flux per unit incident diffuse flux: NIR (col,lyr) [frc]
-
+     real(r8), pointer :: flx_absdv_forc_col   (:,:) => null() 
+     real(r8), pointer :: flx_absdn_forc_col   (:,:) => null()
+     real(r8), pointer :: flx_absiv_forc_col   (:,:) => null()
+     real(r8), pointer :: flx_absin_forc_col   (:,:) => null() 
      real(r8) , pointer :: fsun_z_patch        (:,:) => null() ! patch patch sunlit fraction of canopy layer
      real(r8) , pointer :: tlai_z_patch        (:,:) => null() ! patch tlai increment for canopy layer
      real(r8) , pointer :: tsai_z_patch        (:,:) => null() ! patch tsai increment for canopy layer
@@ -261,8 +270,12 @@ contains
     allocate(this%coszen_col         (begc:endc))              ; this%coszen_col         (:)   = spval
     allocate(this%albgrd_col         (begc:endc,numrad))       ; this%albgrd_col         (:,:) =spval
     allocate(this%albgri_col         (begc:endc,numrad))       ; this%albgri_col         (:,:) =spval
+    allocate(this%albgrd_forc_col         (begc:endc,numrad))       ; this%albgrd_forc_col         (:,:) =spval
+    allocate(this%albgri_forc_col         (begc:endc,numrad))       ; this%albgri_forc_col         (:,:) =spval
     allocate(this%albsnd_hst_col     (begc:endc,numrad))       ; this%albsnd_hst_col     (:,:) = spval
     allocate(this%albsni_hst_col     (begc:endc,numrad))       ; this%albsni_hst_col     (:,:) = spval
+    allocate(this%albsnd_hst_forc_col(begc:endc,numrad))       ; this%albsnd_hst_forc_col(:,:) = spval
+    allocate(this%albsni_hst_forc_col(begc:endc,numrad))       ; this%albsni_hst_forc_col(:,:) = spval
     allocate(this%albsod_col         (begc:endc,numrad))       ; this%albsod_col         (:,:) = spval
     allocate(this%albsoi_col         (begc:endc,numrad))       ; this%albsoi_col         (:,:) = spval
     allocate(this%albgrd_pur_col     (begc:endc,numrad))       ; this%albgrd_pur_col     (:,:) =spval
@@ -275,6 +288,8 @@ contains
     allocate(this%albgri_dst_col     (begc:endc,numrad))       ; this%albgri_dst_col     (:,:) =spval
     allocate(this%albd_patch         (begp:endp,numrad))       ; this%albd_patch         (:,:) =spval
     allocate(this%albi_patch         (begp:endp,numrad))       ; this%albi_patch         (:,:) =spval
+    allocate(this%albd_forc_patch         (begp:endp,numrad))       ; this%albd_forc_patch         (:,:) =spval
+    allocate(this%albi_forc_patch         (begp:endp,numrad))       ; this%albi_forc_patch         (:,:) =spval
 
     allocate(this%spc_albd_patch     (begp:endp,numrad_snw))   ; this%spc_albd_patch     (:,:) =spval 
     allocate(this%spc_albi_patch     (begp:endp,numrad_snw))   ; this%spc_albi_patch     (:,:) =spval 
@@ -306,7 +321,10 @@ contains
     allocate(this%flx_absdn_col      (begc:endc,-nlevsno+1:1)) ; this%flx_absdn_col      (:,:) = spval
     allocate(this%flx_absiv_col      (begc:endc,-nlevsno+1:1)) ; this%flx_absiv_col      (:,:) = spval
     allocate(this%flx_absin_col      (begc:endc,-nlevsno+1:1)) ; this%flx_absin_col      (:,:) = spval
-
+    allocate(this%flx_absdv_forc_col      (begc:endc,-nlevsno+1:1)) ; this%flx_absdv_forc_col      (:,:) = spval
+    allocate(this%flx_absdn_forc_col      (begc:endc,-nlevsno+1:1)) ; this%flx_absdn_forc_col      (:,:) = spval
+    allocate(this%flx_absiv_forc_col      (begc:endc,-nlevsno+1:1)) ; this%flx_absiv_forc_col      (:,:) = spval
+    allocate(this%flx_absin_forc_col      (begc:endc,-nlevsno+1:1)) ; this%flx_absin_forc_col      (:,:) = spval
     allocate(this%fsun_z_patch       (begp:endp,nlevcan))      ; this%fsun_z_patch       (:,:) = 0._r8
     allocate(this%tlai_z_patch       (begp:endp,nlevcan))      ; this%tlai_z_patch       (:,:) = 0._r8
     allocate(this%tsai_z_patch       (begp:endp,nlevcan))      ; this%tsai_z_patch       (:,:) = 0._r8
@@ -385,10 +403,14 @@ contains
 
     this%albgrd_col     (begc:endc, :) = 0.2_r8
     this%albgri_col     (begc:endc, :) = 0.2_r8
+    this%albgrd_forc_col     (begc:endc, :) = 0.2_r8
+    this%albgri_forc_col     (begc:endc, :) = 0.2_r8
     this%albsod_col     (begc:endc, :) = 0.2_r8
     this%albsoi_col     (begc:endc, :) = 0.2_r8
     this%albsnd_hst_col (begc:endc, :) = 0.6_r8
     this%albsni_hst_col (begc:endc, :) = 0.6_r8
+    this%albsnd_hst_forc_col (begc:endc, :) = 0.6_r8
+    this%albsni_hst_forc_col (begc:endc, :) = 0.6_r8
     this%albd_patch     (begp:endp, :) = 0.2_r8
     this%albi_patch     (begp:endp, :) = 0.2_r8
 
@@ -500,10 +522,20 @@ contains
          long_name='snow albedo (direct) (0 to 1)', units='proportion', &
          interpinic_flag='interp', readvar=readvar, data=this%albsnd_hst_col)
 
+    call restartvar(ncid=ncid, flag=flag, varname='albsnd_forc_hst', xtype=ncd_double,  &
+         dim1name='column', dim2name='numrad', switchdim=.true., &
+         long_name='snow albedo 8bnd (direct) (0 to 1)', units='proportion', &
+         interpinic_flag='interp', readvar=readvar, data=this%albsnd_hst_forc_col)
+
     call restartvar(ncid=ncid, flag=flag, varname='albsni_hst', xtype=ncd_double,  &
          dim1name='column', dim2name='numrad', switchdim=.true., &
          long_name='snow albedo (diffuse) (0 to 1)', units='proportion', &
          interpinic_flag='interp', readvar=readvar, data=this%albsni_hst_col)
+
+    call restartvar(ncid=ncid, flag=flag, varname='albsni_forc_hst', xtype=ncd_double,  &
+         dim1name='column', dim2name='numrad', switchdim=.true., &
+         long_name='snow albedo 8bnd (diffuse) (0 to 1)', units='proportion', &
+         interpinic_flag='interp', readvar=readvar, data=this%albsni_hst_forc_col)
 
     call restartvar(ncid=ncid, flag=flag, varname='tlai_z', xtype=ncd_double,  &
          dim1name='pft', dim2name='levcan', switchdim=.true., &
@@ -833,6 +865,28 @@ contains
          dim1name='column', dim2name='levsno1', switchdim=.true., lowerb2=-nlevsno+1, upperb2=1, &
          long_name='snow layer flux absorption factors (diffuse, NIR)', units='fraction', &
          interpinic_flag='interp', readvar=readvar, data=this%flx_absin_col)
+
+    call restartvar(ncid=ncid, flag=flag, varname='flx_absdv_forc', xtype=ncd_double,  &
+         dim1name='column', dim2name='levsno1', switchdim=.true., lowerb2=-nlevsno+1, upperb2=1, &
+         long_name='snow layer flux absorption factors (direct, VIS)', units='fraction', &
+         interpinic_flag='interp', readvar=readvar, data=this%flx_absdv_forc_col)
+
+    call restartvar(ncid=ncid, flag=flag, varname='flx_absdn_forc', xtype=ncd_double,  &
+         dim1name='column', dim2name='levsno1', switchdim=.true., lowerb2=-nlevsno+1, upperb2=1, &
+         long_name='snow layer flux absorption factors (direct, NIR)', units='fraction', &
+         interpinic_flag='interp', readvar=readvar, data=this%flx_absdn_forc_col)
+
+     call restartvar(ncid=ncid, flag=flag, varname='flx_absiv_forc', xtype=ncd_double,  &
+         dim1name='column', dim2name='levsno1', switchdim=.true., lowerb2=-nlevsno+1, upperb2=1, &
+         long_name='snow layer flux absorption factors (diffuse, VIS)', units='fraction', &
+         interpinic_flag='interp', readvar=readvar, data=this%flx_absiv_forc_col)
+
+    call restartvar(ncid=ncid, flag=flag, varname='flx_absin_forc', xtype=ncd_double,  &
+         dim1name='column', dim2name='levsno1', switchdim=.true., lowerb2=-nlevsno+1, upperb2=1, &
+         long_name='snow layer flux absorption factors (diffuse, NIR)', units='fraction', &
+         interpinic_flag='interp', readvar=readvar, data=this%flx_absin_forc_col)
+
+
 
   end subroutine Restart
 

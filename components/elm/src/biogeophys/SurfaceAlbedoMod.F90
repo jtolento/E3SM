@@ -16,7 +16,7 @@ module SurfaceAlbedoMod
   use elm_varpar        , only : numrad, nlevcan, nlevsno, nlevcan
   use elm_varctl        , only : fsurdat, iulog, subgridflag, use_snicar_frc, use_fates, use_snicar_ad, use_top_solar_rad
   use VegetationPropertiesType    , only : veg_vp
-  use SnowSnicarMod     , only : sno_nbr_aer, SNICAR_RT, SNICAR_AD_RT, DO_SNO_AER, DO_SNO_OC
+  use SnowSnicarMod     , only : sno_nbr_aer, SNICAR_RT, SNICAR_AD_RT, DO_SNO_AER, DO_SNO_OC, SNICAR_AD_8bnd
   use AerosolType       , only : aerosol_type
   use CanopyStateType   , only : canopystate_type
   use LakeStateType     , only : lakestate_type
@@ -145,6 +145,10 @@ contains
     real(r8) :: nir_bands_dif   (bounds%begc:bounds%endc,7)
     real(r8) :: albsnd(bounds%begc:bounds%endc,numrad)     ! snow albedo (direct)
     real(r8) :: albsni(bounds%begc:bounds%endc,numrad)     ! snow albedo (diffuse)
+    real(r8) :: spc_albout_dir(bounds%begc:bounds%endc,8)     ! snow albedo (direct)
+    real(r8) :: spc_albout_dif(bounds%begc:bounds%endc,8)     ! snow albedo (diffuse)
+    real(r8) :: albsnd_forc(bounds%begc:bounds%endc,numrad)     ! snow albedo forced (direct)
+    real(r8) :: albsni_forc(bounds%begc:bounds%endc,numrad)     ! snow albedo forced (diffuse) 
     real(r8) :: albsnd_pur      (bounds%begc:bounds%endc,numrad)                          ! direct pure snow albedo (radiative forcing)
     real(r8) :: albsni_pur      (bounds%begc:bounds%endc,numrad)                          ! diffuse pure snow albedo (radiative forcing)
     real(r8) :: albsnd_bc       (bounds%begc:bounds%endc,numrad)                          ! direct snow albedo without BC (radiative forcing)
@@ -155,6 +159,9 @@ contains
     real(r8) :: albsni_dst      (bounds%begc:bounds%endc,numrad)                          ! diffuse snow albedo without dust (radiative forcing)
     real(r8) :: flx_absd_snw    (bounds%begc:bounds%endc,-nlevsno+1:1,numrad)             ! flux absorption factor for just snow (direct) [frc]
     real(r8) :: flx_absi_snw    (bounds%begc:bounds%endc,-nlevsno+1:1,numrad)             ! flux absorption factor for just snow (diffuse) [frc]
+    real(r8) :: flx_absd_snw_forc    (bounds%begc:bounds%endc,-nlevsno+1:1,numrad)
+    real(r8) :: flx_absi_snw_forc    (bounds%begc:bounds%endc,-nlevsno+1:1,numrad)   
+    
     real(r8) :: foo_snw         (bounds%begc:bounds%endc,-nlevsno+1:1,numrad)             ! dummy array for forcing calls
     real(r8) :: h2osno_liq      (bounds%begc:bounds%endc,-nlevsno+1:0)                    ! liquid snow content (col,lyr) [kg m-2]
     real(r8) :: h2osno_ice      (bounds%begc:bounds%endc,-nlevsno+1:0)                    ! ice content in snow (col,lyr) [kg m-2]
@@ -204,6 +211,9 @@ contains
           coszen_col    =>    surfalb_vars%coszen_col             , & ! Output:  [real(r8) (:)   ]  cosine of solar zenith angle
           albgrd        =>    surfalb_vars%albgrd_col             , & ! Output:  [real(r8) (:,:) ]  ground albedo (direct)
           albgri        =>    surfalb_vars%albgri_col             , & ! Output:  [real(r8) (:,:) ]  ground albedo (diffuse)
+          albgrd_forc        =>    surfalb_vars%albgrd_forc_col             , & ! Output:  [real(r8) (:,:) ]  ground albedo (direct)
+          albgri_forc        =>    surfalb_vars%albgri_forc_col , &
+
           albsod        =>    surfalb_vars%albsod_col             , & ! Output:  [real(r8) (:,:) ]  direct-beam soil albedo (col,bnd) [frc]
           albsoi        =>    surfalb_vars%albsoi_col             , & ! Output:  [real(r8) (:,:) ]  diffuse soil albedo (col,bnd) [frc]
           albgrd_pur    =>    surfalb_vars%albgrd_pur_col         , & ! Output:  [real(r8) (:,:) ]  pure snow ground albedo (direct)
@@ -216,8 +226,12 @@ contains
           albgri_dst    =>    surfalb_vars%albgri_dst_col         , & ! Output:  [real(r8) (:,:) ]  ground albedo without dust (diffuse)
           albsnd_hst    =>    surfalb_vars%albsnd_hst_col         , & ! Output:  [real(r8) (:,:) ]  snow albedo, direct, for history files (col,bnd) [frc]
           albsni_hst    =>    surfalb_vars%albsni_hst_col         , & ! Output:  [real(r8) (:,:) ]  snow ground albedo, diffuse, for history files (col,bnd) [frc]
+          albsnd_hst_forc    =>    surfalb_vars%albsnd_hst_forc_col , & ! Output:  [real(r8) (:,:) ]  snow albedo, direct, for history files (col,bnd) [frc]
+          albsni_hst_forc    =>    surfalb_vars%albsni_hst_forc_col , & !
           albd          =>    surfalb_vars%albd_patch             , & ! Output:  [real(r8) (:,:) ]  surface albedo (direct)
           albi          =>    surfalb_vars%albi_patch             , & ! Output:  [real(r8) (:,:) ]  surface albedo (diffuse)
+          albd_forc          =>    surfalb_vars%albd_forc_patch             , & ! Output:  [real(r8) (:,:) ]  surface albedo (direct)
+          albi_forc          =>    surfalb_vars%albi_forc_patch             , & ! Output:  [real(r8) (:,:) ]  surface albedo (diffuse) 
           fabd          =>    surfalb_vars%fabd_patch             , & ! Output:  [real(r8) (:,:) ]  flux absorbed by canopy per unit direct flux
           fabd_sun      =>    surfalb_vars%fabd_sun_patch         , & ! Output:  [real(r8) (:,:) ]  flux absorbed by sunlit canopy per unit direct flux
           fabd_sha      =>    surfalb_vars%fabd_sha_patch         , & ! Output:  [real(r8) (:,:) ]  flux absorbed by shaded canopy per unit direct flux
@@ -230,7 +244,12 @@ contains
           flx_absdv     =>    surfalb_vars%flx_absdv_col          , & ! Output:  [real(r8) (:,:) ]  direct flux absorption factor (col,lyr): VIS [frc]
           flx_absdn     =>    surfalb_vars%flx_absdn_col          , & ! Output:  [real(r8) (:,:) ]  direct flux absorption factor (col,lyr): NIR [frc]
           flx_absiv     =>    surfalb_vars%flx_absiv_col          , & ! Output:  [real(r8) (:,:) ]  diffuse flux absorption factor (col,lyr): VIS [frc]
-          flx_absin     =>    surfalb_vars%flx_absin_col          , & ! Output:  [real(r8) (:,:) ]  diffuse flux absorption factor (col,lyr): NIR [frc]
+          flx_absin     =>    surfalb_vars%flx_absin_col          , & ! Output:  [real(r8) (:,:) ]  diffuse flux absorption factor (col,lyr): NIR [frc]      
+          flx_absdv_forc     =>    surfalb_vars%flx_absdv_forc_col          , &
+          flx_absdn_forc     =>    surfalb_vars%flx_absdn_forc_col          , &
+          flx_absiv_forc     =>    surfalb_vars%flx_absiv_forc_col          , &
+          flx_absin_forc     =>    surfalb_vars%flx_absin_forc_col          , &
+          
           fabd_sun_z    =>    surfalb_vars%fabd_sun_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed sunlit leaf direct  PAR (per unit lai+sai) for each canopy layer
           fabd_sha_z    =>    surfalb_vars%fabd_sha_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed shaded leaf direct  PAR (per unit lai+sai) for each canopy layer
           fabi_sun_z    =>    surfalb_vars%fabi_sun_z_patch       , & ! Output:  [real(r8) (:,:) ]  absorbed sunlit leaf diffuse PAR (per unit lai+sai) for each canopy layer
@@ -264,6 +283,8 @@ contains
           albsoi(c,ib)     = 0._r8
           albgrd(c,ib)     = 0._r8
           albgri(c,ib)     = 0._r8
+          albgrd_forc(c,ib)     = 0._r8
+          albgri_forc(c,ib)     = 0._r8
           albgrd_pur(c,ib) = 0._r8
           albgri_pur(c,ib) = 0._r8
           albgrd_bc(c,ib)  = 0._r8
@@ -277,6 +298,10 @@ contains
              flx_absdn(c,i) = 0._r8
              flx_absiv(c,i) = 0._r8
              flx_absin(c,i) = 0._r8
+             flx_absdv_forc(c,i) = 0._r8
+             flx_absdn_forc(c,i) = 0._r8
+             flx_absiv_forc(c,i) = 0._r8
+             flx_absin_forc(c,i) = 0._r8
           enddo
        end do
 
@@ -284,6 +309,8 @@ contains
           p = filter_nourbanp(fp)
           albd(p,ib) = 1._r8
           albi(p,ib) = 1._r8
+          albd_forc(p,ib) = 1._r8
+          albi_forc(p,ib) = 1._r8
           fabd(p,ib) = 0._r8
           fabd_sun(p,ib) = 0._r8
           fabd_sha(p,ib) = 0._r8
@@ -655,6 +682,36 @@ contains
                            flx_absi_snw(bounds%begc:bounds%endc, :, :) )
        endif ! end if use_snicar_ad
 
+       !8bnd_forcing calc:
+       flg_slr = 1; ! direct-beam 
+       if (use_snicar_ad) then
+           call SNICAR_AD_8bnd(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
+                             coszen_col(bounds%begc:bounds%endc), &
+                             flg_slr, &
+                             h2osno_liq(bounds%begc:bounds%endc, :), &
+                             h2osno_ice(bounds%begc:bounds%endc, :), &
+                             snw_rds_in(bounds%begc:bounds%endc, :), &
+                             mss_cnc_aer_in_fdb(bounds%begc:bounds%endc, :, :), &
+                             albsfc(bounds%begc:bounds%endc, :), &
+                             nir_bands_dir(bounds%begc:bounds%endc, :), &
+                             albsnd_forc(bounds%begc:bounds%endc, :), &
+                             flx_absd_snw_forc(bounds%begc:bounds%endc, :, :),&
+                             spc_albout_dir(bounds%begc:bounds%endc, :) )
+           
+           flg_slr = 2; ! diffuse
+           call SNICAR_AD_8bnd(flg_snw_ice, bounds, num_nourbanc, filter_nourbanc,    &
+                             coszen_col(bounds%begc:bounds%endc), &
+                             flg_slr, &
+                             h2osno_liq(bounds%begc:bounds%endc, :), &
+                             h2osno_ice(bounds%begc:bounds%endc, :), &
+                             snw_rds_in(bounds%begc:bounds%endc, :), &
+                             mss_cnc_aer_in_fdb(bounds%begc:bounds%endc, :, :), &
+                             albsfc(bounds%begc:bounds%endc, :), &
+                             nir_bands_dif(bounds%begc:bounds%endc, :), &
+                             albsni_forc(bounds%begc:bounds%endc, :), &
+                             flx_absi_snw_forc(bounds%begc:bounds%endc, :, :),&
+                             spc_albout_dif(bounds%begc:bounds%endc, :)  )
+        end if
     ! ground albedos and snow-fraction weighting of snow absorption factors
     do ib = 1, nband
        do fc = 1,num_nourbanc
@@ -664,6 +721,8 @@ contains
              ! because the order of SoilAlbedo and SNICAR_RT/SNICAR_AD_RT was switched for SNICAR/SNICAR_AD_RT.
              albgrd(c,ib) = albsod(c,ib)*(1._r8-frac_sno(c)) + albsnd(c,ib)*frac_sno(c)
              albgri(c,ib) = albsoi(c,ib)*(1._r8-frac_sno(c)) + albsni(c,ib)*frac_sno(c)
+             albgrd_forc(c,ib) = albsod(c,ib)*(1._r8-frac_sno(c)) + albsnd_forc(c,ib)*frac_sno(c)
+             albgri_forc(c,ib) = albsoi(c,ib)*(1._r8-frac_sno(c)) + albsni_forc(c,ib)*frac_sno(c)
 
              ! albedos for radiative forcing calculations:
              if (use_snicar_frc) then
@@ -696,19 +755,35 @@ contains
                         ((1.-frac_sno(c))*(1-albsod(c,ib))*(flx_absd_snw(c,i,ib)/(1.-albsnd(c,ib))))
                    flx_absiv(c,i) = flx_absi_snw(c,i,ib)*frac_sno(c) + &
                         ((1.-frac_sno(c))*(1-albsoi(c,ib))*(flx_absi_snw(c,i,ib)/(1.-albsni(c,ib))))
+                   
+                   flx_absdv_forc(c,i) = flx_absd_snw_forc(c,i,ib)*frac_sno(c) + &
+                        ((1.-frac_sno(c))*(1-albsod(c,ib))*(flx_absd_snw_forc(c,i,ib)/(1.-albsnd_forc(c,ib))))
+                   
+                   flx_absiv_forc(c,i) = flx_absi_snw_forc(c,i,ib)*frac_sno(c) + &
+                        ((1.-frac_sno(c))*(1-albsoi(c,ib))*(flx_absi_snw_forc(c,i,ib)/(1.-albsni_forc(c,ib))))
                 elseif (ib == 2) then
                    flx_absdn(c,i) = flx_absd_snw(c,i,ib)*frac_sno(c) + &
                         ((1.-frac_sno(c))*(1-albsod(c,ib))*(flx_absd_snw(c,i,ib)/(1.-albsnd(c,ib))))
                    flx_absin(c,i) = flx_absi_snw(c,i,ib)*frac_sno(c) + &
                         ((1.-frac_sno(c))*(1-albsoi(c,ib))*(flx_absi_snw(c,i,ib)/(1.-albsni(c,ib))))
+                   
+                   flx_absdn_forc(c,i) = flx_absd_snw_forc(c,i,ib)*frac_sno(c) + &
+                        ((1.-frac_sno(c))*(1-albsod(c,ib))*(flx_absd_snw_forc(c,i,ib)/(1.-albsnd_forc(c,ib))))
+                   
+                   flx_absin_forc(c,i) = flx_absi_snw_forc(c,i,ib)*frac_sno(c) + &
+                        ((1.-frac_sno(c))*(1-albsoi(c,ib))*(flx_absi_snw_forc(c,i,ib)/(1.-albsni_forc(c,ib))))
                 endif
              else
                 if (ib == 1) then
                    flx_absdv(c,i) = flx_absd_snw(c,i,ib)*(1.-albsnd(c,ib))
                    flx_absiv(c,i) = flx_absi_snw(c,i,ib)*(1.-albsni(c,ib))
+                   flx_absdv_forc(c,i) = flx_absd_snw_forc(c,i,ib)*(1.-albsnd_forc(c,ib))
+                   flx_absiv_forc(c,i) = flx_absi_snw_forc(c,i,ib)*(1.-albsni_forc(c,ib))
                 elseif (ib == 2) then
                    flx_absdn(c,i) = flx_absd_snw(c,i,ib)*(1.-albsnd(c,ib))
                    flx_absin(c,i) = flx_absi_snw(c,i,ib)*(1.-albsni(c,ib))
+                   flx_absdn_forc(c,i) = flx_absd_snw_forc(c,i,ib)*(1.-albsnd_forc(c,ib))
+                   flx_absin_forc(c,i) = flx_absi_snw_forc(c,i,ib)*(1.-albsni_forc(c,ib))
                 endif
              endif
              enddo
@@ -726,9 +801,13 @@ contains
              if ((coszen_col(c) > 0._r8) .and. (h2osno(c) > 0._r8)) then
              albsnd_hst(c,ib) = albsnd(c,ib)
              albsni_hst(c,ib) = albsni(c,ib)
+             albsnd_hst_forc(c,ib) = albsnd_forc(c,ib)
+             albsni_hst_forc(c,ib) = albsni_forc(c,ib)
           else
              albsnd_hst(c,ib) = 0._r8
              albsni_hst(c,ib) = 0._r8
+             albsnd_hst_forc(c,ib) = 0._r8
+             albsni_hst_forc(c,ib) = 0._r8
           endif
        enddo
     enddo
@@ -981,6 +1060,8 @@ contains
           ftii(p,ib) = 1._r8
           albd(p,ib) = albgrd(c,ib)
           albi(p,ib) = albgri(c,ib)
+          albd_forc(p,ib) = albgrd_forc(c,ib)
+          albi_forc(p,ib) = albgri_forc(c,ib)
        end do
     end do
 
