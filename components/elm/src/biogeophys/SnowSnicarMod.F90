@@ -1778,8 +1778,6 @@ contains
       !JPT 8-band IOPs
       ! Open optics file:
       if(masterproc) write(iulog,*) 'Attempting to read 8band snow optical properties .....'
-      print*,'JPT ELM fsnowoptics_8bnd', fsnowoptics_8bnd
-      print*,'JPT ELM locfn', locfn 
       call getfil (fsnowoptics_8bnd, locfn, 0)
       call ncd_pio_openfile(ncid_8bnd, locfn, 0)
       if(masterproc) write(iulog,*) subname,trim(fsnowoptics_8bnd)

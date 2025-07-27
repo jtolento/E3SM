@@ -53,6 +53,11 @@ module SurfaceRadiationMod
      real(r8), pointer  :: fsr_sno_vi_patch      (:) => null() ! patch reflected diffuse vis solar radiation from snow (W/m**2)
      real(r8), pointer  :: fsr_sno_ni_patch      (:) => null() ! patch reflected diffuse NIR solar radiation from snow (W/m**2)
 
+     real(r8), pointer  :: fsr_sno_vd_forc_patch (:) => null() ! patch reflected direct beam vis solar radiation from snow (W/m**2)
+     real(r8), pointer  :: fsr_sno_nd_forc_patch (:) => null() ! patch reflected direct beam NIR solar radiation from snow (W/m**2)
+     real(r8), pointer  :: fsr_sno_vi_forc_patch (:) => null() ! patch reflected diffuse vis solar radiation from snow (W/m**2)
+     real(r8), pointer  :: fsr_sno_ni_forc_patch (:) => null() ! patch reflected diffuse NIR solar radiation from snow (W/m**2)  
+
      real(r8), pointer  :: fsr_vis_d_patch       (:) => null() ! patch reflected direct beam vis solar radiation (W/m**2)
      real(r8), pointer  :: fsr_vis_i_patch       (:) => null() ! patch reflected diffuse vis solar radiation (W/m**2)
      real(r8), pointer  :: fsr_vis_d_ln_patch    (:) => null() ! patch reflected direct beam vis solar radiation at local noon (W/m**2)
@@ -125,6 +130,11 @@ contains
     allocate(this%fsr_sno_nd_patch      (begp:endp))              ; this%fsr_sno_nd_patch      (:)   = spval
     allocate(this%fsr_sno_vi_patch      (begp:endp))              ; this%fsr_sno_vi_patch      (:)   = spval
     allocate(this%fsr_sno_ni_patch      (begp:endp))              ; this%fsr_sno_ni_patch      (:)   = spval
+    
+    allocate(this%fsr_sno_vd_forc_patch (begp:endp))              ; this%fsr_sno_vd_forc_patch (:)   = spval
+    allocate(this%fsr_sno_nd_forc_patch (begp:endp))              ; this%fsr_sno_nd_forc_patch (:)   = spval
+    allocate(this%fsr_sno_vi_forc_patch (begp:endp))              ; this%fsr_sno_vi_forc_patch (:)   = spval
+    allocate(this%fsr_sno_ni_forc_patch (begp:endp))              ; this%fsr_sno_ni_forc_patch (:)   = spval
 
     allocate(this%fsds_vis_d_patch      (begp:endp))              ; this%fsds_vis_d_patch      (:)   = spval
     allocate(this%fsds_vis_i_patch      (begp:endp))              ; this%fsds_vis_i_patch      (:)   = spval
@@ -282,6 +292,26 @@ contains
          avgflag='A', long_name='diffuse nir reflected solar radiation from snow', &
          ptr_patch=this%fsr_sno_ni_patch, default='inactive')
 
+    this%fsr_sno_vd_forc_patch(begp:endp) = spval
+    call hist_addfld1d (fname='SNOFSRVD_FORC', units='W/m^2',  &
+         avgflag='A', long_name='frocing direct vis reflected solar radiation from snow', &
+         ptr_patch=this%fsr_sno_vd_forc_patch, default='inactive')
+
+    this%fsr_sno_nd_forc_patch(begp:endp) = spval
+    call hist_addfld1d (fname='SNOFSRND_FORC', units='W/m^2',  &
+         avgflag='A', long_name='forcing direct nir reflected solar radiation from snow', &
+         ptr_patch=this%fsr_sno_nd_forc_patch, default='inactive')
+
+    this%fsr_sno_vi_forc_patch(begp:endp) = spval
+    call hist_addfld1d (fname='SNOFSRVI_FORC', units='W/m^2',  &
+         avgflag='A', long_name='forcing diffuse vis reflected solar radiation from snow', &
+         ptr_patch=this%fsr_sno_vi_forc_patch, default='inactive')
+
+    this%fsr_sno_ni_forc_patch(begp:endp) = spval
+    call hist_addfld1d (fname='SNOFSRNI_FORC', units='W/m^2',  &
+         avgflag='A', long_name='forcing diffuse nir reflected solar radiation from snow', &
+         ptr_patch=this%fsr_sno_ni_forc_patch, default='inactive')
+
   end subroutine InitHistory
 
   !------------------------------------------------------------------------
@@ -403,6 +433,8 @@ contains
           albgri_dst      =>    surfalb_vars%albgri_dst_col       , & ! Input:  [real(r8) (:,:) ] ground albedo without dust (diffuse) (col,bnd)
           albsnd_hst      =>    surfalb_vars%albsnd_hst_col       , & ! Input:  [real(r8) (:,:) ] snow albedo, direct, for history files (col,bnd) [frc]
           albsni_hst      =>    surfalb_vars%albsni_hst_col       , & ! Input:  [real(r8) (:,:) ] snow ground albedo, diffuse, for history files (col,bnd
+          albsnd_hst_forc      =>    surfalb_vars%albsnd_hst_forc_col       , & ! Input:  [real(r8) (:,:) ] snow albedo, direct, for history files (col,bnd) [frc]
+          albsni_hst_forc      =>    surfalb_vars%albsni_hst_forc_col       , & ! Input:  [real(r8) (:,:) ] snow ground albedo, diffuse, for history files (col,bnd 
           flx_absdv       =>    surfalb_vars%flx_absdv_col        , & ! Input:  [real(r8) (:,:) ] direct flux absorption factor (col,lyr): VIS [frc]
           flx_absdn       =>    surfalb_vars%flx_absdn_col        , & ! Input:  [real(r8) (:,:) ] direct flux absorption factor (col,lyr): NIR [frc]
           flx_absiv       =>    surfalb_vars%flx_absiv_col        , & ! Input:  [real(r8) (:,:) ] diffuse flux absorption factor (col,lyr): VIS [frc]
@@ -470,7 +502,11 @@ contains
           fsds_sno_vd     =>    surfrad_vars%fsds_sno_vd_patch    , & ! Output: [real(r8) (:)   ] incident visible, direct radiation on snow (for history files) (pft) [W/m2]
           fsds_sno_nd     =>    surfrad_vars%fsds_sno_nd_patch    , & ! Output: [real(r8) (:)   ] incident near-IR, direct radiation on snow (for history files) (pft) [W/m2]
           fsds_sno_vi     =>    surfrad_vars%fsds_sno_vi_patch    , & ! Output: [real(r8) (:)   ] incident visible, diffuse radiation on snow (for history files) (pft) [W/m2]
-          fsds_sno_ni     =>    surfrad_vars%fsds_sno_ni_patch      & ! Output: [real(r8) (:)   ] incident near-IR, diffuse radiation on snow (for history files) (pft) [W/m2]
+          fsds_sno_ni     =>    surfrad_vars%fsds_sno_ni_patch    ,  & ! Output: [real(r8) (:)   ] incident near-IR, diffuse radiation on snow (for history files) (pft) [W/m2]
+          fsr_sno_vd_forc     =>    surfrad_vars%fsr_sno_vd_forc_patch    , &
+          fsr_sno_nd_forc     =>    surfrad_vars%fsr_sno_nd_forc_patch    , &
+          fsr_sno_vi_forc     =>    surfrad_vars%fsr_sno_vi_forc_patch    , &
+          fsr_sno_ni_forc     =>    surfrad_vars%fsr_sno_ni_forc_patch      &
           )
 
           dtime = dtime_mod
@@ -767,6 +803,10 @@ contains
              fsr_sno_nd(p) = fsds_nir_d(p)*albsnd_hst(c,2)
              fsr_sno_vi(p) = fsds_vis_i(p)*albsni_hst(c,1)
              fsr_sno_ni(p) = fsds_nir_i(p)*albsni_hst(c,2)
+             fsr_sno_vd_forc(p) = fsds_vis_d(p)*albsnd_hst_forc(c,1)
+             fsr_sno_nd_forc(p) = fsds_nir_d(p)*albsnd_hst_forc(c,2)
+             fsr_sno_vi_forc(p) = fsds_vis_i(p)*albsni_hst_forc(c,1)
+             fsr_sno_ni_forc(p) = fsds_nir_i(p)*albsni_hst_forc(c,2)
           else
              fsds_sno_vd(p) = spval
              fsds_sno_nd(p) = spval
@@ -777,8 +817,14 @@ contains
              fsr_sno_nd(p) = spval
              fsr_sno_vi(p) = spval
              fsr_sno_ni(p) = spval
+             
+             fsr_sno_vd_forc(p) = spval
+             fsr_sno_nd_forc(p) = spval
+             fsr_sno_vi_forc(p) = spval
+             fsr_sno_ni_forc(p) = spval
           endif
        end do
+
        do fp = 1,num_urbanp
           p = filter_urbanp(fp)
           t = veg_pp%topounit(p)
